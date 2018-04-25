@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Date and Time:</strong>
+  <%= @tr_statement.date_time %>
+</p>
+
+<p>
+  <strong>Time zone:</strong>
+  <%= @tr_statement.timezone %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @tr_statement.description %>
+</p>
+
+<p>
+  <strong>Reason:</strong>
+  <%= @tr_statement.reason %>
+</p>
+
+<p>
+  <strong>Coinbag:</strong>
+  <%= Coinbag.where(id: @tr_statement.coinbag).map(&:coinbag)*"," %>
+</p>
+
+<p>
+  <strong>From:</strong>
+  <%= User.where(id: @tr_statement.from).map(&:nickname)*"," %>
+</p>
+
+<p>
+  <strong>To:</strong>
+  <%= User.where(id: @tr_statement.to).map(&:nickname)*"," %>
+</p>
+
+<p>
+  <strong>Currency:</strong>
+  <%= Currency.where(id: @tr_statement.currency).map(&:currency)*"," %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @tr_statement.amount %>
+</p>
+
+<p>
+  <strong>Celebrate:</strong>
+  <%= @tr_statement.celebrate %>
+</p>
+
+<p>
+  <strong>Create at:</strong>
+  <%= @tr_statement.created_at %>
+</p>
+
+<%= link_to 'Edit', edit_tr_statement_path(@tr_statement) %> |
+<%= link_to 'Back', tr_statements_path %>
