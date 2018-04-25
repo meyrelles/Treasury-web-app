@@ -1,0 +1,102 @@
+<%= form_with(model: tr_statement, local: true) do |form| %>
+  <% if tr_statement.errors.any? %>
+    <div id="error_explanation" xmlns="http://www.w3.org/1999/html">
+      <h2><%= pluralize(tr_statement.errors.count, "error") %> prohibited this Statement Movement from being saved:</h2>
+
+      <ul>
+      <% tr_statement.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <table class="radio">
+    <div class="radio">
+      <tr>
+        <td><%= form.radio_button(:mov_type, "pay", :checked => true) %></td>
+        <td><%= form.label(:mov_pay, "Payment") %></td>
+        <td><%= form.radio_button(:mov_type, "rec") %></td>
+        <td><%= form.label(:mov_rec, "Receipt") %></td>
+        <td><%= form.radio_button(:mov_type, "exch") %></td>
+        <td><%= form.label(:mov_rec, "Exchange") %></td>
+      </tr>
+    </div>
+  </table>
+  <table class="st_input" border="0">
+  <div class="field_date">
+    <tr>
+      <td><%= form.label :date_time %></td>
+      <td><%= form.datetime_select(:date_time) %></td>
+    </tr>
+  </div>
+
+  <tr class="field_int">
+    <tr>
+      <td><%= form.label :'time zone' %></td>
+      <td><%= form.text_field :timezone, :maxlength => "2", :size => "2" %></td>
+    </tr>
+  </div>
+
+  <div class="field">
+    <tr>
+      <td><%= form.label :description %></td>
+      <td><%= form.text_field :description %></td>
+    </tr>
+  </div>
+
+  <div class="field">
+    <tr>
+      <td><%= form.label :reason %></td>
+      <td><%= form.text_field :reason %></td>
+    </tr>
+  </div>
+
+  <div class="field">
+    <tr>
+      <td><%= form.label :coinbag %></td>
+      <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %></td>
+    </tr>
+  </div>
+
+  <div class="field">
+    <tr>
+      <td><%= form.label :from %></td>
+      <td><%= form.collection_select :from, @users, :id, :nickname, include_blank: true %></td>
+    </tr>
+  </div>
+
+  <div class="field">
+    <tr>
+      <td><%= form.label :to %></td>
+      <td><%= form.collection_select :to, @users, :id, :nickname, include_blank: true %></td>
+    </tr>
+  </div>
+
+  <div class="field_currency">
+    <tr>
+      <td><%= form.label :currency %></td>
+      <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %></td>
+    </tr>
+  </div>
+
+  <div class="field_float">
+    <tr>
+      <td><%= form.label :amount %></td>
+      <td><%= form.text_field :amount %></td>
+    </tr>
+  </div>
+
+  <div class="field">
+    <tr>
+      <td><%= form.label :celebrate %></td>
+      <td><%= form.text_field :celebrate %></td>
+    </tr>
+  </div>
+  <div class="actions">
+    <tr>
+      <td><%= form.submit %></td>
+    </tr>
+  </div>
+  </table>
+<% end %>

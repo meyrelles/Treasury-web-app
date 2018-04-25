@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uniqueid: MyString
+  date: 2018-04-17
+  time: 2018-04-17 15:05:09
+  timezone: 2018-04-17 15:05:09
+  description: MyString
+  reason: MyString
+  coinbag: MyString
+  from: MyString
+  to: MyString
+  currency: MyString
+  amount: 
+  celebrate: MyString
+  systemdt: 2018-04-17 15:05:09
+
+two:
+  uniqueid: MyString
+  date: 2018-04-17
+  time: 2018-04-17 15:05:09
+  timezone: 2018-04-17 15:05:09
+  description: MyString
+  reason: MyString
+  coinbag: MyString
+  from: MyString
+  to: MyString
+  currency: MyString
+  amount: 
+  celebrate: MyString
+  systemdt: 2018-04-17 15:05:09

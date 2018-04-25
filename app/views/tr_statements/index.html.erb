@@ -1,0 +1,56 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Treasury Statements</h1>
+
+<br>
+<%= link_to 'New Statement Movement', new_tr_statement_path %>
+<br>
+<br>
+<br>
+
+<table border="1">
+  <thead>
+    <tr>
+      <!--<th>Uniqueid</th>-->
+      <th>Type</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Time zone</th>
+      <th>Description</th>
+      <th>Reason</th>
+      <th>Coinbag</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Currency</th>
+      <th>Amount</th>
+      <th>Celebrate</th>
+      <th colspan="0"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tr_statements.each do |tr_statement| %>
+      <tr>
+        <td><%= tr_statement.mov_type %></td>
+        <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
+        <td><%= tr_statement.date_time.strftime("%H:%M") %></td>
+        <td><%= tr_statement.timezone %></td>
+        <td><%= tr_statement.description %></td>
+        <td><%= tr_statement.reason %></td>
+        <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
+        <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
+        <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
+        <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
+        <td><%= tr_statement.amount %></td>
+        <td><%= tr_statement.celebrate %></td>
+        <td><%= link_to 'Show', tr_statement %></td>
+        <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement) %></td>
+        <td><%= link_to 'Destroy', tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+

@@ -1,0 +1,2 @@
+module CoinbagsHelper
+end

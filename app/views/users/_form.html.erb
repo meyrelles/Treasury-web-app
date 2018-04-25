@@ -1,0 +1,57 @@
+<%= form_with(model: user, local: true) do |form| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :username %>
+    <%= form.text_field :username %>
+  </div>
+
+  <div class="field">
+    <%= form.label :password %>
+    <%= form.password_field  :password %>
+  </div>
+
+  <div class="field">
+    <%= form.label :surname %>
+    <%= form.text_field :surname %>
+  </div>
+
+  <div class="field">
+    <%= form.label :givenname %>
+    <%= form.text_field :givenname %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nickname %>
+    <%= form.text_field :nickname %>
+  </div>
+
+  <div class="field">
+    <%= form.label :'Birthdate and Time' %>
+    <%= form.datetime_select :birthdate_time, :start_year => 1900 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :spreadsheet_link %>
+    <%= form.text_field :spreadsheet_link %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
