@@ -37,3 +37,43 @@
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
+
+
+
+<br>
+<br>
+
+<h2>User google spreadsheet coinlog</h2>
+<br>
+<table border=1>
+  <thead>
+    <tr>
+      <th>Reason</th>
+      <th>Coinbag</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>Currency</th>
+      <th>Amount</th>
+      <th>To celebrate</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @google_synch.worksheet.rows[1..10000].each do |col| %>
+        <tr>
+          <td><%= col[1] %></td>
+          <td><%= col[2] %></td>
+          <td><%= col[3] %></td>
+          <td><%= col[4] %></td>
+          <td><%= col[5] %></td>
+          <td><%= col[6] %></td>
+          <td><%= col[7] %></td>
+          <td><%= col[8] %></td>
+          <td><%= col[9] %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
