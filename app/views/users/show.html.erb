@@ -35,16 +35,18 @@
   <%= @user.spreadsheet_link %>
 </p>
 
+<p>
+  <strong>Sheet name:</strong>
+  <%= @user.sheet_name %>
+</p>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
 
-
-
-<br>
-<br>
-
 <h2>User google spreadsheet coinlog</h2>
+
 <br>
+
 <table border=1>
   <thead>
     <tr>
@@ -62,18 +64,27 @@
   </thead>
 
   <tbody>
-    <% @google_synch.worksheet.rows[1..10000].each do |col| %>
-        <tr>
-          <td><%= col[1] %></td>
-          <td><%= col[2] %></td>
-          <td><%= col[3] %></td>
-          <td><%= col[4] %></td>
-          <td><%= col[5] %></td>
-          <td><%= col[6] %></td>
-          <td><%= col[7] %></td>
-          <td><%= col[8] %></td>
-          <td><%= col[9] %></td>
-        </tr>
+    <% begin %>
+      <% @google_synch.ws.rows[1..10000].each do |col| %>
+          <tr>
+            <td><%= col[1] %></td>
+            <td><%= col[2] %></td>
+            <td><%= col[3] %></td>
+            <td><%= col[4] %></td>
+            <td><%= col[5] %></td>
+            <td><%= col[6] %></td>
+            <td><%= col[7] %></td>
+            <td><%= col[8] %></td>
+            <td><%= col[9] %></td>
+          </tr>
+      <% end %>
+    <% rescue Exception => e %>
+      <h3>No user google API key or wrong key, please verify!</h3>
+      <h5><%= e.message %></h5>
+      <p><%= e.backtrace.inspect %>
+      <br>
+      <br>
     <% end %>
+
   </tbody>
 </table>
