@@ -14,9 +14,12 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    #update global variable to send the google key to google API class
     $user_google_key = @user.spreadsheet_link
+    #update global variable to send the google Sheet Name to google API class
     $user_google_sheet_name = @user.sheet_name
-    #$user_google_key2 = "iuyeriuqwiye"
+
+    #Call Google spreadsheet connection class
     @google_synch = Google_synch_a.new
   end
 
