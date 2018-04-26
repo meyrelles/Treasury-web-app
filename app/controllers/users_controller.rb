@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
+  # Goggle drive class
+  require './app/models/google_sych'
+
   # GET /users
   # GET /users.json
   def index
@@ -11,6 +14,8 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    #connect to google driver
+    @google_synch = Google_synch.new
   end
 
   # GET /users/new
