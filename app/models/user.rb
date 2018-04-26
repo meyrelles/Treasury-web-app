@@ -10,4 +10,5 @@ class User
   field :birthdate_time, :type => Time
   field :email, :type => String
   field :spreadsheet_link, :type => String
+  field :sheet_name, :type => String
 end
