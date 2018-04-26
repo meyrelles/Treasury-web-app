@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   # Goggle drive class
-  require './app/models/google_sych'
+  require './app/models/google_synch2'
 
   # GET /users
   # GET /users.json
@@ -14,8 +14,10 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    #connect to google driver
-    @google_synch = Google_synch.new
+    $user_google_key = @user.spreadsheet_link
+    $user_google_sheet_name = @user.sheet_name
+    #$user_google_key2 = "iuyeriuqwiye"
+    @google_synch = Google_synch_a.new
   end
 
   # GET /users/new
@@ -77,17 +79,17 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:username, :password, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email)
+      params.require(:user).permit(:username, :password, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email, :sheet_name)
     end
 
-  #function to manipulate form data
-  def data_manipulation
-    params[:user][:birthdate_time] = Time.new(params[:user][:"birthdate_time(1i)"].to_i,params[:user][:"birthdate_time(2i)"].to_i,params[:user][:"birthdate_time(3i)"].to_i,params[:user][:"birthdate_time(4i)"].to_i,params[:user][:"birthdate_time(5i)"].to_i,0,'+00:00')
-    params[:user].delete(:"birthdate_time(1i)")
-    params[:user].delete(:"birthdate_time(2i)")
-    params[:user].delete(:"birthdate_time(3i)")
-    params[:user].delete(:"birthdate_time(4i)")
-    params[:user].delete(:"birthdate_time(5i)")
+    #function to manipulate form data
+    def data_manipulation
+      params[:user][:birthdate_time] = Time.new(params[:user][:"birthdate_time(1i)"].to_i,params[:user][:"birthdate_time(2i)"].to_i,params[:user][:"birthdate_time(3i)"].to_i,params[:user][:"birthdate_time(4i)"].to_i,params[:user][:"birthdate_time(5i)"].to_i,0,'+00:00')
+      params[:user].delete(:"birthdate_time(1i)")
+      params[:user].delete(:"birthdate_time(2i)")
+      params[:user].delete(:"birthdate_time(3i)")
+      params[:user].delete(:"birthdate_time(4i)")
+      params[:user].delete(:"birthdate_time(5i)")
 
-  end
+    end
 end
