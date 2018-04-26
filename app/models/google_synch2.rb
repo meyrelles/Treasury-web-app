@@ -7,7 +7,7 @@ class Google_synch_a
     begin
       @session ||= GoogleDrive::Session.from_service_account_key("./app/assets/json_files/client_secret.json")
       @spreadsheet ||= @session.spreadsheet_by_key($user_google_key)
-      @worksheet ||= @spreadsheet.worksheets[$user_google_sheet_name]
+      @worksheet ||= @spreadsheet.worksheet_by_title($user_google_sheet_name)
     rescue Exception => e
       x=e.message
     end
