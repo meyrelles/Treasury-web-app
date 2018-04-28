@@ -3,7 +3,14 @@
 <h1>Treasury Statements</h1>
 
 <br>
-<%= link_to 'New Statement Movement', new_tr_statement_path %>
+<p>New statment transaction type:</P>
+<table class = "links">
+  <tr>
+    <td><%= link_to 'Payment', new_tr_statement_path(@tr_statement, :type => "pay", :usr => '66v7GccZyQjiAW') %></td>
+    <td><%= link_to 'Receipt', new_tr_statement_path(@tr_statement, :type => "rec", :usr => '66v7GccZyQjiAW') %></td>
+    <td><%= link_to 'Exchange', new_tr_statement_path(@tr_statement, :type => "exch", :usr => '66v7GccZyQjiAW') %></td>
+  </tr>
+</table>
 <br>
 <br>
 <br>
@@ -44,7 +51,7 @@
         <td><%= tr_statement.amount %></td>
         <td><%= tr_statement.celebrate %></td>
         <td><%= link_to 'Show', tr_statement %></td>
-        <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement) %></td>
+        <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type) %></td>
         <td><%= link_to 'Destroy', tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -52,5 +59,3 @@
 </table>
 
 <br>
-
-
