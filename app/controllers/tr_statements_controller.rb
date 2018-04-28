@@ -51,7 +51,7 @@ class TrStatementsController < ApplicationController
 
     respond_to do |format|
       if @tr_statement.update(tr_statement_params)
-        format.html { redirect_to @tr_statement, notice: 'Tr statement was successfully updated.' }
+        format.html { redirect_to @tr_statement, notice: 'Statement transaction was successfully updated.' }
         format.json { render :show, status: :ok, location: @tr_statement }
       else
         format.html { render :edit }
@@ -109,8 +109,6 @@ class TrStatementsController < ApplicationController
       #load currency table
       @currency = Currency.all
       @currency = @currency.order(:currency)
-
-      @type = params[:type].to_s
     end
 
 end

@@ -1,3 +1,9 @@
 // Place all the styles related to the tr_statements controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#description_error {
+  display: inline;
+  color: #D00;
+  padding-left: 1px;
+}

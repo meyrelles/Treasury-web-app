@@ -57,3 +57,9 @@ gem 'nobrainer'
 
 #google drive API
 gem "google_drive"
+
+# Asset template engines
+gem 'sass'
+gem 'coffee-script'
+gem 'jquery-rails'
+gem 'jquery-turbolinks'

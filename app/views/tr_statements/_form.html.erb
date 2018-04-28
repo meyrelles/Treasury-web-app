@@ -1,6 +1,4 @@
 <!-- CALL JAVASCRIPT FUNCTION -->
-<body onload="disable_tr_statement_to()">
-
   <%= form_with(model: tr_statement, local: true) do |form| %>
     <% if tr_statement.errors.any? %>
       <div id="error_explanation" xmlns="http://www.w3.org/1999/html">
@@ -14,7 +12,11 @@
       </div>
     <% end %>
 
+    <!-- Text field to give value to mov_type (MOVMENT TYPE) in database -->
     <%= form.text_field :mov_type, :value => params[:type].to_s, style: 'display:none' %>
+
+    <!-- Catch Ruby variable (read url parameter) and send it to CoffeeScript -->
+    <div id="type_parameter" data-parameter="<%= params[:type].to_s %>"></div>
 
     <table class="st_input" border="0">
     <div class="field_date">
@@ -34,7 +36,8 @@
     <div class="field">
       <tr>
         <td><%= form.label :description %></td>
-        <td><%= form.text_field :description %></td>
+        <td><%= form.text_field :description %><div id="description_error"></div></td>
+        <td></td>
       </tr>
     </div>
 
@@ -47,19 +50,34 @@
 
     <div class="field">
       <tr>
-        <td><%= form.label :coinbag %></td>
-        <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %></td>
+        <% if params[:type].to_s == 'exch' %>
+          <td>Source <%= form.label :coinbag %></td>
+          <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %></td>
+        <% else %>
+          <td><%= form.label :coinbag %></td>
+          <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %></td>
+        <% end %>
+      </tr>
+    </div>
+
+    <!-- Used only to exchange process -->
+    <div class="field">
+      <tr>
+        <% if params[:type].to_s == 'exch' %>
+          <td>Destination <%= form.label :coinbag %></td>
+          <td><%= form.collection_select :coinbag_dest, @coinbag, :id, :coinbag, include_blank: true %></td>
+        <% end %>
       </tr>
     </div>
 
     <div class="field">
       <tr>
         <td><%= form.label :from %></td>
-        <% if @type.to_s == 'rec' %>
+        <% if params[:type].to_s == 'rec' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
-        <% elsif @type.to_s == 'pay' %>
+        <% elsif params[:type].to_s == 'pay' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
-        <% elsif @type.to_s == 'exch' %>
+        <% elsif params[:type].to_s == 'exch' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
         <% else %>
           <td><%= form.collection_select :from, @users, :id, :nickname %></td>
@@ -70,11 +88,11 @@
     <div class="field">
       <tr>
         <td><%= form.label :to %></td>
-        <% if @type.to_s == 'rec' %>
+        <% if params[:type].to_s == 'rec' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
-        <% elsif @type.to_s == 'pay' %>
+        <% elsif params[:type].to_s == 'pay' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
-        <% elsif @type.to_s == 'exch' %>
+        <% elsif params[:type].to_s == 'exch' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
         <% else %>
           <td><%= form.collection_select :to, @users, :id, :nickname %></td>
@@ -84,21 +102,42 @@
 
     <div class="field_currency">
       <tr>
-        <td><%= form.label :currency %></td>
+        <% if params[:type].to_s == 'exch' %>
+          <td>Source <%= form.label :currency %></td>
+        <% else %>
+          <td><%= form.label :currency %></td>
+        <% end %>
         <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %></td>
+        <% if params[:type].to_s == 'exch' %>
+          <td><%= form.label :amount %></td>
+          <td><%= form.text_field :amount %></td>
+        <% end %>
       </tr>
     </div>
 
-    <div class="field_float">
-      <tr>
-        <td><%= form.label :amount %></td>
-        <td><%= form.text_field :amount %></td>
-      </tr>
-    </div>
+    <% if params[:type].to_s == 'exch' %>
+      <div class="field_currency">
+        <tr>
+          <td>Destination <%= form.label :currency %></td>
+          <td><%= form.collection_select :currency_dest, @currency, :id, :currency, include_blank: true %></td>
+          <td><%= form.label :amount %></td>
+          <td><%= form.text_field :amount_dest %></td>
+        </tr>
+      </div>
+    <% end %>
+
+    <% if params[:type].to_s != 'exch' %>
+      <div class="field_float">
+        <tr>
+          <td><%= form.label :amount %></td>
+          <td><%= form.text_field :amount %></td>
+        </tr>
+      </div>
+    <% end %>
 
     <div class="field">
       <tr>
-        <td><%= form.label :celebrate %></td>
+        <td>To <%= form.label :celebrate %></td>
         <td><%= form.text_field :celebrate %></td>
       </tr>
     </div>
@@ -109,4 +148,3 @@
     </div>
     </table>
   <% end %>
-</body>
