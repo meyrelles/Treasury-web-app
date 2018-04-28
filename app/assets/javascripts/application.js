@@ -14,3 +14,12 @@
 //= require activestorage
 //= require turbolinks
 //= require_tree .
+
+// Function to disable the combobox TO in new transactions type Receipt to avoid errors
+function disable_tr_statement_to() {
+    var type = location.search.split('type=')[1]
+    type = type.substr(0, 3)
+    if (type == "rec") {
+      document.getElementById("tr_statement_to").disabled = true;
+    }
+}
