@@ -55,5 +55,5 @@
   <%= @tr_statement.created_at %>
 </p>
 
-<%= link_to 'Edit', edit_tr_statement_path(@tr_statement) %> |
+<%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type) %> |
 <%= link_to 'Back', tr_statements_path %>
