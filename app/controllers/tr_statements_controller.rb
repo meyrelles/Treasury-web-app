@@ -96,19 +96,21 @@ class TrStatementsController < ApplicationController
 
     end
 
-  def load_tables
+    def load_tables
 
-    #load user table
-    @users = User.all
-    @users = @users.order(:nickname)
+      #load user table
+      @users = User.all
+      @users = @users.order(:nickname)
 
-    #load coinbags table
-    @coinbag = Coinbag.all
-    @coinbag = @coinbag.order(:coinbag)
+      #load coinbags table
+      @coinbag = Coinbag.all
+      @coinbag = @coinbag.order(:coinbag)
 
-    #load currency table
-    @currency = Currency.all
-    @currency = @currency.order(:currency)
-  end
+      #load currency table
+      @currency = Currency.all
+      @currency = @currency.order(:currency)
+
+      @type = params[:type].to_s
+    end
 
 end
