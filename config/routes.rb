@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :reasons
+  resources :classifications
   resources :coinbags
   resources :currencies
   get 'users2/new'

@@ -1,6 +1,6 @@
-class Reason
+class Classification
   include NoBrainer::Document
   include NoBrainer::Document::Timestamps
 
-  field :reason, :type => String
+  field :classification, :type => String
 end
