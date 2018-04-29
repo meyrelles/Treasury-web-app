@@ -44,8 +44,11 @@
     <div class="field">
       <tr>
         <td><%= form.label :classification %></td>
-        <td><%= form.collection_select :classification, @classification, :id, :classification, include_blank: true %></td>
-      </tr>
+        <% begin %>
+          <td><%= form.collection_select :classification, @classification, :id, :classification, include_blank: true %></td>
+        <% rescue %>
+        <% end %>
+        </tr>
     </div>
 
     <div class="field">
@@ -55,7 +58,10 @@
           <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %></td>
         <% else %>
           <td><%= form.label :coinbag %></td>
-          <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %></td>
+          <% begin %>
+            <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %></td>
+          <% rescue %>
+          <% end %>
         <% end %>
       </tr>
     </div>
@@ -74,13 +80,16 @@
       <tr>
         <td><%= form.label :from %></td>
         <% if params[:type].to_s == 'rec' %>
-          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
+          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s, :value => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
         <% elsif params[:type].to_s == 'pay' %>
-          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
+          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s, :value => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
         <% elsif params[:type].to_s == 'exch' %>
-          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
+          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s, :value => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
         <% else %>
-          <td><%= form.collection_select :from, @users, :id, :nickname %></td>
+          <% begin %>
+            <td><%= form.collection_select :from, @users, :id, :nickname %></td>
+          <% rescue %>
+          <% end %>
         <% end %>
       </tr>
     </div>
@@ -89,13 +98,16 @@
       <tr>
         <td><%= form.label :to %></td>
         <% if params[:type].to_s == 'rec' %>
-          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
+          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s, :value => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
         <% elsif params[:type].to_s == 'pay' %>
-          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
+          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s, :value => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
         <% elsif params[:type].to_s == 'exch' %>
-          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
+          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: params[:usr].to_s).map(&:id)*",".to_s, :value => User.where(id: params[:usr].to_s).map(&:id)*",".to_s %></td>
         <% else %>
-          <td><%= form.collection_select :to, @users, :id, :nickname %></td>
+          <% begin %>
+            <td><%= form.collection_select :to, @users, :id, :nickname %></td>
+          <% rescue %>
+          <% end %>
         <% end %>
       </tr>
     </div>
@@ -107,11 +119,20 @@
         <% else %>
           <td><%= form.label :currency %></td>
         <% end %>
-        <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %></td>
-        <% if params[:type].to_s == 'exch' %>
-          <td><%= form.label :amount %></td>
-          <td><%= form.text_field :amount %></td>
-        <% end %>
+        <td>
+          <table>
+            <tr>
+              <% begin %>
+                <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %></td>
+              <% rescue %>
+              <% end %>
+              <% if params[:type].to_s == 'exch' %>
+                <td><%= form.label :amount %></td>
+                <td><%= form.text_field :amount %></td>
+              <% end %>
+            </tr>
+          </table>
+        </td>
       </tr>
     </div>
 
@@ -119,9 +140,24 @@
       <div class="field_currency">
         <tr>
           <td>Destination <%= form.label :currency %></td>
-          <td><%= form.collection_select :currency_dest, @currency, :id, :currency, include_blank: true %></td>
-          <td><%= form.label :amount %></td>
-          <td><%= form.text_field :amount_dest %></td>
+          <td>
+            <table>
+              <tr>
+                <td><%= form.collection_select :currency_dest, @currency, :id, :currency, include_blank: true %></td>
+                <td><%= form.label :amount %></td>
+                <td><%= form.text_field :amount_dest %></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </div>
+    <% end %>
+
+    <% if params[:type].to_s == 'exch' %>
+      <div class="field">
+        <tr>
+          <td><%= form.label :transaction_link %></td>
+          <td><%= form.text_field :transaction_link, :value => User.where(id: params[:usr].to_s).map(&:id)*",".to_s + Time.new.to_s.gsub!(/\s/,'') %></td>
         </tr>
       </div>
     <% end %>
@@ -135,6 +171,15 @@
       </div>
     <% end %>
 
+    <% if params[:type].to_s == 'exch' %>
+      <div class="field">
+        <tr>
+          <td><%= form.label :exch_destin %></td>
+          <td><%= form.text_field :exch_destin, :value => "Sent" %></td>
+        </tr>
+      </div>
+    <% end %>
+
     <div class="field">
       <tr>
         <td>To <%= form.label :celebrate %></td>
@@ -143,7 +188,7 @@
     </div>
     <div class="actions">
       <tr>
-        <td><%= form.submit %></td>
+        <td><%= form.submit 'submit transaction', name: 'send', id: 'send', calss:'send', data: { disable_with: "Please wait.." } %></td>
       </tr>
     </div>
     </table>

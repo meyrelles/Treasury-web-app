@@ -5,6 +5,7 @@ class TrStatementsController < ApplicationController
   # GET /tr_statements.json
   def index
     @tr_statements = TrStatement.all
+    @tr_statements = @tr_statements.order(date_time: :desc)
   end
 
   # GET /tr_statements/1
@@ -29,11 +30,16 @@ class TrStatementsController < ApplicationController
     #data manipulation from form
     data_manipulation
 
+    # If working on exchange operation, the app needs to creat an aditional record in DB
+    # Link to function to create it.
+    if params[:tr_statement][:mov_type] == 'exch'
+      exchange_function
+    end
+
     @tr_statement = TrStatement.new(tr_statement_params)
 
     respond_to do |format|
       if @tr_statement.save
-
         format.html { redirect_to @tr_statement, notice: 'Tr statement was successfully created.' }
         format.json { render :show, status: :created, location: @tr_statement }
       else
@@ -79,7 +85,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:mov_type, :date_time, :timezone, :classification, :reason, :coinbag, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :coinbag, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data
@@ -115,4 +121,27 @@ class TrStatementsController < ApplicationController
       @classification = @classification.order(:classification)
     end
 
+    def exchange_function
+
+      r = RethinkDB::RQL.new
+
+      conn = r.connect(:host => "localhost", :port => 28015)
+
+      r.db('treasury_development').table('tr_statements').insert({
+        :reason => params[:tr_statement][:reason],
+        :celebrate => params[:tr_statement][:celebrate],
+        :date_time => params[:tr_statement][:date_time],
+        :transaction_link => params[:tr_statement][:transaction_link],
+        :mov_type => params[:tr_statement][:mov_type],
+        :timezone => params[:tr_statement][:timezone],
+        :classification => params[:tr_statement][:classification],
+        :coinbag => params[:tr_statement][:coinbag_dest],
+        :amount => params[:tr_statement][:amount_dest],
+        :currency => params[:tr_statement][:currency_dest],
+        :from => params[:tr_statement][:from],
+        :to => params[:tr_statement][:to],
+        :exch_destin => "Received"
+      }).run(conn)
+
+    end
 end

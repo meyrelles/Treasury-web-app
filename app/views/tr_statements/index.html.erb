@@ -45,29 +45,47 @@
         <td><%= tr_statement.reason %></td>
         <% begin %>
           <td><%= Classification.where(id: tr_statement.classification).map(&:classification)*"," %></td>
-        <% rescue%>
+        <% rescue %>
         <% end %>
         <% begin %>
           <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
-        <% rescue%>
+        <% rescue %>
         <% end %>
         <% begin %>
           <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
-        <% rescue%>
+        <% rescue %>
         <% end %>
         <% begin %>
           <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
-        <% rescue%>
+        <% rescue %>
         <% end %>
         <% begin %>
           <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
-        <% rescue%>
+        <% rescue %>
         <% end %>
         <td><%= tr_statement.amount %></td>
         <td><%= tr_statement.celebrate %></td>
-        <td><%= link_to 'Show', tr_statement %></td>
-        <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type) %></td>
-        <td><%= link_to 'Destroy', tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% if tr_statement.exch_destin != 'Received' %>
+          <td><%= link_to 'Show', tr_statement %></td>
+        <% else %>
+          <td>---</td>
+        <% end %>
+        <% if tr_statement.from == nil %>
+          <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
+        <% else %>
+          <% if tr_statement.mov_type == 'rec' %>
+            <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
+          <% elsif tr_statement.exch_destin != 'Received' %>
+            <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.from).map(&:id)*",") %></td>
+          <% else %>
+            <td>---</td>
+          <% end %>
+        <% end %>
+        <% if tr_statement.exch_destin != 'Received' %>
+          <td><%= link_to 'Destroy', tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% else %>
+          <td>---</td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

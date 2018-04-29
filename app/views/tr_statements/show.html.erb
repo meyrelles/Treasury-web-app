@@ -30,12 +30,18 @@
 
 <p>
   <strong>From:</strong>
-  <%= User.where(id: @tr_statement.from).map(&:nickname)*"," %>
+  <% begin %>
+    <%= User.where(id: @tr_statement.from).map(&:nickname)*"," %>
+  <% rescue%>
+  <% end %>
 </p>
 
 <p>
   <strong>To:</strong>
-  <%= User.where(id: @tr_statement.to).map(&:nickname)*"," %>
+  <% begin %>
+    <%= User.where(id: @tr_statement.to).map(&:nickname)*"," %>
+  <% rescue%>
+  <% end %>
 </p>
 
 <p>
@@ -57,6 +63,13 @@
   <strong>Create at:</strong>
   <%= @tr_statement.created_at %>
 </p>
-
-<%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type) %> |
+<% if @tr_statement.from == nil %>
+  <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => '') %></td> |
+<% else %>
+  <% if @tr_statement.mov_type == 'rec' %>
+    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.to).map(&:id)*",") %></td> |
+  <% else %>
+    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.from).map(&:id)*",") %></td> |
+  <% end %>
+<% end %>
 <%= link_to 'Back', tr_statements_path %>

@@ -13,4 +13,6 @@ class TrStatement
   field :amount, :type => Float
   field :celebrate, :type => String
   field :mov_type, :type => String
+  field :transaction_link, :type => String
+  field :exch_destin, :type => String
 end
