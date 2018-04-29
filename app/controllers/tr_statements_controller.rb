@@ -30,16 +30,17 @@ class TrStatementsController < ApplicationController
     #data manipulation from form
     data_manipulation
 
-    # If working on exchange operation, the app needs to creat an aditional record in DB
-    # Link to function to create it.
-    if params[:tr_statement][:mov_type] == 'exch'
-      exchange_function
-    end
-
     @tr_statement = TrStatement.new(tr_statement_params)
 
     respond_to do |format|
       if @tr_statement.save
+        # change for here to update the table after form commit
+        # If working on exchange operation, the app needs to creat an aditional record in DB
+        # Link to function to create it.
+        if params[:tr_statement][:mov_type] == 'exch'
+          exchange_function
+        end        
+        
         format.html { redirect_to @tr_statement, notice: 'Tr statement was successfully created.' }
         format.json { render :show, status: :created, location: @tr_statement }
       else
