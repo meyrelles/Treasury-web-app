@@ -79,7 +79,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:mov_type, :date_time, :timezone, :description, :reason, :coinbag, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:mov_type, :date_time, :timezone, :classification, :reason, :coinbag, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data
@@ -109,6 +109,10 @@ class TrStatementsController < ApplicationController
       #load currency table
       @currency = Currency.all
       @currency = @currency.order(:currency)
+
+      #load classification table
+      @classification = Classification.all
+      @classification = @classification.order(:classification)
     end
 
 end

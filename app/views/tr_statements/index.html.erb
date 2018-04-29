@@ -23,8 +23,8 @@
       <th>Date</th>
       <th>Time</th>
       <th>Time zone</th>
-      <th>Description</th>
       <th>Reason</th>
+      <th>Classification</th>
       <th>Coinbag</th>
       <th>From</th>
       <th>To</th>
@@ -42,12 +42,27 @@
         <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
         <td><%= tr_statement.date_time.strftime("%H:%M") %></td>
         <td><%= tr_statement.timezone %></td>
-        <td><%= tr_statement.description %></td>
         <td><%= tr_statement.reason %></td>
-        <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
-        <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
-        <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
-        <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
+        <% begin %>
+          <td><%= Classification.where(id: tr_statement.classification).map(&:classification)*"," %></td>
+        <% rescue%>
+        <% end %>
+        <% begin %>
+          <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
+        <% rescue%>
+        <% end %>
+        <% begin %>
+          <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
+        <% rescue%>
+        <% end %>
+        <% begin %>
+          <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
+        <% rescue%>
+        <% end %>
+        <% begin %>
+          <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
+        <% rescue%>
+        <% end %>
         <td><%= tr_statement.amount %></td>
         <td><%= tr_statement.celebrate %></td>
         <td><%= link_to 'Show', tr_statement %></td>

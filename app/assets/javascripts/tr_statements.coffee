@@ -18,7 +18,7 @@ ValidateNumber =
 
 #Shoud use 'turbolinks:load' to avoid manualy refresh the webpage
 $(document).on 'turbolinks:load', ->
-  $("#tr_statement_description").blur ->
+  $("#tr_statement_classification").blur ->
     if ValidateNumber.validNumber(@value)
       $("#description_error").text("")
     else

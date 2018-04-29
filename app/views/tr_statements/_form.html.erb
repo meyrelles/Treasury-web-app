@@ -35,16 +35,16 @@
 
     <div class="field">
       <tr>
-        <td><%= form.label :description %></td>
-        <td><%= form.text_field :description %><div id="description_error"></div></td>
+        <td><%= form.label :reason %></td>
+        <td><%= form.text_field :reason %><div id="description_error"></div></td>
         <td></td>
       </tr>
     </div>
 
     <div class="field">
       <tr>
-        <td><%= form.label :reason %></td>
-        <td><%= form.text_field :reason %></td>
+        <td><%= form.label :classification %></td>
+        <td><%= form.collection_select :classification, @classification, :id, :classification, include_blank: true %></td>
       </tr>
     </div>
 

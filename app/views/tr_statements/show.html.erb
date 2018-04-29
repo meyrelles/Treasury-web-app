@@ -11,13 +11,16 @@
 </p>
 
 <p>
-  <strong>Description:</strong>
-  <%= @tr_statement.description %>
+  <strong>Reason:</strong>
+  <%= @tr_statement.reason %>
 </p>
 
 <p>
-  <strong>Reason:</strong>
-  <%= @tr_statement.reason %>
+  <strong>Classification:</strong>
+  <% begin %>
+    <%= Classification.where(id: @tr_statement.classification.to_s).map(&:classification)*"," %>
+  <% rescue Exception => e %>
+  <% end %>
 </p>
 
 <p>
