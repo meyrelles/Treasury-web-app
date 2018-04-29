@@ -25,36 +25,23 @@ $(document).on 'turbolinks:load', ->
       $("#description_error").text("    Invalid number")
 #END OF Example
 
+#  $(document).ready ->
+#    $('#send').hover ->
+#      document.getElementById("tr_statement_to").disabled = false
+#      document.getElementById("tr_statement_from").disabled = false
+
 #jQuery to desable the combobox TO and FROM to avoid errors on transactions
-  $('#tr_statement_to').hover ->
+  $(document).ready ->
     if $("#type_parameter").data("parameter") is 'rec'
       document.getElementById("tr_statement_to").disabled = true
-
-  $('#tr_statement_from').hover ->
     if $("#type_parameter").data("parameter") is 'pay'
       document.getElementById("tr_statement_from").disabled = true
-
-  $('#tr_statement_to').hover ->
     if $("#type_parameter").data("parameter") is 'exch'
       document.getElementById("tr_statement_to").disabled = true
-
-  $('#tr_statement_from').hover ->
-    if $("#type_parameter").data("parameter") is 'exch'
       document.getElementById("tr_statement_from").disabled = true
 
-  $('#tr_statement_to').keydown ->
-    if $("#type_parameter").data("parameter") is 'rec'
-      document.getElementById("tr_statement_to").disabled = true
-
-  $('#tr_statement_from').keydown ->
-    if $("#type_parameter").data("parameter") is 'pay'
-      document.getElementById("tr_statement_from").disabled = true
-
-  $('#tr_statement_to').keydown ->
-    if $("#type_parameter").data("parameter") is 'exch'
-      document.getElementById("tr_statement_to").disabled = true
-
-  $('#tr_statement_from').keydown ->
-    if $("#type_parameter").data("parameter") is 'exch'
-      document.getElementById("tr_statement_from").disabled = true
+    #Enable combox before submit to permit ruby store the user data.
+    $('#send').hover ->
+      document.getElementById("tr_statement_to").disabled = false
+      document.getElementById("tr_statement_from").disabled = false
 #End of Combobox desable
