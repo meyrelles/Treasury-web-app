@@ -16,11 +16,13 @@ class TrStatementsController < ApplicationController
   # GET /tr_statements/new
   def new
     load_tables
+    @action = 'NEW'
     @tr_statement = TrStatement.new
   end
 
   # GET /tr_statements/1/edit
   def edit
+    @action = 'EDIT'
     load_tables
   end
 
@@ -35,12 +37,12 @@ class TrStatementsController < ApplicationController
     respond_to do |format|
       if @tr_statement.save
         # change for here to update the table after form commit
-        # If working on exchange operation, the app needs to creat an aditional record in DB
+        # If working on exchange operation, the app needs to create an aditional record in DB
         # Link to function to create it.
         if params[:tr_statement][:mov_type] == 'exch'
-          exchange_function
-        end        
-        
+          exchange_function_insert
+        end
+
         format.html { redirect_to @tr_statement, notice: 'Tr statement was successfully created.' }
         format.json { render :show, status: :created, location: @tr_statement }
       else
@@ -58,6 +60,13 @@ class TrStatementsController < ApplicationController
 
     respond_to do |format|
       if @tr_statement.update(tr_statement_params)
+
+        # If working on exchange operation, the app needs to update an aditional record in DB
+        # Link to function to update it.
+        if params[:tr_statement][:mov_type] == 'exch'
+          exchange_function_update
+        end
+
         format.html { redirect_to @tr_statement, notice: 'Statement transaction was successfully updated.' }
         format.json { render :show, status: :ok, location: @tr_statement }
       else
@@ -94,7 +103,7 @@ class TrStatementsController < ApplicationController
 
       @tempo = Time.now
 
-      params[:tr_statement][:date_time] = Time.new(params[:tr_statement][:"date_time(1i)"].to_i,params[:tr_statement][:"date_time(2i)"].to_i,params[:tr_statement][:"date_time(3i)"].to_i,params[:tr_statement][:"date_time(4i)"].to_i,params[:tr_statement][:"date_time(5i)"].to_i,0,'+00:00')
+      params[:tr_statement][:date_time] = Time.new(params[:tr_statement][:"date_time(1i)"].to_i,params[:tr_statement][:"date_time(2i)"].to_i,params[:tr_statement][:"date_time(3i)"].to_i,params[:tr_statement][:"date_time(4i)"].to_i,params[:tr_statement][:"date_time(5i)"].to_i,50,'+01:00')
       params[:tr_statement].delete(:"date_time(1i)")
       params[:tr_statement].delete(:"date_time(2i)")
       params[:tr_statement].delete(:"date_time(3i)")
@@ -122,10 +131,8 @@ class TrStatementsController < ApplicationController
       @classification = @classification.order(:classification)
     end
 
-    def exchange_function
-
+    def exchange_function_insert
       r = RethinkDB::RQL.new
-
       conn = r.connect(:host => "localhost", :port => 28015)
 
       r.db('treasury_development').table('tr_statements').insert({
@@ -144,5 +151,26 @@ class TrStatementsController < ApplicationController
         :exch_destin => "Received"
       }).run(conn)
 
+      conn.close
+    end
+
+    def exchange_function_update
+      r = RethinkDB::RQL.new
+      conn = r.connect(:host => "localhost", :port => 28015)
+
+      r.db('treasury_development').table("tr_statements").filter({
+        :transaction_link => params[:tr_statement][:transaction_link],
+        :exch_destin => "Received"}).update({
+          :timezone => params[:tr_statement][:timezone],
+          :classification => params[:tr_statement][:classification],
+          :coinbag => params[:tr_statement][:coinbag_dest],
+          :amount => params[:tr_statement][:amount_dest],
+          :currency => params[:tr_statement][:currency_dest],
+          :reason => params[:tr_statement][:reason],
+          :celebrate => params[:tr_statement][:celebrate],
+          :date_time => params[:tr_statement][:date_time]
+      }).run(conn)
+
+      conn.close
     end
 end
