@@ -82,7 +82,7 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:username, :password, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email, :sheet_name)
+      params.require(:user).permit(:username, :password_digest, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email, :sheet_name)
     end
 
     #function to manipulate form data
@@ -93,6 +93,6 @@ class UsersController < ApplicationController
       params[:user].delete(:"birthdate_time(3i)")
       params[:user].delete(:"birthdate_time(4i)")
       params[:user].delete(:"birthdate_time(5i)")
-
+      params[:user][:password_digest] = Digest::SHA2.hexdigest(SecureRandom.base64(8) + params[:user][:"password_digest"])
     end
 end

@@ -17,7 +17,7 @@ class UsersTest < ApplicationSystemTestCase
     fill_in "Birthdate Time", with: @user.birthdate_time
     fill_in "Givenname", with: @user.givenname
     fill_in "Nickname", with: @user.nickname
-    fill_in "Password", with: @user.password
+    fill_in "Password", with: @user.password_digest
     fill_in "Spreadsheet Link", with: @user.spreadsheet_link
     fill_in "Surname", with: @user.surname
     fill_in "Username", with: @user.username
@@ -34,7 +34,7 @@ class UsersTest < ApplicationSystemTestCase
     fill_in "Birthdate Time", with: @user.birthdate_time
     fill_in "Givenname", with: @user.givenname
     fill_in "Nickname", with: @user.nickname
-    fill_in "Password", with: @user.password
+    fill_in "Password", with: @user.password_digest
     fill_in "Spreadsheet Link", with: @user.spreadsheet_link
     fill_in "Surname", with: @user.surname
     fill_in "Username", with: @user.username

@@ -2,7 +2,7 @@
 
 one:
   username: MyString
-  password: 
+  password_digest: MyString
   surname: MyString
   givenname: MyString
   nickname: MyString
@@ -11,7 +11,7 @@ one:
 
 two:
   username: MyString
-  password: 
+  password_digest: MyString
   surname: MyString
   givenname: MyString
   nickname: MyString
