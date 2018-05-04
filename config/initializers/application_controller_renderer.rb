@@ -6,3 +6,6 @@
 #     https: false
 #   )
 # end
+def root_path
+  ::RAILS_ROOT
+end

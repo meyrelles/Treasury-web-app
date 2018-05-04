@@ -4,15 +4,17 @@ class SessionsController < ApplicationController
     end
 
     def create
-      user = User.where(username: params[:session][:username])
-      pass = User.where(password_digest: (Digest::SHA2.hexdigest(SecureRandom.base64(8) + params[:session][:"password"])))
-      flash[:danger] = pass.to_s
-      if user && pass
-        log_in user
-        redirect_to user
+      #user = User.find_by(username: params[:session][:username].to_s)
+      user = User.where(username: params[:session][:username].to_s)
+      pass = User.where(username: params[:session][:username].to_s).map(&:password_digest)*",".to_s
+      user_pass = $crypt.decrypt_and_verify(pass)
 
-      # if user && user.authenticate(params[:session][:password])
-        # Log the user in and redirect to the user's show page.
+      if user && user_pass == params[:session][:password].to_s
+        log_in user
+        #flash[:danger] = user
+        #redirect_to '/users/' + User.where(username: params[:session][:username].to_s).map(&:id)*",".to_s
+        redirect_to tr_statements_path
+        #redirect_to user
       else
         flash[:danger] = 'Invalid username/password combination' # Not quite right!
         render 'new'
@@ -20,5 +22,7 @@ class SessionsController < ApplicationController
     end
 
     def destroy
+      log_out
+      redirect_to root_url
     end
 end

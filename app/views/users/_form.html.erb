@@ -1,5 +1,6 @@
-<%= form_with(model: user, local: true) do |form| %>
+<%= form_with(model: user, local: true, url: signup_path) do |form| %>
   <% if user.errors.any? %>
+  <%= render 'shared/error_messages' %>
     <div id="error_explanation">
       <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
 
@@ -13,50 +14,52 @@
 
   <div class="field">
     <%= form.label :username %>
-    <%= form.text_field :username %>
+    <%= form.text_field :username, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :password %>
-    <%= form.password_field  :password_digest %>
+    <%= form.password_field  :password_digest, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :surname %>
-    <%= form.text_field :surname %>
+    <%= form.text_field :surname, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :givenname %>
-    <%= form.text_field :givenname %>
+    <%= form.text_field :givenname, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :nickname %>
-    <%= form.text_field :nickname %>
+    <%= form.text_field :nickname, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :'Birthdate and Time' %>
-    <%= form.datetime_select :birthdate_time, :start_year => 1900 %>
+    <%= form.datetime_select :birthdate_time, :start_year => 1900, class: 'form-control-datetime' %>
   </div>
 
   <div class="field">
     <%= form.label :email %>
-    <%= form.text_field :email %>
+    <%= form.text_field :email, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :spreadsheet_link %>
-    <%= form.text_field :spreadsheet_link %>
+    <%= form.text_field :spreadsheet_link, class: 'form-control' %>
   </div>
 
   <div class="field">
     <%= form.label :sheet_name %>
-    <%= form.text_field :sheet_name %>
+    <%= form.text_field :sheet_name, class: 'form-control' %>
   </div>
 
+  <%= form.text_field :id, value: @user.id %>
+
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Submit", class: "btn btn-lg btn-primary"  %>
   </div>
 <% end %>

@@ -14,6 +14,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @user = User.find(params[:id])
     #update global variable to send the google key to google API class
     $user_google_key = @user.spreadsheet_link
     #update global variable to send the google Sheet Name to google API class
@@ -21,15 +22,23 @@ class UsersController < ApplicationController
 
     #Call Google spreadsheet connection class
     @google_synch = Google_synch_a.new
+
+
+
+    @kind = 'edit'
+
   end
 
   # GET /users/new
   def new
     @user = User.new
+    @kind = 'new'
   end
 
   # GET /users/1/edit
   def edit
+    @user = User.find(params[:id])
+    @kind = 'edit'
   end
 
   # POST /users
@@ -38,14 +47,13 @@ class UsersController < ApplicationController
     data_manipulation
     @user = User.new(user_params)
 
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    if @user.save
+      flash[:success] = "Welcome to the Veda Treasury App!"
+      redirect_to @user
+      #format.json { render :show, status: :created, location: @user }
+    else
+      render :new
+      #format.json { render json: @user.errors, status: :unprocessable_entity }
     end
   end
 
@@ -53,36 +61,40 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     data_manipulation
-    respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
-      else
-        format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    @user = User.find(params[:user][:"id"])
+
+    if @user.update(user_params)
+      flash[:success] = "User was successfully updated.!"
+      redirect_to @user
+      #format.json { render :show, status: :ok, location: @user }
+    else
+      render :edit
+      #format.json { render json: @user.errors, status: :unprocessable_entity }
     end
   end
 
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user.destroy
-    respond_to do |format|
-      format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    User.find(params[:id]).destroy
+    flash[:success] = "User deleted"
+    redirect_to users_url
+
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      if @kind == 'edit'
+        @user = User.find(params[:user][:"id"])
+      elsif @kind == 'new' || @kind == 'show'
+        @user = User.find(params[:id])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:username, :password_digest, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email, :sheet_name)
+      params.require(:user).permit(:id, :username, :password_digest, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email, :sheet_name)
     end
 
     #function to manipulate form data
@@ -93,6 +105,9 @@ class UsersController < ApplicationController
       params[:user].delete(:"birthdate_time(3i)")
       params[:user].delete(:"birthdate_time(4i)")
       params[:user].delete(:"birthdate_time(5i)")
-      params[:user][:password_digest] = Digest::SHA2.hexdigest(SecureRandom.base64(8) + params[:user][:"password_digest"])
+
+      encrypted_data = $crypt.encrypt_and_sign(params[:user][:"password_digest"])
+
+      params[:user][:password_digest] = encrypted_data
     end
 end
