@@ -83,6 +83,9 @@ class TrStatementsController < ApplicationController
   # DELETE /tr_statements/1
   # DELETE /tr_statements/1.json
   def destroy
+    if @tr_statement.mov_type.to_s == 'exch'
+      exchange_function_delete @tr_statement.transaction_link
+    end
     @tr_statement.destroy
     respond_to do |format|
       format.html { redirect_to tr_statements_url, notice: 'Tr statement was successfully destroyed.' }
@@ -94,7 +97,6 @@ class TrStatementsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_tr_statement
       @tr_statement = TrStatement.find(params[:id])
-
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -174,6 +176,15 @@ class TrStatementsController < ApplicationController
           :celebrate => params[:tr_statement][:celebrate],
           :date_time => params[:tr_statement][:date_time]
       }).run(conn)
+
+      conn.close
+    end
+
+    def exchange_function_delete(tr_id)
+      r = RethinkDB::RQL.new
+      conn = r.connect(:host => "localhost", :port => 28015)
+
+      r.db('treasury_development').table("tr_statements").filter({"transaction_link": tr_id}).delete().run(conn)
 
       conn.close
     end
