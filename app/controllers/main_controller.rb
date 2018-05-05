@@ -1,4 +1,5 @@
 class MainController < ApplicationController
+  require 'yaml'
   def home
   end
 
@@ -6,9 +7,5 @@ class MainController < ApplicationController
   end
 
   def about
-    len   = ActiveSupport::MessageEncryptor.key_len
-    salt  = SecureRandom.random_bytes(len)
-    key   = ActiveSupport::KeyGenerator.new('password').generate_key(salt, len)
-    $crypt = ActiveSupport::MessageEncryptor.new(key)
   end
 end

@@ -1,0 +1,10 @@
+--- !ruby/object:ActiveSupport::MessageEncryptor
+secret: !binary |-
+  7/iyg2g7s7Sk/2CPzNjT2P4V+dwcNWkwN89xx4i6Gh4=
+sign_secret: 
+cipher: aes-256-gcm
+aead_mode: true
+verifier: !ruby/module 'ActiveSupport::MessageEncryptor::NullVerifier'
+serializer: !ruby/module 'Marshal'
+options: {}
+rotations: []

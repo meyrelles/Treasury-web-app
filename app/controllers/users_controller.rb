@@ -106,7 +106,11 @@ class UsersController < ApplicationController
       params[:user].delete(:"birthdate_time(4i)")
       params[:user].delete(:"birthdate_time(5i)")
 
-      encrypted_data = $crypt.encrypt_and_sign(params[:user][:"password_digest"])
+      len   = ActiveSupport::MessageEncryptor.key_len
+      salt  = 'CCEKvUgNbXByO6eAp2pgb56Nur/E16tHA1cYY2Ofai8='
+      key   = ActiveSupport::KeyGenerator.new('password').generate_key(salt, len)
+      crypt = ActiveSupport::MessageEncryptor.new(key)
+      encrypted_data = crypt.encrypt_and_sign(params[:user][:"password_digest"])
 
       params[:user][:password_digest] = encrypted_data
     end

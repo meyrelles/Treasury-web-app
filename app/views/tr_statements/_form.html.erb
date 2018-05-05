@@ -188,7 +188,8 @@
 
     <div class="actions">
       <tr>
-        <td><%= form.submit 'submit transaction', name: 'send', id: 'send', calss:'send', data: { disable_with: "Please wait.." } %></td>
+        <td><%= form.submit 'submit transaction', name: 'send', id: 'send', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+        <td><%= link_to 'Back', tr_statements_path, class: "btn btn-lg btn-primary" %></td>
       </tr>
     </div>
     </table>

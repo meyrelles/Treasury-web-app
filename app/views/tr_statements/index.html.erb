@@ -3,12 +3,12 @@
 <h1>Treasury Statements</h1>
 
 <br>
-<p>New statment transaction type:</P>
+<h3>New statment transaction type:</h3>
 <table class = "links">
   <tr>
-    <td><%= link_to 'Payment', new_tr_statement_path(@tr_statement, :type => "pay"), id: "new_pay" %></td>
-    <td><%= link_to 'Receipt', new_tr_statement_path(@tr_statement, :type => "rec"), id: "new_rec" %></td>
-    <td><%= link_to 'Exchange', new_tr_statement_path(@tr_statement, :type => "exch"), id: "new_exch" %></td>
+    <td><%= link_to 'Payment', new_tr_statement_path(@tr_statement, :type => "pay"), id: "new_pay", class: "btn btn-lg btn-primary" %></td>
+    <td><%= link_to 'Receipt', new_tr_statement_path(@tr_statement, :type => "rec"), id: "new_rec", class: "btn btn-lg btn-primary" %></td>
+    <td><%= link_to 'Exchange', new_tr_statement_path(@tr_statement, :type => "exch"), id: "new_exch", class: "btn btn-lg btn-primary" %></td>
     <div id="type_parameter"></div>
   </tr>
 </table>

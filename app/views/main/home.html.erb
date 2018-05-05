@@ -1,12 +1,18 @@
 <div class="center jumbotron">
-  <h1>Welcome Veda Treasury Web App</h1>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <%= link_to "login!", login_path, class: "btn btn-lg btn-primary" %>
+  <% if session[:user_id].to_s != '' %>
+    <script type="text/javascript">
+      window.location.href="/tr_statements"  // put your correct path in a string here
+      </script>
+  <% else %>
+    <h1>Welcome Veda Treasury Web App</h1>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <%= link_to "login!", login_path, class: "btn btn-lg btn-primary" %>
+  <% end %>
 
 </div>
 

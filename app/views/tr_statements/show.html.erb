@@ -64,12 +64,12 @@
   <%= @tr_statement.created_at %>
 </p>
 <% if @tr_statement.from == nil %>
-  <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => '') %></td> |
+  <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => ''), class: "btn btn-lg btn-primary" %></td> |
 <% else %>
   <% if @tr_statement.mov_type == 'rec' %>
-    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.to).map(&:id)*",") %></td> |
+    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.to).map(&:id)*","), class: "btn btn-lg btn-primary" %></td> |
   <% else %>
-    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.from).map(&:id)*",") %></td> |
+    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.from).map(&:id)*","), class: "btn btn-lg btn-primary" %></td> |
   <% end %>
 <% end %>
-<%= link_to 'Back', tr_statements_path %>
+<%= link_to 'Back', tr_statements_path, class: "btn btn-lg btn-primary" %>

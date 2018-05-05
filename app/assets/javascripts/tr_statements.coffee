@@ -67,6 +67,10 @@ jQuery ->
     $('#send').mousedown ->
       document.getElementById("tr_statement_to").disabled = false
       document.getElementById("tr_statement_from").disabled = false
+
+    $('#send').keydown ->
+      document.getElementById("tr_statement_to").disabled = false
+      document.getElementById("tr_statement_from").disabled = false
     #End of Combobox desable
 
     #REASON FIELD
