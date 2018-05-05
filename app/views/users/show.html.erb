@@ -1,58 +1,59 @@
 <% provide(:title, @user.surname + ', ' + @user.givenname) %>
 <div class="row">
-  <aside class="col-md-4">
-    <section class="user_info">
-      <h1>
-        <%= gravatar_for @user %>
-        <%=  @user.surname + ', ' + @user.givenname %>
-      </h1>
-    </section>
-  </aside>
+  <div class="col-md-6 col-md-offset-3">
+    <aside class="col-md-4">
+      <section class="user_info">
+        <h1>
+          <%= gravatar_for @user %>
+          <%=  @user.surname + ', ' + @user.givenname %>
+        </h1>
+      </section>
+    </aside>
+    <p>
+      <strong>Username:</strong>
+      <%= @user.username %>
+    </p>
+
+    <p>
+      <strong>Surname:</strong>
+      <%= @user.surname %>
+    </p>
+
+    <p>
+      <strong>Givenname:</strong>
+      <%= @user.givenname %>
+    </p>
+
+    <p>
+      <strong>Nickname:</strong>
+      <%= @user.nickname %>
+    </p>
+
+    <p>
+      <strong>Birthdate time:</strong>
+      <%= @user.birthdate_time %>
+    </p>
+
+    <p>
+      <strong>Email:</strong>
+      <%= @user.email %>
+    </p>
+
+    <p>
+      <strong>Spreadsheet link:</strong>
+      <%= @user.spreadsheet_link %>
+    </p>
+
+    <p>
+      <strong>Sheet name:</strong>
+      <%= @user.sheet_name %>
+    </p>
+
+    <%= @kind = 'edit' %>
+    <%= link_to 'Edit', edit_user_path(@user) %> |
+    <%= link_to 'Back', users_path %>
+  </div>
 </div>
-<p>
-  <strong>Username:</strong>
-  <%= @user.username %>
-</p>
-
-<p>
-  <strong>Surname:</strong>
-  <%= @user.surname %>
-</p>
-
-<p>
-  <strong>Givenname:</strong>
-  <%= @user.givenname %>
-</p>
-
-<p>
-  <strong>Nickname:</strong>
-  <%= @user.nickname %>
-</p>
-
-<p>
-  <strong>Birthdate time:</strong>
-  <%= @user.birthdate_time %>
-</p>
-
-<p>
-  <strong>Email:</strong>
-  <%= @user.email %>
-</p>
-
-<p>
-  <strong>Spreadsheet link:</strong>
-  <%= @user.spreadsheet_link %>
-</p>
-
-<p>
-  <strong>Sheet name:</strong>
-  <%= @user.sheet_name %>
-</p>
-
-<%= @kind = 'edit' %>
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
-
 <h2>User google spreadsheet coinlog</h2>
 
 <br>

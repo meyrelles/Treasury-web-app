@@ -1,0 +1,10 @@
+<% if @coinbag.valid? %>
+  $('#dialog-form').dialog('close');
+  $('#dialog-form').remove();
+
+  // Add the newly created article to the table
+  $('table tbody').append('<%= j render(@coinbag) %>');
+<% else %>
+  // Validation failed, re-render the form showing the errors
+  $('#dialog-form').html('<%=j render("coinbags/form") %>')
+<% end %>

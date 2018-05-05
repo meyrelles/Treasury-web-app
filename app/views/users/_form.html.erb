@@ -56,9 +56,11 @@
     <%= form.label :sheet_name %>
     <%= form.text_field :sheet_name, class: 'form-control' %>
   </div>
-
-  <%= form.text_field :id, value: @user.id %>
-
+    <% if @kind != 'new' %>
+      <%= form.hidden_field :id, value: params[:id].to_s %>
+    <% else %>
+      <%= form.hidden_field :id, value: @user.id %>
+    <% end %>
   <div class="actions">
     <%= form.submit "Submit", class: "btn btn-lg btn-primary"  %>
   </div>

@@ -1,5 +1,10 @@
+<% provide(:title, 'Coinbag') %>
+<% provide(:button_text, 'Create Coinbag') %>
 <h1>New Coinbag</h1>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <td><%= render 'form', coinbag: @coinbag %></td>
 
-<%= render 'form', coinbag: @coinbag %>
-
-<%= link_to 'Back', coinbags_path %>
+    <td><%= link_to 'Back', coinbags_path, class: "btn btn-lg btn-primary" %></td>
+  </div>
+</div>

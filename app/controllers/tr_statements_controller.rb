@@ -17,7 +17,7 @@ class TrStatementsController < ApplicationController
   def new
     load_tables
     @action = 'NEW'
-    @usr = '66v7GccZyQjiAW'
+    @usr = session[:user_id].to_s
     @mov_type = params[:type]
     @tr_statement = TrStatement.new
   end
@@ -25,7 +25,7 @@ class TrStatementsController < ApplicationController
   # GET /tr_statements/1/edit
   def edit
     @action = 'EDIT'
-    @usr = '66v7GccZyQjiAW'
+    @usr = session[:user_id].to_s
     @mov_type = params[:type]
     load_tables
   end
