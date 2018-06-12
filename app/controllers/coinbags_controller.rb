@@ -61,6 +61,18 @@ class CoinbagsController < ApplicationController
     end
   end
 
+  # Select coinbags from user in transaction form when select user combobox
+  def user_coinbags
+    coinbag_id = params[:id].to_i
+    coinbags = Coinbag.where(:id => coinbag_id)
+    cbag = []
+    coinbags.each do |coinbag|
+      cbag << {:id => coinbag.id, :n => coinbag.coinbag}
+    end
+    cbag << {id => "qiyetuqtye8", :n => "TESTE"}
+    render :json => {:cbag => cbag.compact}.as_json
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_coinbag
@@ -69,6 +81,6 @@ class CoinbagsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def coinbag_params
-      params.require(:coinbag).permit(:coinbag)
+      params.require(:coinbag).permit(:coinbag, :user_id)
     end
 end

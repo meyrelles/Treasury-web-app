@@ -16,6 +16,14 @@
     <%= form.text_field :coinbag, class: 'form-control' %>
   </div>
 
+  <div class="field">
+    <tr>
+      <td><%= form.label "User" %></td>
+      <td><%= form.collection_select :user_id, User.all, :id, :username %>
+      <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+    </tr>
+  </div>
+
   <div class="actions">
     <%= form.submit "Submit", class: "btn btn-lg btn-primary" %>
   </div>

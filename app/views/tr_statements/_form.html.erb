@@ -53,7 +53,7 @@
     <div class="field">
       <tr>
         <% if @mov_type.to_s == 'exch' %>
-          <td>Source <%= form.label :coinbag %></td>
+          <td><%= form.label "Source #{:coinbag}" %></td>
         <% else %>
           <td><%= form.label :coinbag %></td>
         <% end %>
@@ -65,7 +65,7 @@
     <div class="field">
       <tr>
         <% if @mov_type.to_s == 'exch' %>
-          <td>Destination <%= form.label :coinbag %></td>
+          <td><%= form.label "Destination #{:coinbag}" %></td>
           <td><%= form.collection_select :coinbag_dest, @coinbag, :id, :coinbag, include_blank: true, :selected => TrStatement.where(transaction_link: tr_statement.transaction_link, exch_destin: 'Received').map(&:coinbag)*",".to_s %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% end %>
@@ -77,7 +77,7 @@
         <td><%= form.label :from %></td>
         <% if @mov_type.to_s == 'rec' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s, :value => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
-        <% elsif @mov_type.to_s == 'pay' %>
+        <% elsif @mov_type.to_s == 'tr' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
         <% elsif @mov_type.to_s == 'exch' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
@@ -95,7 +95,7 @@
         <td><%= form.label :to %></td>
         <% if @mov_type.to_s == 'rec' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
-        <% elsif @mov_type.to_s == 'pay' %>
+        <% elsif @mov_type.to_s == 'tr' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s, :value => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
         <% elsif @mov_type.to_s == 'exch' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
@@ -108,10 +108,21 @@
       </tr>
     </div>
 
+    <!-- Used only to destination coinbag member transaction -->
+    <div class="field">
+      <tr>
+        <% if @mov_type.to_s == 'tr' %>
+          <td><%= form.label "to #{:coinbag}" %></td>
+          <td><%= form.collection_select :coinbag_dest, [], :id, :coinbag, :include_blank => 'SELECT MEMBER' %>
+            <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+        <% end %>
+      </tr>
+    </div>
+
     <div class="field_currency">
       <tr>
         <% if @mov_type.to_s == 'exch' %>
-          <td>Source <%= form.label :currency %></td>
+          <td><%= form.label "Source #{:currency}" %></td>
         <% else %>
           <td><%= form.label :currency %></td>
         <% end %>
@@ -135,7 +146,7 @@
     <% if @mov_type.to_s == 'exch' %>
       <div class="field_currency">
         <tr>
-          <td>Destination <%= form.label :currency %></td>
+          <td><%= form.label "Destination #{:currency}" %></td>
           <td>
             <table>
               <tr>
@@ -159,9 +170,23 @@
       </div>
     <% end %>
 
+    <div class="field_float">
+      <tr>
+        <td><%= form.label :fee %></td>
+        <td><%= form.text_field :fee %><div id="CTR_fee" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+      </tr>
+    </div>
+
     <div class="field">
       <tr>
-        <td>To <%= form.label :celebrate %></td>
+        <td><%= form.label :hash %></td>
+        <td><%= form.text_field :hash %></td>
+      </tr>
+    </div>
+
+    <div class="field">
+      <tr>
+        <td><%= form.label "To #{:celebrate}" %></td>
         <td><%= form.text_field :celebrate %></td>
       </tr>
     </div>
@@ -188,9 +213,33 @@
 
     <div class="actions">
       <tr>
-        <td><%= form.submit 'submit transaction', name: 'send', id: 'send', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+        <td><%= form.submit 'Submit', name: 'send', id: 'send', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+        <!-- <td><%= link_to 'Show', @tr_statement, class: "btn btn-lg btn-primary" %></td> -->
         <td><%= link_to 'Back', tr_statements_path, class: "btn btn-lg btn-primary" %></td>
       </tr>
     </div>
     </table>
   <% end %>
+
+  <!-- SCRIPT TO POPULATE DESTINATION COINBAGS BY USER -->
+  <script type="text/javascript">
+    $(document).ready(function() {
+     $("#user_id").change(function() {
+       getCoinbagsByUser("id=66xTRpAGWgUOyS").val());
+       //  getCoinbagsByUser("id="+$("#to").val());
+      });
+    });
+
+    function getCoinbagsByUser(id) {
+      $.getJSON("/user_coinbags", id, function(j) {
+        var options = '<option value="">-- SELECT A COINBAG --</option>';
+        $.each(j.cty, function(i, item) {
+          options += '<option value="' + item.id + '">' + item.n + '</option>';
+        });
+        options += '<option value="' + "teste script" + '">' + "item n" + '</option>'
+        $("#trstatement_coinbag_dest").html(options);
+      });
+    }
+  </script>
+
+  <!-- END OF SCRIPT -->

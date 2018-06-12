@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-#Example to put message in fornt of field when wrong
+#Put message in fornt of field when wrong
 ValidateNumber =
   cleanNumber: (number) -> number.replace /[- ]/g, ""
 
@@ -25,10 +25,10 @@ EnableSubmitButton =
       k = k + array[i]
       i++
     if sessionStorage.getItem('mov_type') is 'exch'
-      if k == 8
+      if k == 9
         document.getElementById("send").disabled = false
     else
-      if k == 5
+      if k == 6
         document.getElementById("send").disabled = false
 
 jQuery ->
@@ -37,10 +37,8 @@ jQuery ->
     array=[]
     array[0]=0
 
-    $('#new_pay').click ->
-      sessionStorage.setItem('mov_type', 'pay')
-    $('#new_rec').click ->
-      sessionStorage.setItem('mov_type', 'rec')
+    $('#new_tr').click ->
+      sessionStorage.setItem('mov_type', 'tr')
     $('#new_exch').click ->
       sessionStorage.setItem('mov_type', 'exch')
 
@@ -50,7 +48,7 @@ jQuery ->
     #jQuery to disable the combobox TO and FROM to avoid errors on transactions
     if sessionStorage.getItem('mov_type') is 'rec'
       document.getElementById("tr_statement_to").disabled = true
-    if sessionStorage.getItem('mov_type') is 'pay'
+    if sessionStorage.getItem('mov_type') is 'tr'
       document.getElementById("tr_statement_from").disabled = true
     if sessionStorage.getItem('mov_type') is 'exch'
       document.getElementById("tr_statement_to").disabled = true
@@ -58,10 +56,10 @@ jQuery ->
 
     if $("#type_new").data("parameter") is 'NEW'
       document.getElementById("send").disabled = true
-      array = [0,0,0,0,0,0,0,0,0]
+      array = [0,0,0,0,0,0,0,0,0,0]
 
     if $("#type_new").data("parameter") is 'EDIT'
-      array = [0,1,1,1,1,1,1,1,1]
+      array = [0,1,1,1,1,1,1,1,1,1]
 
     #Enable combox before submit to permit ruby store the user data.
     $('#send').mousedown ->
@@ -153,6 +151,22 @@ jQuery ->
         $("#CTR_amount").text("Amount should be a number!")
         document.getElementById("send").disabled = true
         array[6]=0
+
+    $("#tr_statement_fee").blur ->
+      if !isNaN(@value)
+        if @value >= 0 && @value.length > 0
+          $("#CTR_fee").text("")
+          array[9]=1
+          #enable submit
+          EnableSubmitButton.Checking(array)
+        else
+          $("#CTR_fee").text("Fee should be positive value and great or equal 0!")
+          document.getElementById("send").disabled = true
+          array[9]=0
+      else
+        $("#CTR_fee").text("Fee should be a number!")
+        document.getElementById("send").disabled = true
+        array[9]=0
 
     #CURRENCY AND AMOUNT FOR EXCHANGE FIELD Destination
     $("#tr_statement_currency_dest").blur ->

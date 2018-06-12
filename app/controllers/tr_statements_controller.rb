@@ -47,7 +47,7 @@ class TrStatementsController < ApplicationController
           exchange_function_insert
         end
 
-        format.html { redirect_to @tr_statement, notice: 'Tr statement was successfully created.' }
+        format.html { redirect_to @tr_statement, notice: 'Transaction was successfully created.' }
         format.json { render :show, status: :created, location: @tr_statement }
       else
         format.html { render :new }
@@ -71,7 +71,7 @@ class TrStatementsController < ApplicationController
           exchange_function_update
         end
 
-        format.html { redirect_to @tr_statement, notice: 'Statement transaction was successfully updated.' }
+        format.html { redirect_to @tr_statement, notice: 'Transaction was successfully updated.' }
         format.json { render :show, status: :ok, location: @tr_statement }
       else
         format.html { render :edit }
@@ -88,7 +88,7 @@ class TrStatementsController < ApplicationController
     end
     @tr_statement.destroy
     respond_to do |format|
-      format.html { redirect_to tr_statements_url, notice: 'Tr statement was successfully destroyed.' }
+      format.html { redirect_to tr_statements_url, notice: 'Transaction was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -101,7 +101,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :coinbag, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data

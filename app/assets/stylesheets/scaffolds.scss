@@ -10,7 +10,7 @@ body {
 p, ol, ul, td {
   font-family: verdana, arial, helvetica, sans-serif;
   font-size: 13px;
-  line-height: 18px;
+  line-height: 16px;
 }
 
 pre {
@@ -19,7 +19,8 @@ pre {
   font-size: 11px;
 }
 
-a {
+/*Table format SHOW*/
+table#show a {
   color: #000;
 
   &:visited {
@@ -32,12 +33,13 @@ a {
   }
 }
 
+
 th {
-  padding-bottom: 5px;
+  padding-bottom: 1px;
 }
 
 td {
-  padding: 0 5px 7px;
+  padding: 0 2px 0px;
 }
 
 div {

@@ -15,4 +15,7 @@ class TrStatement
   field :mov_type, :type => String
   field :transaction_link, :type => String
   field :exch_destin, :type => String
+  field :fee, :type => Float
+  field :hash, :type => String
+  field :version, :type => String 
 end

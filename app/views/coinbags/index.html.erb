@@ -7,6 +7,7 @@
       <thead>
         <tr>
           <th>Coinbag</th>
+          <th>User coinbag</th>
           <th colspan="3"></th>
         </tr>
       </thead>
@@ -15,6 +16,7 @@
         <% @coinbags.each do |coinbag| %>
           <tr>
             <td><%= coinbag.coinbag %></td>
+            <td><%= coinbag.user_id %></td>
             <td><%= link_to 'Show', coinbag %></td>
             <td><%= link_to 'Edit', edit_coinbag_path(coinbag) %></td>
             <td><%= link_to 'Destroy', coinbag, method: :delete, data: { confirm: 'Are you sure?' } %></td>
