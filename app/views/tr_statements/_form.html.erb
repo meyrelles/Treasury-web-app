@@ -50,14 +50,13 @@
         </tr>
     </div>
 
+    <!-- Used only to exchange process -->
     <div class="field">
       <tr>
         <% if @mov_type.to_s == 'exch' %>
           <td><%= form.label "Source #{:coinbag}" %></td>
-        <% else %>
-          <td><%= form.label :coinbag %></td>
+          <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %><div id="CTR_coinbag" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% end %>
-        <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %><div id="CTR_coinbag" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
       </tr>
     </div>
 
@@ -90,13 +89,22 @@
       </tr>
     </div>
 
+    <!-- Used only to transaction process source coinbag-->
+    <div class="field">
+      <tr>
+        <% if @mov_type.to_s == 'tr' %>
+          <td><%= form.label :coinbag %></td>
+          <td><%= form.grouped_collection_select :coinbag, User.order(:nickname),
+            :coinbag, :nickname, :id, :coinbag, include_blank: true %>
+        <% end %>
+      </tr>
+    </div>
+
     <div class="field">
       <tr>
         <td><%= form.label :to %></td>
-        <% if @mov_type.to_s == 'rec' %>
-          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
-        <% elsif @mov_type.to_s == 'tr' %>
-          <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s, :value => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
+        <% if @mov_type.to_s == 'tr' %>
+          <td><%= form.collection_select :to, @users, :id, :nickname, selected: User.where(id: @usr.to_s).map(&:id)*",".to_s, value: User.where(id: @usr.to_s).map(&:id)*",".to_s, include_blank: true %></td>
         <% elsif @mov_type.to_s == 'exch' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
         <% else %>
@@ -112,8 +120,9 @@
     <div class="field">
       <tr>
         <% if @mov_type.to_s == 'tr' %>
-          <td><%= form.label "to #{:coinbag}" %></td>
-          <td><%= form.collection_select :coinbag_dest, [], :id, :coinbag, :include_blank => 'SELECT MEMBER' %>
+          <td><%= form.label "coinbag" %></td>
+          <td><%= form.grouped_collection_select :coinbag_dest, User.order(:nickname),
+            :coinbag, :nickname, :id, :coinbag, include_blank: true %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% end %>
       </tr>
@@ -220,26 +229,3 @@
     </div>
     </table>
   <% end %>
-
-  <!-- SCRIPT TO POPULATE DESTINATION COINBAGS BY USER -->
-  <script type="text/javascript">
-    $(document).ready(function() {
-     $("#user_id").change(function() {
-       getCoinbagsByUser("id=66xTRpAGWgUOyS").val());
-       //  getCoinbagsByUser("id="+$("#to").val());
-      });
-    });
-
-    function getCoinbagsByUser(id) {
-      $.getJSON("/user_coinbags", id, function(j) {
-        var options = '<option value="">-- SELECT A COINBAG --</option>';
-        $.each(j.cty, function(i, item) {
-          options += '<option value="' + item.id + '">' + item.n + '</option>';
-        });
-        options += '<option value="' + "teste script" + '">' + "item n" + '</option>'
-        $("#trstatement_coinbag_dest").html(options);
-      });
-    }
-  </script>
-
-  <!-- END OF SCRIPT -->

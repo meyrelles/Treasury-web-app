@@ -101,7 +101,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data

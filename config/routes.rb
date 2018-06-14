@@ -26,8 +26,6 @@ Rails.application.routes.draw do
   put       '/users/:id',       to: 'users#update'
   delete    '/users/:id',       to: 'users#destroy'
   resources :tr_statements
-  # To list coinbags per user
-  get "/treasury" => "coinbags#user_coinbags"
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   #
 end

@@ -46,10 +46,8 @@ jQuery ->
     #document.getElementById('type_parameter').setAttribute('data_parameter',sessionStorage.getItem('mov_type'))
 
     #jQuery to disable the combobox TO and FROM to avoid errors on transactions
-    if sessionStorage.getItem('mov_type') is 'rec'
-      document.getElementById("tr_statement_to").disabled = true
     if sessionStorage.getItem('mov_type') is 'tr'
-      document.getElementById("tr_statement_from").disabled = true
+      document.getElementById("tr_statement_from").disabled = false
     if sessionStorage.getItem('mov_type') is 'exch'
       document.getElementById("tr_statement_to").disabled = true
       document.getElementById("tr_statement_from").disabled = true
@@ -195,3 +193,31 @@ jQuery ->
         $("#CTR_amount_dest").text("Amount should be a number!")
         document.getElementById("send").disabled = true
         array[8]=0
+
+    #Dynamic destination coinbag Combobox
+    destcoinbags = $('#tr_statement_coinbag_dest').html()
+    $('#tr_statement_to').change ->
+      destto = $('#tr_statement_to :selected').text()
+      options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
+      if options
+        $('#tr_statement_coinbag_dest').html(options)
+      else
+        $('#tr_statement_coinbag_dest').empty()
+
+    $('form').load ->
+      destto = $('#tr_statement_to :selected').text()
+      options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
+      if options
+        $('#tr_statement_coinbag_dest').html(options)
+      else
+        $('#tr_statement_coinbag_dest').empty()
+
+    #Dynamic source coinbag Combobox
+    coinbag = $('#tr_statement_coinbag').html()
+    $('form').change ->
+      destfrom = $('#tr_statement_from :selected').text()
+      options = $(coinbag).filter("optgroup[label='#{destfrom}']").html()
+      if options
+        $('#tr_statement_coinbag').html(options)
+      else
+        $('#tr_statement_coinbag').empty()

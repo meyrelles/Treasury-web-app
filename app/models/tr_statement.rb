@@ -7,6 +7,7 @@ class TrStatement
   field :classification, :type => String
   field :reason, :type => String
   field :coinbag, :type => String
+  field :coinbag_dest, :type => String
   field :from, :type => String
   field :to, :type => String
   field :currency, :type => String
@@ -17,5 +18,5 @@ class TrStatement
   field :exch_destin, :type => String
   field :fee, :type => Float
   field :hash, :type => String
-  field :version, :type => String 
+  field :version, :type => String
 end

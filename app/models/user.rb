@@ -1,6 +1,7 @@
 class User
   include NoBrainer::Document
   include NoBrainer::Document::Timestamps
+  has_many :coinbag
 
   before_save { self.email = email.downcase }
   validates :password_digest,  presence: true, length: { minimum: 8 }
