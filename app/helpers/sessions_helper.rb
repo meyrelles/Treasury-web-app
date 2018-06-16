@@ -4,6 +4,8 @@ module SessionsHelper
   def log_in(user)
     id = User.where(username: params[:session][:username].to_s).map(&:id)*",".to_s
     session[:user_id] = id
+    session[:admin] = User.where(username: params[:session][:username].to_s).map(&:admin)
+    session[:verified] = User.where(username: params[:session][:username].to_s).map(&:verified)
   end
 
   # Returns the current logged-in user (if any).

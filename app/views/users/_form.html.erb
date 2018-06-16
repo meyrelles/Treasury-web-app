@@ -56,11 +56,27 @@
     <%= form.label :sheet_name %>
     <%= form.text_field :sheet_name, class: 'form-control' %>
   </div>
-    <% if @kind != 'new' %>
-      <%= form.hidden_field :id, value: params[:id].to_s %>
-    <% else %>
-      <%= form.hidden_field :id, value: @user.id %>
-    <% end %>
+
+  <% if @kind != 'new' %>
+    <%= form.hidden_field :id, value: params[:id].to_s %>
+  <% else %>
+    <%= form.hidden_field :id, value: @user.id %>
+  <% end %>
+
+  <% if session[:admin].to_s == "[true]" %>
+    <div class="Boolean">
+      <p>
+        <%= form.label 'User Verified?', class: 'label_checkbox' %>
+        <%= form.check_box :verified, class: 'box_checkbox' %>
+      </p>
+    </div>
+
+    <div class="Boolean">
+      <%= form.label "Administrator?", class: 'label_checkbox' %>
+      <%= form.check_box :admin, class: 'box_checkbox' %>
+    </div>
+  <% end %>
+
   <div class="actions">
     <%= form.submit "Submit", class: "btn btn-lg btn-primary"  %>
   </div>

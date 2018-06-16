@@ -21,6 +21,8 @@ class User
   field :email, :type => String
   field :spreadsheet_link, :type => String
   field :sheet_name, :type => String
+  field :verified, :type => Boolean
+  field :admin, :type => Boolean
 
   #has_secure_password
 end
