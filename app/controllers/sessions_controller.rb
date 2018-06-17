@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
       flash[:info] = "Welcome to treasury app"
       redirect_to tr_statements_path
     else
-      if verified.to_s != "true"
+      if user && params[:session][:"password"].to_s == pass && pass != ''
         flash[:danger] = 'User not yet verified, contact Veda member.' # Not quite right!
         render 'new'
       else

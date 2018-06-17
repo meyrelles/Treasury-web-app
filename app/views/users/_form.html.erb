@@ -17,10 +17,12 @@
     <%= form.text_field :username, class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field  :password_digest, class: 'form-control' %>
-  </div>
+  <% if @kind == 'new' %>
+    <div class="field">
+      <%= form.label :password %>
+      <%= form.password_field  :password_digest, class: 'form-control' %>
+    </div>
+  <% end %>
 
   <div class="field">
     <%= form.label :surname %>

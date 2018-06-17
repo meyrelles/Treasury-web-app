@@ -49,6 +49,13 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     data_manipulation
+
+    salt  = 'CCEKvUgNbXByO6eAp2pgb56Nur/E16tHA1cYY2Ofai8='
+    key   = ActiveSupport::KeyGenerator.new('password').generate_key(salt, 32)
+    crypt = ActiveSupport::MessageEncryptor.new(key)
+    encrypted_data = crypt.encrypt_and_sign(params[:user][:"password_digest"], purpose: :login)
+    params[:user][:password_digest] = encrypted_data
+
     @user = User.new(user_params)
 
     if @user.save
@@ -109,12 +116,5 @@ class UsersController < ApplicationController
       params[:user].delete(:"birthdate_time(3i)")
       params[:user].delete(:"birthdate_time(4i)")
       params[:user].delete(:"birthdate_time(5i)")
-
-      salt  = 'CCEKvUgNbXByO6eAp2pgb56Nur/E16tHA1cYY2Ofai8='
-      key   = ActiveSupport::KeyGenerator.new('password').generate_key(salt, 32)
-      crypt = ActiveSupport::MessageEncryptor.new(key)
-      encrypted_data = crypt.encrypt_and_sign(params[:user][:"password_digest"], purpose: :login)
-
-      params[:user][:password_digest] = encrypted_data
     end
 end
