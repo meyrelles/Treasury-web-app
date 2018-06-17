@@ -63,18 +63,30 @@
     <%= form.hidden_field :id, value: @user.id %>
   <% end %>
 
-  <% if session[:admin].to_s == "[true]" %>
-    <div class="Boolean">
-      <p>
-        <%= form.label 'User Verified?', class: 'label_checkbox' %>
-        <%= form.check_box :verified, class: 'box_checkbox' %>
-      </p>
-    </div>
+  <% if session[:admin].to_s == "[true]" and session[:user_id] != '' %>
+    <table class="user_administrator" border="0">
+      <div class="Boolean_Class">
+        <tr>
+          <td><%= form.label 'User Verified?', class: 'Check_Boolean_Class' %></td>
+          <td><span style="display:inline-block; width: 10px;"></span></td>
+          <td><%= form.check_box :verified, class: 'Label_Boolean_Class' %></td>
+        </tr>
+        <tr>
+          <td><span style="display:block; height: 10px;"></span></td>
+        </tr>
+      </div>
 
-    <div class="Boolean">
-      <%= form.label "Administrator?", class: 'label_checkbox' %>
-      <%= form.check_box :admin, class: 'box_checkbox' %>
-    </div>
+      <div class="Boolean_Class">
+        <tr>
+          <td><%= form.label "Administrator?", class: 'Label_Boolean_Class' %></td>
+          <td></td>
+          <td><%= form.check_box :admin, class: 'Check_Boolean_Class' %></td>
+        </tr>
+        <tr>
+          <td><span style="display:block; height: 10px;"></span></td>
+        </tr>
+      </div>
+    </table>
   <% end %>
 
   <div class="actions">

@@ -4,6 +4,10 @@ class ClassificationsController < ApplicationController
   # GET /reasons
   # GET /reasons.json
   def index
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end    
     @classifications = Classification.all
   end
 

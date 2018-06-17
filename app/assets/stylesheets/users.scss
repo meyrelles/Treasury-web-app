@@ -4,12 +4,8 @@
 
 @media (min-width: 768px) {
 
-    input, select {
-       max-width: 60%;
+    label.Boolean_Class, input.Boolean_Class, select.Boolean_Class  {
+        display: inline;
+        max-width: 50%;
     }
-
-    label.label_checkbox, input, select  {
-        display: inline;    
-    }
-
 }

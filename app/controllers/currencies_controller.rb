@@ -4,6 +4,10 @@ class CurrenciesController < ApplicationController
   # GET /currencies
   # GET /currencies.json
   def index
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end    
     @currencies = Currency.all
   end
 

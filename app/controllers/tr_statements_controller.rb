@@ -4,6 +4,10 @@ class TrStatementsController < ApplicationController
   # GET /tr_statements
   # GET /tr_statements.json
   def index
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end        
     @tr_statements = TrStatement.all
     @tr_statements = @tr_statements.order(date_time: :desc)
   end

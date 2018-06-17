@@ -4,6 +4,10 @@ class CoinbagsController < ApplicationController
   # GET /coinbags
   # GET /coinbags.json
   def index
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
     @coinbags = Coinbag.all
   end
 

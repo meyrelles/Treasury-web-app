@@ -7,6 +7,10 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
     @users = User.all
     @users = @users.order(:username)
   end

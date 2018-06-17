@@ -49,9 +49,11 @@
       <%= @user.sheet_name %>
     </p>
 
-    <%= @kind = 'edit' %>
-    <%= link_to 'Edit', edit_user_path(@user) %> |
-    <%= link_to 'Back', users_path %>
+    <% @kind = 'edit' %>
+    <%= link_to 'Edit', edit_user_path(@user) %>
+    <% if session[:admin].to_s == '[true]' %> |
+      <%= link_to 'Back', users_path %>
+    <% end %>
   </div>
 </div>
 <h2>User google spreadsheet coinlog</h2>
