@@ -16,7 +16,7 @@
         <% @coinbags.each do |coinbag| %>
           <tr>
             <td><%= coinbag.coinbag %></td>
-            <td><%= coinbag.user_id %></td>
+            <td><%= User.where(id: coinbag.user_id).map(&:nickname)*",".to_s %></td>
             <td><%= link_to 'Show', coinbag %></td>
             <td><%= link_to 'Edit', edit_coinbag_path(coinbag) %></td>
             <td><%= link_to 'Destroy', coinbag, method: :delete, data: { confirm: 'Are you sure?' } %></td>
