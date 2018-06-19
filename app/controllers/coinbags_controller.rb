@@ -8,7 +8,11 @@ class CoinbagsController < ApplicationController
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
-    @coinbags = Coinbag.all
+    if session[:admin].to_s == "[true]" and session[:user_id] != ''
+      @coinbags = Coinbag.all
+    else
+      @coinbags = Coinbag.where(user_id: session[:user_id])
+    end
   end
 
   # GET /coinbags/1
