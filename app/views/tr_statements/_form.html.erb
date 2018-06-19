@@ -55,7 +55,7 @@
       <tr>
         <% if @mov_type.to_s == 'exch' %>
           <td><%= form.label "Source #{:coinbag}" %></td>
-          <td><%= form.collection_select :coinbag, @coinbag, :id, :coinbag, include_blank: true %><div id="CTR_coinbag" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+          <td><%= form.collection_select :coinbag, Coinbag.where(user_id: @usr.to_s), :id, :coinbag %><div id="CTR_coinbag" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% end %>
       </tr>
     </div>
@@ -65,7 +65,7 @@
       <tr>
         <% if @mov_type.to_s == 'exch' %>
           <td><%= form.label "Destination #{:coinbag}" %></td>
-          <td><%= form.collection_select :coinbag_dest, @coinbag, :id, :coinbag, include_blank: true, :selected => TrStatement.where(transaction_link: tr_statement.transaction_link, exch_destin: 'Received').map(&:coinbag)*",".to_s %>
+          <td><%= form.collection_select :coinbag_dest, Coinbag.where(user_id: @usr.to_s), :id, :coinbag, :selected => TrStatement.where(transaction_link: tr_statement.transaction_link, exch_destin: 'Received').map(&:coinbag)*",".to_s %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% end %>
       </tr>
@@ -74,24 +74,21 @@
     <div class="field">
       <tr>
         <td><%= form.label :from %></td>
-        <% if @mov_type.to_s == 'rec' %>
-          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s, :value => User.where(id: '66vVRjoK9ZA8qy').map(&:id)*",".to_s %></td>
-        <% elsif @mov_type.to_s == 'tr' %>
-          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
+        <% if @mov_type.to_s == 'tr' %>
+          <% if @action == 'NEW' %>
+            <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
+          <% else %>
+            <td><%= form.collection_select :from, @users, :id, :nickname %></td>
+          <% end %>
         <% elsif @mov_type.to_s == 'exch' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
-        <% else %>
-          <% begin %>
-            <td><%= form.collection_select :from, @users, :id, :nickname %></td>
-          <% rescue %>
-          <% end %>
         <% end %>
       </tr>
     </div>
 
     <!-- Used only to transaction process source coinbag-->
     <div class="field">
-      <tr>
+      <tr id = "field_coinbag_from">
         <% if @mov_type.to_s == 'tr' %>
           <td><%= form.label :coinbag %></td>
           <td><%= form.grouped_collection_select :coinbag, User.order(:nickname),
@@ -104,21 +101,20 @@
       <tr>
         <td><%= form.label :to %></td>
         <% if @mov_type.to_s == 'tr' %>
-          <td><%= form.collection_select :to, @users, :id, :nickname, selected: User.where(id: @usr.to_s).map(&:id)*",".to_s, value: User.where(id: @usr.to_s).map(&:id)*",".to_s, include_blank: true %></td>
+          <% if @action == 'NEW' %>
+            <td><%= form.collection_select :to, @users, :id, :nickname, selected: User.where(id: @usr.to_s).map(&:id)*",".to_s, value: User.where(id: @usr.to_s).map(&:id)*",".to_s, include_blank: true %></td>
+          <% else %>
+            <td><%= form.collection_select :to, @users, :id, :nickname %></td>
+          <% end %>
         <% elsif @mov_type.to_s == 'exch' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
-        <% else %>
-          <% begin %>
-            <td><%= form.collection_select :to, @users, :id, :nickname %></td>
-          <% rescue %>
-          <% end %>
         <% end %>
       </tr>
     </div>
 
     <!-- Used only to destination coinbag member transaction -->
     <div class="field">
-      <tr>
+      <tr id = "field_coinbag_to">
         <% if @mov_type.to_s == 'tr' %>
           <td><%= form.label "coinbag" %></td>
           <td><%= form.grouped_collection_select :coinbag_dest, User.order(:nickname),

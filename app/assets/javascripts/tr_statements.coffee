@@ -31,6 +31,37 @@ EnableSubmitButton =
       if k == 6
         document.getElementById("send").disabled = false
 
+Update_Field_On_Start =
+  From_Coinbag: ->
+    #FROM COINBAG CONTROL
+    coinbag = $('#tr_statement_coinbag').html()
+    if $('#tr_statement_from option:selected').text() == "World"
+      $('#field_coinbag_from').hide()
+      $('#tr_statement_coinbag').empty()
+    else
+      $('#field_coinbag_from').show()
+      destfrom = $('#tr_statement_from :selected').text()
+      options = $(coinbag).filter("optgroup[label='#{destfrom}']").html()
+      if options
+        $('#tr_statement_coinbag').html(options)
+      else
+        $('#tr_statement_coinbag').empty()
+
+  To_Coinbag: ->
+    #TO COINBAG CONTROL
+    destcoinbags = $('#tr_statement_coinbag_dest').html()
+    if $('#tr_statement_to option:selected').text() == "World"
+      $('#field_coinbag_to').hide()
+      $('#tr_statement_coinbag_dest').empty()
+    else
+      $('#field_coinbag_to').show()
+      destto = $('#tr_statement_to :selected').text()
+      options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
+      if options
+        $('#tr_statement_coinbag_dest').html(options)
+      else
+        $('#tr_statement_coinbag_dest').empty()
+
 jQuery ->
 #Form control
   $(document).on 'turbolinks:load', ->
@@ -65,6 +96,10 @@ jQuery ->
       document.getElementById("tr_statement_from").disabled = false
 
     $('#send').keydown ->
+      document.getElementById("tr_statement_to").disabled = false
+      document.getElementById("tr_statement_from").disabled = false
+
+    $('#send').keypress ->
       document.getElementById("tr_statement_to").disabled = false
       document.getElementById("tr_statement_from").disabled = false
     #End of Combobox desable
@@ -197,27 +232,33 @@ jQuery ->
     #Dynamic destination coinbag Combobox
     destcoinbags = $('#tr_statement_coinbag_dest').html()
     $('#tr_statement_to').change ->
-      destto = $('#tr_statement_to :selected').text()
-      options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
-      if options
-        $('#tr_statement_coinbag_dest').html(options)
-      else
+      if $('#tr_statement_to option:selected').text() == "World"
+        $('#field_coinbag_to').hide()
         $('#tr_statement_coinbag_dest').empty()
-
-    $('form').load ->
-      destto = $('#tr_statement_to :selected').text()
-      options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
-      if options
-        $('#tr_statement_coinbag_dest').html(options)
       else
-        $('#tr_statement_coinbag_dest').empty()
+        $('#field_coinbag_to').show()
+        destto = $('#tr_statement_to :selected').text()
+        options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
+        if options
+          $('#tr_statement_coinbag_dest').html(options)
+        else
+          $('#tr_statement_coinbag_dest').empty()
 
     #Dynamic source coinbag Combobox
     coinbag = $('#tr_statement_coinbag').html()
-    $('form').change ->
-      destfrom = $('#tr_statement_from :selected').text()
-      options = $(coinbag).filter("optgroup[label='#{destfrom}']").html()
-      if options
-        $('#tr_statement_coinbag').html(options)
-      else
+    $('#tr_statement_from').change ->
+      if $('#tr_statement_from option:selected').text() == "World"
+        $('#field_coinbag_from').hide()
         $('#tr_statement_coinbag').empty()
+      else
+        $('#field_coinbag_from').show()
+        destfrom = $('#tr_statement_from :selected').text()
+        options = $(coinbag).filter("optgroup[label='#{destfrom}']").html()
+        if options
+          $('#tr_statement_coinbag').html(options)
+        else
+          $('#tr_statement_coinbag').empty()
+
+    if sessionStorage.getItem('mov_type') is 'tr'
+      Update_Field_On_Start.From_Coinbag()
+      Update_Field_On_Start.To_Coinbag()
