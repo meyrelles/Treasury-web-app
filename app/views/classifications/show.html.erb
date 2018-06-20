@@ -1,9 +1,14 @@
-<p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
 
-<p>
-  <strong>Classification:</strong>
-  <%= @classification.classification %>
-</p>
+    <p id="notice"><%= notice %></p>
 
-<%= link_to 'Edit', edit_classification_path(@classification) %> |
-<%= link_to 'Back', classifications_path %>
+    <p>
+      <strong>Classification:</strong>
+      <%= @classification.classification %>
+    </p>
+    <td><%= link_to 'Edit', edit_classification_path(@classification), class: "btn btn-lg btn-primary" %> </td>
+    <td><%= link_to 'Back', classifications_path, class: "btn btn-lg btn-primary" %> </td>
+
+  </div>
+</div>

@@ -89,9 +89,16 @@
         </tr>
       </div>
     </table>
-  <% end %>
 
-  <div class="actions">
-    <%= form.submit "Submit", class: "btn btn-lg btn-primary"  %>
-  </div>
+    <table>
+      <div class="actions">
+        <tr>
+          <td><%= form.submit "Submit", class: "btn btn-lg btn-primary"  %></td>
+          <% if session[:admin].to_s == '[true]' %>
+            <td><%= link_to 'Back', users_path, class: "btn btn-lg btn-primary" %></td>
+          <% end %>
+        </tr>
+      </div>
+    </table>
+  <% end %>
 <% end %>

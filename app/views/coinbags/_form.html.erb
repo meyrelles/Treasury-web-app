@@ -11,20 +11,31 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :coinbag %>
-    <%= form.text_field :coinbag, class: 'form-control' %>
-  </div>
+  <table class="st_input" border="0">
+    <div class="field">
+      <tr>
+        <td><%= form.label :coinbag %></td>
+        <td><%= form.text_field :coinbag %></td>
+      </tr>
+    </div>
 
-  <div class="field">
-    <tr>
-      <td><%= form.label "User" %></td>
-      <td><%= form.collection_select :user_id, User.all, :id, :username %>
-      <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
-    </tr>
-  </div>
+    <% if session[:admin] == [true] %>
+      <div class="field">
+        <tr>
+          <td><%= form.label "User" %></td>
+          <td><%= form.collection_select :user_id, User.all, :id, :username, selected: session[:user_id] %>
+          <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+        </tr>
+      </div>
+    <% else %>
+      <td><%= form.hidden_field :user_id, :value => session[:user_id] %></td>
+    <% end %>
 
-  <div class="actions">
-    <%= form.submit "Submit", class: "btn btn-lg btn-primary" %>
-  </div>
+    <div class="actions">
+      <tr>
+        <td><%= form.submit "Submit", class: "btn btn-lg btn-primary" %></td>
+        <td><%= link_to 'Back', coinbags_path, class: "btn btn-lg btn-primary" %></td>
+      </tr>
+    </div>
+  </table>
 <% end %>

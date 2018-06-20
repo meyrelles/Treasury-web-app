@@ -19,4 +19,5 @@ class TrStatement
   field :fee, :type => Float
   field :hash, :type => String
   field :version, :type => String
+  field :created_by, :type => String
 end

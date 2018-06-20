@@ -41,7 +41,8 @@ Update_Field_On_Start =
     else
       $('#field_coinbag_from').show()
       destfrom = $('#tr_statement_from :selected').text()
-      options = $(coinbag).filter("optgroup[label='#{destfrom}']").html()
+      options = "<option value=''></option>"
+      options = options + $(coinbag).filter("optgroup[label='#{destfrom}']").html()
       if options
         $('#tr_statement_coinbag').html(options)
       else
@@ -56,7 +57,8 @@ Update_Field_On_Start =
     else
       $('#field_coinbag_to').show()
       destto = $('#tr_statement_to :selected').text()
-      options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
+      options = "<option value=''></option>"
+      options = options + $(destcoinbags).filter("optgroup[label='#{destto}']").html()
       if options
         $('#tr_statement_coinbag_dest').html(options)
       else
@@ -79,6 +81,7 @@ jQuery ->
     #jQuery to disable the combobox TO and FROM to avoid errors on transactions
     if sessionStorage.getItem('mov_type') is 'tr'
       document.getElementById("tr_statement_from").disabled = false
+      document.getElementById("tr_statement_to").disabled = false
     if sessionStorage.getItem('mov_type') is 'exch'
       document.getElementById("tr_statement_to").disabled = true
       document.getElementById("tr_statement_from").disabled = true
@@ -238,7 +241,8 @@ jQuery ->
       else
         $('#field_coinbag_to').show()
         destto = $('#tr_statement_to :selected').text()
-        options = $(destcoinbags).filter("optgroup[label='#{destto}']").html()
+        options = "<option value=''></option>"
+        options = options + $(destcoinbags).filter("optgroup[label='#{destto}']").html()
         if options
           $('#tr_statement_coinbag_dest').html(options)
         else
@@ -253,7 +257,8 @@ jQuery ->
       else
         $('#field_coinbag_from').show()
         destfrom = $('#tr_statement_from :selected').text()
-        options = $(coinbag).filter("optgroup[label='#{destfrom}']").html()
+        options = "<option value=''></option>"
+        options = options + $(coinbag).filter("optgroup[label='#{destfrom}']").html()
         if options
           $('#tr_statement_coinbag').html(options)
         else

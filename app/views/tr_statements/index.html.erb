@@ -73,15 +73,15 @@
         <% if tr_statement.from == nil %>
           <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
         <% else %>
-          <% if tr_statement.mov_type == 'rec' %>
+          <% if tr_statement.mov_type == 'tr' && tr_statement.created_by == session[:user_id] %>
             <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
-          <% elsif tr_statement.exch_destin != 'Received' %>
+          <% elsif tr_statement.exch_destin != 'Received' && tr_statement.created_by == session[:user_id] %>
             <td><%= link_to 'Edit', edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.from).map(&:id)*",") %></td>
           <% else %>
             <td>---</td>
           <% end %>
         <% end %>
-        <% if tr_statement.exch_destin != 'Received' %>
+        <% if tr_statement.exch_destin != 'Received' && tr_statement.created_by == session[:user_id] %>
           <td><%= link_to 'Destroy', tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% else %>
           <td>---</td>

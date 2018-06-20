@@ -1,9 +1,13 @@
-<p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Coinbag:</strong>
-  <%= @coinbag.coinbag %>
-</p>
+    <p>
+      <strong>Coinbag:</strong>
+      <%= @coinbag.coinbag %>
+    </p>
 
-<%= link_to 'Edit', edit_coinbag_path(@coinbag) %> |
-<%= link_to 'Back', coinbags_path %>
+    <%= link_to 'Edit', edit_coinbag_path(@coinbag), class: "btn btn-lg btn-primary" %> |
+    <%= link_to 'Back', coinbags_path, class: "btn btn-lg btn-primary" %>
+  </div>
+</div>

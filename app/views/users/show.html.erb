@@ -50,9 +50,9 @@
     </p>
 
     <% @kind = 'edit' %>
-    <%= link_to 'Edit', edit_user_path(@user) %>
-    <% if session[:admin].to_s == '[true]' %> |
-      <%= link_to 'Back', users_path %>
+    <td><%= link_to 'Edit', edit_user_path(@user), class: "btn btn-lg btn-primary" %></td>
+    <% if session[:admin].to_s == '[true]' %> 
+      <td><%= link_to 'Back', users_path, class: "btn btn-lg btn-primary" %></td>
     <% end %>
   </div>
 </div>

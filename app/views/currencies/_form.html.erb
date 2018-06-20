@@ -11,12 +11,19 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :currency %>
-    <%= form.text_field :currency %>
-  </div>
+  <table class="st_input" border="0">
+    <div class="field">
+      <tr>
+        <td><%= form.label :currency %></td>
+        <td><%= form.text_field :currency %></td>
+      </tr>
+    </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+    <div class="actions">
+      <tr>
+        <td><%= form.submit 'Submit', name: 'send', id: 'send', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+        <td><%= link_to 'Back', currencies_path, class: "btn btn-lg btn-primary" %></td>
+      </tr>
+    </div>
+  </table>
 <% end %>

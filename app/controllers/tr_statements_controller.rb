@@ -7,7 +7,7 @@ class TrStatementsController < ApplicationController
     if session[:user_id].to_s == ''
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
-    end        
+    end
     @tr_statements = TrStatement.all
     @tr_statements = @tr_statements.order(date_time: :desc)
   end
@@ -105,7 +105,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:created_by, :coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data
@@ -119,6 +119,7 @@ class TrStatementsController < ApplicationController
       params[:tr_statement].delete(:"date_time(3i)")
       params[:tr_statement].delete(:"date_time(4i)")
       params[:tr_statement].delete(:"date_time(5i)")
+      params[:tr_statement][:created_by] = session[:user_id]
 
     end
 
@@ -158,7 +159,8 @@ class TrStatementsController < ApplicationController
         :currency => params[:tr_statement][:currency_dest],
         :from => params[:tr_statement][:from],
         :to => params[:tr_statement][:to],
-        :exch_destin => "Received"
+        :exch_destin => "Received",
+        :created_by => session[:user_id]
       }).run(conn)
 
       conn.close
@@ -178,7 +180,8 @@ class TrStatementsController < ApplicationController
           :currency => params[:tr_statement][:currency_dest],
           :reason => params[:tr_statement][:reason],
           :celebrate => params[:tr_statement][:celebrate],
-          :date_time => params[:tr_statement][:date_time]
+          :date_time => params[:tr_statement][:date_time],
+          :created_by => session[:user_id]
       }).run(conn)
 
       conn.close
