@@ -33,7 +33,7 @@
 
     <div class="actions">
       <tr>
-        <td><%= form.submit "Submit", class: "btn btn-lg btn-primary" %></td>
+        <td><%= form.submit "Submit", class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
         <td><%= link_to 'Back', coinbags_path, class: "btn btn-lg btn-primary" %></td>
       </tr>
     </div>

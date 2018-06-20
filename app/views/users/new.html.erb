@@ -3,9 +3,6 @@
 <h1>Sign up</h1>
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-    <%= render 'form', user: @user %>
-    <% if session[:admin].to_s == '[true]' %> |
-      <%= link_to 'Back', users_path %>
-    <% end %>
+    <td><%= render 'form', user: @user %></td>
   </div>
 </div>

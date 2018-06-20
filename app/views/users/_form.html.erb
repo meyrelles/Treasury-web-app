@@ -89,16 +89,16 @@
         </tr>
       </div>
     </table>
+  <% end %>
 
-    <table>
+  <table>
       <div class="actions">
         <tr>
-          <td><%= form.submit "Submit", class: "btn btn-lg btn-primary"  %></td>
+          <td><%= form.submit "Submit", class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." }  %></td>
           <% if session[:admin].to_s == '[true]' %>
             <td><%= link_to 'Back', users_path, class: "btn btn-lg btn-primary" %></td>
           <% end %>
         </tr>
       </div>
-    </table>
-  <% end %>
+  </table>
 <% end %>

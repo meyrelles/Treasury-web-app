@@ -59,6 +59,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      # Tell the UserMailer to send a welcome email after save
+      UserMailer.with(user: @user).welcome_email.deliver_now
       flash[:success] = "Welcome to the Veda Treasury App!"
       redirect_to login_path #@user
       #format.json { render :show, status: :created, location: @user }
