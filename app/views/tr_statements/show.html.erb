@@ -25,7 +25,9 @@
 
 <p>
   <strong>Coinbag:</strong>
-  <%= Coinbag.where(id: @tr_statement.coinbag).map(&:coinbag)*"," %>
+  <% if @tr_statement.coinbag == '' %>
+    <%= Coinbag.where(id: @tr_statement.coinbag).map(&:coinbag)*"," %>
+  <% end %>
 </p>
 
 <p>

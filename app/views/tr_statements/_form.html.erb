@@ -133,7 +133,7 @@
         <% if @mov_type.to_s == 'tr' %>
           <td><%= form.label "coinbag" %></td>
           <td><%= form.grouped_collection_select :coinbag_dest, User.order(:nickname),
-            :coinbag, :nickname, :id, :coinbag, { :prompt => 'SELECT' } %>
+            :coinbag_dest, :nickname, :id, :coinbag_dest %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% end %>
       </tr>
