@@ -61,6 +61,7 @@ class UsersController < ApplicationController
     if @user.save
       # Tell the UserMailer to send a welcome email after save
       UserMailer.with(user: @user).welcome_email.deliver_now
+      UserMailer.with(user: @user).approve_user_email.deliver_now
       flash[:success] = "Welcome to the Veda Treasury App!"
       redirect_to login_path #@user
       #format.json { render :show, status: :created, location: @user }
@@ -74,9 +75,14 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     data_manipulation
-    @user = User.find(params[:user][:"id"])
 
+    @user = User.find(params[:user][:"id"])
+    @verified = User.where(id: @user.id).map(&:verified)*","
     if @user.update(user_params)
+
+      if @verified == 'false' && params[:user][:verified] == '1'
+        UserMailer.with(user: @user).approved_user.deliver_now
+      end
       flash[:success] = "User was successfully updated.!"
       redirect_to @user
       #format.json { render :show, status: :ok, location: @user }

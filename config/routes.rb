@@ -14,11 +14,17 @@ Rails.application.routes.draw do
   resources :classifications
   resources :coinbags
   resources :currencies
+  #Reset password
+  get       '/password',        to: 'sessions#password'
+  post      '/password',        to: 'sessions#reset_pass'
+  get       '/password_reset',   to: 'sessions#reset_password'
+  post      '/password_reset',   to: 'sessions#reset_password_post'
+
   get       '/login',           to: 'sessions#new'
   post      '/login',           to: 'sessions#create'
   delete    '/logout',          to: 'sessions#destroy'
   get       '/users',           to: 'users#index'
-  post      '/users',           to: 'users#creat'
+  post      '/users',           to: 'users#create'
   get       '/users/new',       to: 'users#new'
   get       '/users/:id/edit',  to: 'users#edit'
   get       '/users/:id',       to: 'users#show'

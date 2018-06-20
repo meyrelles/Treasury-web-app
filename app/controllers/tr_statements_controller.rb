@@ -40,6 +40,11 @@ class TrStatementsController < ApplicationController
     #data manipulation from form
     data_manipulation
 
+    #Version Controll
+    params[:tr_statement][:transaction_id] = params[:tr_statement][:"id"]
+    params[:tr_statement][:status] = 'I'
+    #--#
+
     @tr_statement = TrStatement.new(tr_statement_params)
 
     respond_to do |format|
@@ -105,7 +110,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:created_by, :coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:status, :transaction_id, :created_by, :coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data
@@ -120,6 +125,7 @@ class TrStatementsController < ApplicationController
       params[:tr_statement].delete(:"date_time(4i)")
       params[:tr_statement].delete(:"date_time(5i)")
       params[:tr_statement][:created_by] = session[:user_id]
+
 
     end
 
@@ -160,7 +166,9 @@ class TrStatementsController < ApplicationController
         :from => params[:tr_statement][:from],
         :to => params[:tr_statement][:to],
         :exch_destin => "Received",
-        :created_by => session[:user_id]
+        :created_by => session[:user_id],
+        :transaction_id => params[:tr_statement][:id],
+        :status => 'I'
       }).run(conn)
 
       conn.close

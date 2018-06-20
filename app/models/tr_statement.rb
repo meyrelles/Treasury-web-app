@@ -20,4 +20,6 @@ class TrStatement
   field :hash, :type => String
   field :version, :type => String
   field :created_by, :type => String
+  field :transaction_id, :type => String
+  field :status, :type => String
 end

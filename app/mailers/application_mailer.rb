@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'no_reply.treasury.app@ultroneous.org'
+  default from: 'no_reply@ultroneous.org'
   layout 'mailer'
 end
