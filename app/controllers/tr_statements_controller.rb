@@ -1,5 +1,8 @@
 class TrStatementsController < ApplicationController
   before_action :set_tr_statement, only: [:show, :edit, :update, :destroy]
+  require 'will_paginate'
+  require 'will_paginate/array'
+  require 'will_paginate/active_record'
 
   # GET /tr_statements
   # GET /tr_statements.json
@@ -8,8 +11,14 @@ class TrStatementsController < ApplicationController
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
-    @tr_statements = TrStatement.all
-    @tr_statements = @tr_statements.order(date_time: :desc)
+    @statements_tr = TrStatement.where(mov_type: 'tr').order(date_time: :desc)
+    @statements_tr = @statements_tr.paginate(:page => params[:trpage], :per_page => 10)
+
+    #@products = current_company.products.paginate(:page =&gt; params[:products_page], :per_page =&gt; 10)
+
+    @statements_exch = TrStatement.where(mov_type: 'exch').order(date_time: :desc)
+    @statements_exch = @statements_exch.paginate(:page => params[:exchpage], :per_page => 10)
+
   end
 
   # GET /tr_statements/1
@@ -120,7 +129,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:status, :transaction_id, :created_by, :coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :reason, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:status, :transaction_id, :created_by, :coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :detail, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data
@@ -128,12 +137,7 @@ class TrStatementsController < ApplicationController
 
       @tempo = Time.now
 
-      params[:tr_statement][:date_time] = Time.new(params[:tr_statement][:"date_time(1i)"].to_i,params[:tr_statement][:"date_time(2i)"].to_i,params[:tr_statement][:"date_time(3i)"].to_i,params[:tr_statement][:"date_time(4i)"].to_i,params[:tr_statement][:"date_time(5i)"].to_i,50,'+01:00')
-      params[:tr_statement].delete(:"date_time(1i)")
-      params[:tr_statement].delete(:"date_time(2i)")
-      params[:tr_statement].delete(:"date_time(3i)")
-      params[:tr_statement].delete(:"date_time(4i)")
-      params[:tr_statement].delete(:"date_time(5i)")
+      params[:tr_statement][:date_time] = Time.new(params[:tr_statement][:"date_time"][0..3].to_i,params[:tr_statement][:"date_time"][5..6].to_i,params[:tr_statement][:"date_time"][8..9].to_i,1,45,45,"+00:00")
       params[:tr_statement][:created_by] = session[:user_id]
 
 

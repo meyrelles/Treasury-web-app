@@ -23,32 +23,74 @@
     <div class="field_date">
       <tr>
         <td><%= form.label :date_time %></td>
-        <td><%= form.datetime_select(:date_time) %></td>
+          <% if @action == 'NEW' %>
+            <td class="input-daterange" data-behaviour='datepicker' id="datepicker">
+              <%= form.text_field :date_time, class: 'datepicker_field', value: Time.now.strftime("%Y-%m-%d") %>
+              <i class="glyphicon glyphicon-calendar"></i>
+            </td>
+            <!--
+            HOURS DESABLED
+            <td>
+              <span  class="input-group bootstrap-timepicker"  id="datepicker">
+              <input id="timepicker1" type="time" class="timepicker_field" value="<%= Time.now.strftime("%H:%M") %>">
+              </span>
+            </td>
+
+            <script type="text/javascript">
+              $('#timepicker1').timepicker({
+                minuteStep: 15,
+                defaultTime: true,
+                showMeridian: false,
+                pickDate: false
+              });
+            </script>
+          -->
+          <% else %>
+            <td  class="input-daterange" data-behaviour='datepicker' id="datepicker">
+              <%= form.text_field :date_time, class: 'datepicker_field' %>
+              <i class="glyphicon glyphicon-calendar"></i>
+            </td>
+          <% end %>
       </tr>
     </div>
 
+    <script type="text/javascript">
+      $('[data-behaviour~=datepicker]').datepicker({
+        format: "yyyy-mm-dd",
+        maxViewMode: 2,
+        todayHighlight: true,
+        orientation: "bottom left",
+        todayBtn: "linked",
+        autoclose: true
+      });
+    </script>
+
+<!--
+  Desabled for now
     <tr class="field_int">
       <tr>
         <td><%= form.label :'time zone' %></td>
         <td><%= form.text_field :timezone, :maxlength => "2", :size => "2" %><div id="CTR_TZ" class="CTR_form"><%= @action == 'NEW' && '*' || '' %> </div></td>
       </tr>
     </div>
+-->
+
 
     <div class="field">
       <tr>
-        <td><%= form.label :reason %></td>
-        <td><%= form.text_field :reason %><div id="CTR_reason" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
-      </tr>
-    </div>
-
-    <div class="field">
-      <tr>
-        <td><%= form.label :classification %></td>
+        <td><%= form.label "Category" %></td>
         <% begin %>
           <td><%= form.collection_select :classification, @classification, :id, :classification, include_blank: true %></td>
         <% rescue %>
         <% end %>
         </tr>
+    </div>
+
+    <div class="field">
+      <tr>
+        <td><%= form.label :detail %></td>
+        <td><%= form.text_field :detail, class: 'text_field_Detail' %><div id="CTR_reason" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+      </tr>
     </div>
 
     <!-- Used only to exchange process -->
@@ -145,7 +187,7 @@
         <% if @mov_type.to_s == 'exch' %>
           <td><%= form.label "Source #{:currency}" %></td>
         <% else %>
-          <td><%= form.label :currency %></td>
+          <td><%= form.label :currency%></td>
         <% end %>
         <% if @mov_type.to_s != 'exch' %>
           <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %><div id="CTR_currency" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
@@ -155,7 +197,7 @@
               <tr>
                 <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %></td>
                 <td><%= form.label :amount %></td>
-                <td><%= form.text_field :amount %><div id="CTR_currency" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div><div id="CTR_amount" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+                <td><%= form.text_field :amount, class: 'text_field2' %><div id="CTR_currency" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div><div id="CTR_amount" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
               </tr>
             </table>
           </td>
@@ -186,7 +228,7 @@
       <div class="field_float">
         <tr>
           <td><%= form.label :amount %></td>
-          <td><%= form.text_field :amount %><div id="CTR_amount" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+          <td><%= form.text_field :amount, class: 'text_field2'  %><div id="CTR_amount" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         </tr>
       </div>
     <% end %>
@@ -194,7 +236,7 @@
     <div class="field_float">
       <tr>
         <td><%= form.label :fee %></td>
-        <td><%= form.text_field :fee %><div id="CTR_fee" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+        <td><%= form.text_field :fee, class: 'text_field2'  %><div id="CTR_fee" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
       </tr>
     </div>
 

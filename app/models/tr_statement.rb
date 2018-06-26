@@ -5,7 +5,7 @@ class TrStatement
   field :date_time, :type => Time
   field :timezone, :type => Integer
   field :classification, :type => String
-  field :reason, :type => String
+  field :detail, :type => String
   field :coinbag, :type => String
   field :coinbag_dest, :type => String
   field :from, :type => String

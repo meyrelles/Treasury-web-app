@@ -80,3 +80,12 @@ gem "google_drive"
 gem 'sass'
 gem 'jquery-rails'
 gem 'jquery-turbolinks'
+
+# Asset to have date picker calender
+gem 'bootstrap-datepicker-rails'
+# Asset to have time picker
+gem 'bootstrap-timepicker-rails'
+
+#To paginate the tables
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'

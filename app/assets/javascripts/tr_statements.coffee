@@ -88,7 +88,7 @@ jQuery ->
 
     if $("#type_new").data("parameter") is 'NEW'
       document.getElementById("send").disabled = true
-      array = [0,0,0,0,0,0,0,0,0,0]
+      array = [0,1,0,0,0,0,0,0,0,0]
 
     if $("#type_new").data("parameter") is 'EDIT'
       array = [0,1,1,1,1,1,1,1,1,1]
