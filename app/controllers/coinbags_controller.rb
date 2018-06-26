@@ -10,8 +10,10 @@ class CoinbagsController < ApplicationController
     end
     if session[:admin].to_s == "[true]" and session[:user_id] != ''
       @coinbags = Coinbag.all
+      @coinbags = @coinbags.order('user_id', 'coinbag')
     else
       @coinbags = Coinbag.where(user_id: session[:user_id])
+      @coinbags = @coinbags.order('coinbag')
     end
   end
 
@@ -22,11 +24,13 @@ class CoinbagsController < ApplicationController
 
   # GET /coinbags/new
   def new
+    @type = 'NEW'
     @coinbag = Coinbag.new
   end
 
   # GET /coinbags/1/edit
   def edit
+    @type = 'EDIT'
   end
 
   # POST /coinbags

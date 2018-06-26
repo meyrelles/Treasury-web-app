@@ -23,7 +23,11 @@
       <div class="field">
         <tr>
           <td><%= form.label "User" %></td>
-          <td><%= form.collection_select :user_id, User.all, :id, :username, selected: session[:user_id] %>
+          <% if @type == 'NEW' %>
+            <td><%= form.collection_select :user_id, User.all, :id, :username, selected: session[:user_id] %>
+          <% else %>
+            <td><%= form.collection_select :user_id, User.all, :id, :username %>
+          <% end %>
           <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         </tr>
       </div>

@@ -1,4 +1,5 @@
-<!-- CALL JAVASCRIPT FUNCTION -->
+<body class="body_<%= @mov_type.to_s %>">
+
   <%= form_with(model: tr_statement, local: true) do |form| %>
     <% if tr_statement.errors.any? %>
       <div id="error_explanation" xmlns="http://www.w3.org/1999/html">
@@ -133,7 +134,7 @@
         <% if @mov_type.to_s == 'tr' %>
           <td><%= form.label "coinbag" %></td>
           <td><%= form.grouped_collection_select :coinbag_dest, User.order(:nickname),
-            :coinbag_dest, :nickname, :id, :coinbag_dest %>
+            :coinbag, :nickname, :id, :coinbag %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% end %>
       </tr>
@@ -240,3 +241,4 @@
     </div>
     </table>
   <% end %>
+</body>

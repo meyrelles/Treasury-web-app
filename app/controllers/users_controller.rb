@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       redirect_to login_path
     end
     @users = User.all
-    @users = @users.order(:username)
+    @users = @users.order(:givenname)
   end
 
   # GET /users/1

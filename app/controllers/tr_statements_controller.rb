@@ -23,6 +23,11 @@ class TrStatementsController < ApplicationController
     @action = 'NEW'
     @usr = session[:user_id].to_s
     @mov_type = params[:type]
+    if params[:type] == 'tr'
+      @tittle = 'New Transaction'
+    elsif params[:type] == 'exch'
+      @tittle = 'New Exchange'
+    end
     @tr_statement = TrStatement.new
   end
 
@@ -31,6 +36,11 @@ class TrStatementsController < ApplicationController
     @action = 'EDIT'
     @usr = session[:user_id].to_s
     @mov_type = params[:type]
+    if params[:type] == 'tr'
+      @tittle = 'Edit Transaction'
+    elsif params[:type] == 'exch'
+      @tittle = 'Edit Exchange'
+    end
     load_tables
   end
 
