@@ -19,11 +19,14 @@
       <th>Date</th>
       <th>Detail</th>
       <th>Category</th>
-      <th>Coinbag</th>
       <th>From</th>
-      <th>To</th>
+      <th>From coinbag</th>
       <th>Currency</th>
       <th>Amount</th>
+      <th>To</th>
+      <th>To coinbag</th>
+      <th>To currency</th>
+      <th>To amount</th>
       <th>Celebrate</th>
       <th colspan="0"></th>
     </tr>
@@ -31,7 +34,7 @@
 
   <tbody>
     <h3>List of transactions:</h3>
-    <%= will_paginate  @statements_tr, param_name: 'trpage' %>
+    <%= will_paginate  @statements_tr, param_name: 'page' %>
     <% @statements_tr.each do |tr_statement| %>
       <tr>
         <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
@@ -41,78 +44,7 @@
         <% rescue %>
         <% end %>
         <% begin %>
-          <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
           <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
-          <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
-          <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <td><%= tr_statement.amount %></td>
-        <td><%= tr_statement.celebrate %></td>
-        <% if tr_statement.exch_destin != 'Received' %>
-          <td><%= link_to image_tag('show.ico', size: "20x20"), tr_statement %></td>
-        <% else %>
-          <td>---</td>
-        <% end %>
-        <% if tr_statement.from == nil %>
-          <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
-        <% else %>
-          <% if tr_statement.mov_type == 'tr' && tr_statement.created_by == session[:user_id] %>
-            <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
-          <% elsif tr_statement.exch_destin != 'Received' && tr_statement.created_by == session[:user_id] %>
-            <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.from).map(&:id)*",") %></td>
-          <% else %>
-            <td>---</td>
-          <% end %>
-        <% end %>
-        <% if tr_statement.exch_destin != 'Received' && tr_statement.created_by == session[:user_id] %>
-          <td><%= link_to image_tag('delete.ico', size: "20x20"), tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% else %>
-          <td>---</td>
-        <% end %>
-      </tr>
-    <% end %>
-  <br>
-  </tbody>
-
-</table>
-
-
-<table border="1" id="show">
-  <br>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Detail</th>
-      <th>Category</th>
-      <th>Coinbag</th>
-      <th>From</th>
-      <th>To</th>
-      <th>Currency</th>
-      <th>Amount</th>
-      <th>Celebrate</th>
-      <th colspan="0"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <h3>List of exchanges:</h3>
-    <%= will_paginate  @statements_exch, param_name: 'exchpage' %>
-    <% @statements_exch.each do |tr_statement| %>
-      <tr>
-        <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
-        <td><%= tr_statement.detail %></td>
-        <% begin %>
-          <td><%= Classification.where(id: tr_statement.classification).map(&:classification)*"," %></td>
         <% rescue %>
         <% end %>
         <% begin %>
@@ -120,43 +52,42 @@
         <% rescue %>
         <% end %>
         <% begin %>
-          <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
+          <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
         <% rescue %>
         <% end %>
+        <td><%= tr_statement.amount %></td>
         <% begin %>
           <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
         <% rescue %>
         <% end %>
         <% begin %>
-          <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
+          <td><%= Coinbag.where(id: tr_statement.coinbag_dest).map(&:coinbag)*"," %></td>
         <% rescue %>
         <% end %>
-        <td><%= tr_statement.amount %></td>
-        <td><%= tr_statement.celebrate %></td>
-        <% if tr_statement.exch_destin != 'Received' %>
-          <td><%= link_to image_tag('show.ico', size: "20x20"), tr_statement %></td>
-        <% else %>
-          <td>---</td>
+        <% begin %>
+          <td><%= Currency.where(id: tr_statement.currency_dest).map(&:currency)*"," %></td>
+        <% rescue %>
         <% end %>
+        <td><%= tr_statement.amount_dest %></td>
+        <td><%= tr_statement.celebrate %></td>
+        <td><%= link_to image_tag('show.ico', size: "20x20"), tr_statement %></td>
         <% if tr_statement.from == nil %>
           <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
         <% else %>
-          <% if tr_statement.mov_type == 'tr' && tr_statement.created_by == session[:user_id] %>
+          <% if tr_statement.created_by == session[:user_id] %>
             <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
-          <% elsif tr_statement.exch_destin != 'Received' && tr_statement.created_by == session[:user_id] %>
-            <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.from).map(&:id)*",") %></td>
           <% else %>
             <td>---</td>
           <% end %>
         <% end %>
-        <% if tr_statement.exch_destin != 'Received' && tr_statement.created_by == session[:user_id] %>
+        <% if tr_statement.created_by == session[:user_id] %>
           <td><%= link_to image_tag('delete.ico', size: "20x20"), tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% else %>
           <td>---</td>
         <% end %>
       </tr>
     <% end %>
-
+  <br>
   </tbody>
 
 </table>

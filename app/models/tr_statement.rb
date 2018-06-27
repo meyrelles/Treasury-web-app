@@ -12,14 +12,14 @@ class TrStatement
   field :to, :type => String
   field :currency, :type => String
   field :amount, :type => Float
+  field :currency_dest, :type => String
+  field :amount_dest, :type => Float
   field :celebrate, :type => String
   field :mov_type, :type => String
-  field :transaction_link, :type => String
-  field :exch_destin, :type => String
   field :fee, :type => Float
   field :hash, :type => String
   field :version, :type => String
   field :created_by, :type => String
-  field :transaction_id, :type => String
   field :status, :type => String
+  field :link_id, :type => String
 end

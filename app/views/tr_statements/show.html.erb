@@ -52,7 +52,7 @@
 <tr>
 <p>
   <td><strong>From coinbag:</strong></td>
-  <% if @tr_statement.coinbag != '' %>
+  <% if @tr_statement.coinbag != nil %>
     <td><%= Coinbag.where(id: @tr_statement.coinbag).map(&:coinbag)*"," %></td>
   <% end %>
 </p>
@@ -71,7 +71,7 @@
 <tr>
 <p>
   <td><strong>To coinbag:</strong></td>
-  <% if @tr_statement.coinbag_dest != '' %>
+  <% if @tr_statement.coinbag_dest != nil %>
     <td><%= Coinbag.where(id: @tr_statement.coinbag_dest).map(&:coinbag)*"," %></td>
   <% end %>
 </p>

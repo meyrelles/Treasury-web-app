@@ -11,14 +11,8 @@ class TrStatementsController < ApplicationController
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
-    @statements_tr = TrStatement.where(mov_type: 'tr').order(date_time: :desc)
-    @statements_tr = @statements_tr.paginate(:page => params[:trpage], :per_page => 10)
-
-    #@products = current_company.products.paginate(:page =&gt; params[:products_page], :per_page =&gt; 10)
-
-    @statements_exch = TrStatement.where(mov_type: 'exch').order(date_time: :desc)
-    @statements_exch = @statements_exch.paginate(:page => params[:exchpage], :per_page => 10)
-
+    @statements_tr = TrStatement.where(status: 'I').order(date_time: :desc)
+    @statements_tr = @statements_tr.paginate(:page => params[:page], :per_page => 10)
   end
 
   # GET /tr_statements/1
@@ -90,15 +84,10 @@ class TrStatementsController < ApplicationController
     #data manipulation from form
     data_manipulation
 
+    function_update
+
     respond_to do |format|
       if @tr_statement.update(tr_statement_params)
-
-        # If working on exchange operation, the app needs to update an aditional record in DB
-        # Link to function to update it.
-        if params[:tr_statement][:mov_type] == 'exch'
-          exchange_function_update
-        end
-
         format.html { redirect_to @tr_statement, notice: 'Transaction was successfully updated.' }
         format.json { render :show, status: :ok, location: @tr_statement }
       else
@@ -111,14 +100,13 @@ class TrStatementsController < ApplicationController
   # DELETE /tr_statements/1
   # DELETE /tr_statements/1.json
   def destroy
-    if @tr_statement.mov_type.to_s == 'exch'
-      exchange_function_delete @tr_statement.transaction_link
-    end
-    @tr_statement.destroy
-    respond_to do |format|
-      format.html { redirect_to tr_statements_url, notice: 'Transaction was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    function_delete
+
+    #@tr_statement.destroy
+    #respond_to do |format|
+    #format.html { redirect_to tr_statements_url, notice: 'Transaction was successfully destroyed.' }
+    #format.json { head :no_content }
+    #end
   end
 
   private
@@ -129,7 +117,7 @@ class TrStatementsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tr_statement_params
-      params.require(:tr_statement).permit(:status, :transaction_id, :created_by, :coinbag_dest, :coinbag, :fee, :hash, :version, :exch_destin, :transaction_link, :mov_type, :date_time, :timezone, :classification, :detail, :from, :to, :currency, :amount, :celebrate)
+      params.require(:tr_statement).permit(:currency_dest, :amount_dest, :status, :created_by, :coinbag_dest, :coinbag, :fee, :hash, :version, :mov_type, :date_time, :timezone, :classification, :detail, :from, :to, :currency, :amount, :celebrate)
     end
 
     #function to manipulate form data
@@ -163,58 +151,92 @@ class TrStatementsController < ApplicationController
     end
 
     def exchange_function_insert
-      r = RethinkDB::RQL.new
-      conn = r.connect(:host => "localhost", :port => 28015)
+#      r = RethinkDB::RQL.new
+#      conn = r.connect(:host => "localhost", :port => 28015)
 
-      r.db('treasury_development').table('tr_statements').insert({
-        :reason => params[:tr_statement][:reason],
-        :celebrate => params[:tr_statement][:celebrate],
-        :date_time => params[:tr_statement][:date_time],
-        :transaction_link => params[:tr_statement][:transaction_link],
-        :mov_type => params[:tr_statement][:mov_type],
-        :timezone => params[:tr_statement][:timezone],
-        :classification => params[:tr_statement][:classification],
-        :coinbag => params[:tr_statement][:coinbag_dest],
-        :amount => params[:tr_statement][:amount_dest],
-        :currency => params[:tr_statement][:currency_dest],
-        :from => params[:tr_statement][:from],
-        :to => params[:tr_statement][:to],
-        :exch_destin => "Received",
-        :created_by => session[:user_id],
-        :transaction_id => params[:tr_statement][:id],
-        :status => 'I'
-      }).run(conn)
+#      r.db('treasury_development').table('tr_statements').insert({
+#        :reason => params[:tr_statement][:reason],
+#        :celebrate => params[:tr_statement][:celebrate],
+#        :date_time => params[:tr_statement][:date_time],
+#        :transaction_link => params[:tr_statement][:transaction_link],
+#        :mov_type => params[:tr_statement][:mov_type],
+#        :timezone => params[:tr_statement][:timezone],
+#        :classification => params[:tr_statement][:classification],
+#        :coinbag => params[:tr_statement][:coinbag_dest],
+#        :amount => params[:tr_statement][:amount_dest],
+#        :currency => params[:tr_statement][:currency_dest],
+#        :from => params[:tr_statement][:from],
+#        :to => params[:tr_statement][:to],
+#        :exch_destin => "Received",
+#        :created_by => session[:user_id],
+#        :transaction_id => params[:tr_statement][:id],
+#        :status => 'I'
+#      }).run(conn)
 
-      conn.close
+#      conn.close
     end
 
-    def exchange_function_update
-      r = RethinkDB::RQL.new
-      conn = r.connect(:host => "localhost", :port => 28015)
+    def function_update
 
-      r.db('treasury_development').table("tr_statements").filter({
-        :transaction_link => params[:tr_statement][:transaction_link],
-        :exch_destin => "Received"}).update({
-          :timezone => params[:tr_statement][:timezone],
-          :classification => params[:tr_statement][:classification],
-          :coinbag => params[:tr_statement][:coinbag_dest],
-          :amount => params[:tr_statement][:amount_dest],
-          :currency => params[:tr_statement][:currency_dest],
-          :reason => params[:tr_statement][:reason],
-          :celebrate => params[:tr_statement][:celebrate],
-          :date_time => params[:tr_statement][:date_time],
-          :created_by => session[:user_id]
-      }).run(conn)
+  #    respond_to do |format|
+        begin
+          @Record = TrStatement.find(params[:id])
 
-      conn.close
+          r = RethinkDB::RQL.new
+          conn = r.connect(:host => "localhost", :port => 28015)
+
+          r.db('treasury_development').table('tr_statements').insert({
+            :id => ([*('A'..'Z'),*('0'..'9'),*('a'..'z')]-%w(Y)).sample(16).join,
+            :detail => TrStatement.where(id: params[:id]).map(&:detail)*",",
+            :celebrate => TrStatement.where(id: params[:id]).map(&:celebrate)*",",
+            :date_time => TrStatement.where(id: params[:id]).map(&:date_time)*",",
+            :mov_type => TrStatement.where(id: params[:id]).map(&:mov_type)*",",
+            :timezone => TrStatement.where(id: params[:id]).map(&:timezone)*",",
+            :classification => TrStatement.where(id: params[:id]).map(&:classification)*",",
+            :coinbag => TrStatement.where(id: params[:id]).map(&:coinbag)*",",
+            :coinbag_dest => TrStatement.where(id: params[:id]).map(&:coinbag_dest)*",",
+            :amount => TrStatement.where(id: params[:id]).map(&:amount)*",",
+            :currency => TrStatement.where(id: params[:id]).map(&:currency)*",",
+            :currency_dest => TrStatement.where(id: params[:id]).map(&:currency_dest)*",",
+            :amount_dest => TrStatement.where(id: params[:id]).map(&:amount_dest)*",",
+            :from => TrStatement.where(id: params[:id]).map(&:from)*",",
+            :to => TrStatement.where(id: params[:id]).map(&:to)*",",
+            :created_by => TrStatement.where(id: params[:id]).map(&:created_by)*",",
+            :fee => TrStatement.where(id: params[:id]).map(&:fee)*",",
+            :hash => TrStatement.where(id: params[:id]).map(&:hash)*",",
+            :version => TrStatement.where(id: params[:id]).map(&:version)*",",
+            :link_id => params[:id],
+            :status => 'U'
+          }).run(conn)
+
+          conn.close
+
+        rescue
+          flash[:alert] = 'Transaction was unsuccessfully updated!!!, try again...'
+          render :edit
+        end
+
+#      end
+
     end
 
-    def exchange_function_delete(tr_id)
-      r = RethinkDB::RQL.new
-      conn = r.connect(:host => "localhost", :port => 28015)
+    def function_delete()
+      begin
+        r = RethinkDB::RQL.new
+        conn = r.connect(:host => "localhost", :port => 28015)
 
-      r.db('treasury_development').table("tr_statements").filter({"transaction_link": tr_id}).delete().run(conn)
+        r.db('treasury_development').table("tr_statements").filter({
+          :id => params[:id]}).update({
+            :status => 'D'
+        }).run(conn)
 
-      conn.close
+        conn.close
+
+        flash[:success] = 'Transaction was successfully destroyed.'
+        redirect_to tr_statements_url
+      rescue
+        flash[:alert] = 'Transaction was unsuccessfully destroyed!!!'
+        redirect_to tr_statements_url
+      end
     end
 end

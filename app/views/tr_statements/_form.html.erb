@@ -111,7 +111,7 @@
       <tr>
         <% if @mov_type.to_s == 'exch' && @action == 'NEW' %>
           <td><%= form.label "Destination #{:coinbag}" %></td>
-          <td><%= form.collection_select :coinbag_dest, Coinbag.where(user_id: @usr.to_s), :id, :coinbag, include_blank: true, :selected => TrStatement.where(transaction_link: tr_statement.transaction_link, exch_destin: 'Received').map(&:coinbag)*",".to_s %>
+          <td><%= form.collection_select :coinbag_dest, Coinbag.where(user_id: @usr.to_s), :id, :coinbag, include_blank: true %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% elsif @mov_type.to_s == 'exch' && @action != 'NEW' %>
           <td><%= form.label "Destination #{:coinbag}" %></td>
@@ -123,18 +123,10 @@
     <div class="field">
       <tr>
         <td><%= form.label :from %></td>
-        <% if @mov_type.to_s == 'tr' %>
-          <% if @action == 'NEW' %>
-            <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
-          <% else %>
-            <td><%= form.collection_select :from, @users, :id, :nickname %></td>
-          <% end %>
-        <% elsif @mov_type.to_s == 'exch' %>
-          <% if @action == 'NEW' %>
-            <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
-          <% else %>
-            <td><%= form.collection_select :from, @users, :id, :nickname %>
-          <% end %>
+        <% if @action == 'NEW' %>
+          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
+        <% else %>
+          <td><%= form.collection_select :from, @users, :id, :nickname %></td>
         <% end %>
       </tr>
     </div>
@@ -154,18 +146,10 @@
     <div class="field">
       <tr>
         <td><%= form.label :to %></td>
-        <% if @mov_type.to_s == 'tr' %>
-          <% if @action == 'NEW' %>
-            <td><%= form.collection_select :to, @users, :id, :nickname, selected: User.where(id: @usr.to_s).map(&:id)*",".to_s, value: User.where(id: @usr.to_s).map(&:id)*",".to_s, include_blank: true %></td>
-          <% else %>
-            <td><%= form.collection_select :to, @users, :id, :nickname %></td>
-          <% end %>
-        <% elsif @mov_type.to_s == 'exch' %>
-          <% if @action == 'NEW' %>
-            <td><%= form.collection_select :to, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
-          <% else %>
-            <td><%= form.collection_select :to, @users, :id, :nickname %>
-          <% end %>
+        <% if @action == 'NEW' %>
+          <td><%= form.collection_select :to, @users, :id, :nickname, selected: User.where(id: @usr.to_s).map(&:id)*",".to_s, value: User.where(id: @usr.to_s).map(&:id)*",".to_s, include_blank: true %></td>
+        <% else %>
+          <td><%= form.collection_select :to, @users, :id, :nickname %></td>
         <% end %>
       </tr>
     </div>
@@ -213,9 +197,9 @@
           <td>
             <table>
               <tr>
-                <td><%= form.collection_select :currency_dest, @currency, :id, :currency, include_blank: true, :selected => TrStatement.where(transaction_link: tr_statement.transaction_link, exch_destin: 'Received').map(&:currency)*",".to_s %></td>
+                <td><%= form.collection_select :currency_dest, @currency, :id, :currency, include_blank: true %></td>
                 <td><%= form.label :amount %></td>
-                <td><%= form.text_field :amount_dest, :value => TrStatement.where(transaction_link: tr_statement.transaction_link, exch_destin: 'Received').map(&:amount)*"," %><div id="CTR_currency_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div>
+                <td><%= form.text_field :amount_dest %><div id="CTR_currency_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div>
                   <div id="CTR_amount_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
               </tr>
             </table>
@@ -235,7 +219,7 @@
 
     <div class="field_float">
       <tr>
-        <td><%= form.label :fee %></td>
+        <td><%= form.label "Original currency #{:fee}" %></td>
         <td><%= form.text_field :fee, class: 'text_field2'  %><div id="CTR_fee" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
       </tr>
     </div>
@@ -253,26 +237,6 @@
         <td><%= form.text_field :celebrate %></td>
       </tr>
     </div>
-
-    <% if @mov_type.to_s == 'exch' %>
-      <div class="field">
-        <tr>
-          <% if @action == 'EDIT' %>
-            <td><%= form.hidden_field :transaction_link %></td>
-          <% else %>
-            <td><%= form.hidden_field :transaction_link, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s + Time.new.to_s.gsub!(/\s/,'') %></td>
-          <% end %>
-        </tr>
-      </div>
-    <% end %>
-
-    <% if @mov_type.to_s == 'exch' %>
-      <div class="field">
-        <tr>
-          <td><%= form.hidden_field :exch_destin, :value => "Sent" %></td>
-        </tr>
-      </div>
-    <% end %>
 
     <div class="actions">
       <tr>

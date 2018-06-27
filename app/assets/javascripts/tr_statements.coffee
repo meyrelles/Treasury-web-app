@@ -108,14 +108,14 @@ jQuery ->
     #End of Combobox desable
 
     #REASON FIELD
-    $("#tr_statement_reason").blur ->
+    $("#tr_statement_detail").blur ->
       if @value.length > 5
         $("#CTR_reason").text("")
         array[2]=1
         #enable submit
         EnableSubmitButton.Checking(array)
       else
-        $("#CTR_reason").text("Reason should be great than 5 characters!")
+        $("#CTR_reason").text("Detail should be great than 5 characters!")
         document.getElementById("send").disabled = true
         array[2]=0
 
