@@ -67,16 +67,20 @@ Update_Field_On_Start =
 jQuery ->
 #Form control
   $(document).on 'turbolinks:load', ->
+    $('#new_tr').click ->
+      sessionStorage.setItem('mov_type', 'tr')
+    $('#new_exch').click ->
+      sessionStorage.setItem('mov_type', 'exch')
+
+    if $("#tr_type").data("parameter") is 'tr'
+      sessionStorage.setItem('mov_type', 'tr')
+    if $("#tr_type").data("parameter") is 'exch'
+      sessionStorage.setItem('mov_type', 'exch')
+
     if $("#Trstatementbody").data("controller") == 'tr_statements'
       #alert($("#Trstatementbody").data("controller"))
       array=[]
       array[0]=0
-
-      $('#new_tr').click ->
-        sessionStorage.setItem('mov_type', 'tr')
-      $('#new_exch').click ->
-        sessionStorage.setItem('mov_type', 'exch')
-
 
       #document.getElementById('type_parameter').setAttribute('data_parameter',sessionStorage.getItem('mov_type'))
 
