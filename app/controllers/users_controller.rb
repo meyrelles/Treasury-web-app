@@ -118,11 +118,12 @@ class UsersController < ApplicationController
 
     #function to manipulate form data
     def data_manipulation
-      params[:user][:birthdate_time] = Time.new(params[:user][:"birthdate_time(1i)"].to_i,params[:user][:"birthdate_time(2i)"].to_i,params[:user][:"birthdate_time(3i)"].to_i,params[:user][:"birthdate_time(4i)"].to_i,params[:user][:"birthdate_time(5i)"].to_i,0,'+00:00')
-      params[:user].delete(:"birthdate_time(1i)")
-      params[:user].delete(:"birthdate_time(2i)")
-      params[:user].delete(:"birthdate_time(3i)")
-      params[:user].delete(:"birthdate_time(4i)")
-      params[:user].delete(:"birthdate_time(5i)")
+      #params[:user][:birthdate_time] = Time.new(params[:user][:"birthdate_time(1i)"].to_i,params[:user][:"birthdate_time(2i)"].to_i,params[:user][:"birthdate_time(3i)"].to_i,params[:user][:"birthdate_time(4i)"].to_i,params[:user][:"birthdate_time(5i)"].to_i,0,'+00:00')
+      #params[:user].delete(:"birthdate_time(1i)")
+      #params[:user].delete(:"birthdate_time(2i)")
+      #params[:user].delete(:"birthdate_time(3i)")
+      #params[:user].delete(:"birthdate_time(4i)")
+      #params[:user].delete(:"birthdate_time(5i)")
+      params[:user][:email] = params[:user][:"email"].downcase
     end
 end

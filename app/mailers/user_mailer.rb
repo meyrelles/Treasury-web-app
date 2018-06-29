@@ -41,7 +41,7 @@ class UserMailer < ApplicationMailer
 
   def reset_password
     @user = params[:user]
-    @url  = 'http://treasury.ultroneous.org:3000/login'
+    @url  = 'http://treasury.ultroneous.org:3000/password_reset'
     delivery_options = {
                :address              => "smtp.gmail.com",
                :port                 => 587,

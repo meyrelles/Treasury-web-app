@@ -29,11 +29,12 @@
       <%= @user.nickname %>
     </p>
 
+<!--
     <p>
       <strong>Birthdate time:</strong>
       <%= @user.birthdate_time %>
     </p>
-
+-->
     <p>
       <strong>Email:</strong>
       <%= @user.email %>
@@ -51,7 +52,7 @@
 
     <% @kind = 'edit' %>
     <td><%= link_to 'Edit', edit_user_path(@user), class: "btn btn-lg btn-primary" %></td>
-    <% if session[:admin].to_s == '[true]' %> 
+    <% if session[:admin].to_s == '[true]' %>
       <td><%= link_to 'Back', users_path, class: "btn btn-lg btn-primary" %></td>
     <% end %>
   </div>

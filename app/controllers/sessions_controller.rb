@@ -8,8 +8,8 @@ class SessionsController < ApplicationController
   #POST /reset_pass
   def reset_pass
 
-    if User.where(email: params[:session][:email].to_s) != [] && params[:session][:email].to_s != ''
-      @user = User.find(User.where(email: params[:session][:email].to_s).map(&:id)*",")
+    if User.where(email: params[:session][:email].to_s.downcase) != [] && params[:session][:email].to_s != ''
+      @user = User.find(User.where(email: params[:session][:email].to_s.downcase).map(&:id)*",")
     else
       @user =''
     end
@@ -53,7 +53,7 @@ class SessionsController < ApplicationController
 
         $reset_pass='76872645826uytutfaskgdfjashdg'
 
-        flash[:success] = "User was successfully updated.!"
+        flash[:success] = "Password was successfully updated.!"
         redirect_to login_path
 
       else
