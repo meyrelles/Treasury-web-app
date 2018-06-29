@@ -17,8 +17,12 @@ Rails.application.routes.draw do
   #Reset password
   get       '/password',        to: 'sessions#password'
   post      '/password',        to: 'sessions#reset_pass'
-  get       '/password_reset',   to: 'sessions#reset_password'
-  post      '/password_reset',   to: 'sessions#reset_password_post'
+  get       '/password_reset',  to: 'sessions#reset_password'
+  post      '/password_reset',  to: 'sessions#reset_password_post'
+
+  #Settings
+  get       '/settings',        to: 'settings#index'
+  post      '/settings',        to: 'settings#save'
 
   get       '/login',           to: 'sessions#new'
   post      '/login',           to: 'sessions#create'

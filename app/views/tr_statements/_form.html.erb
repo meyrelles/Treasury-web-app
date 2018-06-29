@@ -1,4 +1,4 @@
-<body class="body_<%= @mov_type.to_s %>">
+<body class="body_<%= @mov_type.to_s %>" id="Trstatementbody" data-controller="<%= controller.controller_name %>">
 
   <%= form_with(model: tr_statement, local: true) do |form| %>
     <% if tr_statement.errors.any? %>
