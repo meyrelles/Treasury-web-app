@@ -3,6 +3,7 @@ class TrStatementsController < ApplicationController
   require 'will_paginate'
   require 'will_paginate/array'
   require 'will_paginate/active_record'
+  #require YAML
 
   # GET /tr_statements
   # GET /tr_statements.json
@@ -150,40 +151,20 @@ class TrStatementsController < ApplicationController
       @classification = @classification.order(:classification)
     end
 
-    def exchange_function_insert
-#      r = RethinkDB::RQL.new
-#      conn = r.connect(:host => "localhost", :port => 28015)
-
-#      r.db('treasury_development').table('tr_statements').insert({
-#        :reason => params[:tr_statement][:reason],
-#        :celebrate => params[:tr_statement][:celebrate],
-#        :date_time => params[:tr_statement][:date_time],
-#        :transaction_link => params[:tr_statement][:transaction_link],
-#        :mov_type => params[:tr_statement][:mov_type],
-#        :timezone => params[:tr_statement][:timezone],
-#        :classification => params[:tr_statement][:classification],
-#        :coinbag => params[:tr_statement][:coinbag_dest],
-#        :amount => params[:tr_statement][:amount_dest],
-#        :currency => params[:tr_statement][:currency_dest],
-#        :from => params[:tr_statement][:from],
-#        :to => params[:tr_statement][:to],
-#        :exch_destin => "Received",
-#        :created_by => session[:user_id],
-#        :transaction_id => params[:tr_statement][:id],
-#        :status => 'I'
-#      }).run(conn)
-
-#      conn.close
-    end
-
     def function_update
 
   #    respond_to do |format|
         begin
           @Record = TrStatement.find(params[:id])
 
+          #GET Rethinkdb access data
+          rdbaccess = YAML.load_file("#{Rails.root.to_s}/config/rethinkdb.yml")
+
           r = RethinkDB::RQL.new
-          conn = r.connect(:host => "localhost", :port => 28015)
+          conn = r.connect(:host => rdbaccess["access"]["host"],
+            :user => rdbaccess["access"]["user"],
+            :password => rdbaccess["access"]["pass"],
+            :port => rdbaccess["access"]["port"])
 
           r.db('treasury_development').table('tr_statements').insert({
             :id => ([*('A'..'Z'),*('0'..'9'),*('a'..'z')]-%w(Y)).sample(16).join,
@@ -222,8 +203,13 @@ class TrStatementsController < ApplicationController
 
     def function_delete()
       begin
+        rdbaccess = YAML.load_file("#{Rails.root.to_s}/config/rethinkdb.yml")
+
         r = RethinkDB::RQL.new
-        conn = r.connect(:host => "localhost", :port => 28015)
+        conn = r.connect(:host => rdbaccess["access"]["host"],
+          :user => rdbaccess["access"]["user"],
+          :password => rdbaccess["access"]["pass"],
+          :port => rdbaccess["access"]["port"])
 
         r.db('treasury_development').table("tr_statements").filter({
           :id => params[:id]}).update({

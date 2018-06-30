@@ -29,8 +29,13 @@ class SettingsController < ApplicationController
 
 
 
+      rdbaccess = YAML.load_file("#{Rails.root.to_s}/config/rethinkdb.yml")
+
       r = RethinkDB::RQL.new
-      conn = r.connect(:host => "localhost", :port => 28015)
+      conn = r.connect(:host => rdbaccess["access"]["host"],
+        :user => rdbaccess["access"]["user"],
+        :password => rdbaccess["access"]["pass"],
+        :port => rdbaccess["access"]["port"])
 
       r.db('treasury_development').table("users").filter({
         :id => session[:user_id]}).update({

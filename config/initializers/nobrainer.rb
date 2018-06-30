@@ -16,6 +16,20 @@ NoBrainer.configure do |config|
   # * RDB_URL, RDB_USER, RDB_PASSWORD, RDB_HOST, RDB_PORT, RDB_DB
   # * All the above, but with RETHINKDB instead of RDB
   # config.rethinkdb_urls = [config.default_rethinkdb_url]
+  rdbaccess = YAML.load_file("#{Rails.root.to_s}/config/rethinkdb.yml")
+
+  host = rdbaccess["access"]["host"]
+  user = rdbaccess["access"]["user"]
+  password = rdbaccess["access"]["pass"]
+  port = rdbaccess["access"]["port"]
+  appname = Rails.application.class.to_s.split("::").first
+
+  NoBrainer.configure do |config|
+    host = 'localhost'
+    user = 'admin'
+    pass = 'GHT%&%$55$dfde$#wdf-6tYThusu'
+    config.rethinkdb_url = ENV['RDB_URL'] || "rethinkdb://#{"#{user}:#{pass}@" if (user || pass)}#{host}#{":#{port}" if port}/treasury_#{Rails.env}"
+  end
 
   # ssl_options may be set to {:ca_certs => '/path/to/ca.crt'} to establish
   # an SSL connection to the RethinkDB servers.
