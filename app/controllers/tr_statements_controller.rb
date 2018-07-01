@@ -54,6 +54,11 @@ class TrStatementsController < ApplicationController
     #data manipulation from form
     data_manipulation
 
+    #Insert new category
+    if params[:tr_statement][:"array_category"] != ''
+      insert_New_Category
+    end
+
     #Version Controll
     params[:tr_statement][:transaction_id] = params[:tr_statement][:"id"]
     params[:tr_statement][:status] = 'I'
@@ -84,6 +89,11 @@ class TrStatementsController < ApplicationController
   def update
     #data manipulation from form
     data_manipulation
+
+    #Insert new category
+    if params[:tr_statement][:"array_category"] != ''
+      insert_New_Category
+    end
 
     function_update
 
@@ -223,6 +233,36 @@ class TrStatementsController < ApplicationController
       rescue
         flash[:alert] = 'Transaction was unsuccessfully destroyed!!!'
         redirect_to tr_statements_url
+      end
+    end
+
+    def insert_New_Category
+      #Insert new category
+      if params[:tr_statement][:"array_category"] != ''
+        rdbaccess = YAML.load_file("#{Rails.root.to_s}/config/rethinkdb.yml")
+
+        r = RethinkDB::RQL.new
+
+        conn = r.connect(:host => rdbaccess["access"]["host"],
+          :user => rdbaccess["access"]["user"],
+          :password => rdbaccess["access"]["pass"],
+          :port => rdbaccess["access"]["port"])
+
+        @category = params[:tr_statement][:"array_category"].split(',')
+        id = params[:tr_statement][:"array_id"].split(',')
+
+        i=0
+
+        @category.each do |categories|
+          r.db('treasury_development').table('classifications').insert({
+            :id => id[i],
+            :classification => @category[i],
+            :created_at => Time.now
+          }).run(conn)
+
+          i=i+1
+        end
+        conn.close
       end
     end
 end

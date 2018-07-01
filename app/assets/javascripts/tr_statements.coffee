@@ -273,3 +273,64 @@ jQuery ->
       if sessionStorage.getItem('mov_type') is 'tr'
         Update_Field_On_Start.From_Coinbag()
         Update_Field_On_Start.To_Coinbag()
+
+      #OPEN CATEGORY FORM
+      $('#flip').click ->
+        $('#panel').slideToggle 'slow'
+        $('#fixed').toggle 1000
+        return
+      $('#catsubmit').click ->
+        put_new_cat_to = document.getElementById("tr_statement_classification")
+        create_option = document.createElement("option")
+        create_option.text = document.getElementById("newCatrgory").value
+        create_option.id = 'NEW'
+        #Verify if exist in the list
+        i = 0
+        flag = 0
+        while i < document.getElementById("tr_statement_classification").options.length - 1
+          if document.getElementById("tr_statement_classification").options[i].text == create_option.text
+            alert('Category already exist in categories tables, change your input.')
+            flag = 1
+          i++
+
+        if flag == 0
+          #Generate id key
+          text = ''
+          possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+          i = 0
+          while i < 15
+            text += possible.charAt(Math.floor(Math.random() * possible.length))
+            i++
+          create_option.value = text
+          #set values to array to insert in the controller
+          array_id = []
+          array_category = []
+
+          #clear the form field
+          document.getElementById("newCatrgory").value = ""
+
+          put_new_cat_to.add(create_option)
+          #send data to array
+          i=0
+          while i < document.getElementById("tr_statement_classification").options.length
+            if document.getElementById("tr_statement_classification").options[i].id == 'NEW'
+              array_id[array_id.length] = document.getElementById("tr_statement_classification").options[i].value
+              array_category[array_category.length] = document.getElementById("tr_statement_classification").options[i].text
+            i++
+          #put data in form hidden field to psend to controller
+          $("#tr_statement_array_id").val(array_id)
+          $("#tr_statement_array_category").val(array_category)
+
+          $('#panel').slideToggle 'slow'
+          $('#fixed').toggle 1000
+        return
+      return
+
+      #CALENDAR CONTROLLER
+      $('[data-behaviour~=datepicker]').datepicker
+        format: 'yyyy-mm-dd'
+        maxViewMode: 2
+        todayHighlight: true
+        orientation: 'bottom left'
+        todayBtn: 'linked'
+        autoclose: true

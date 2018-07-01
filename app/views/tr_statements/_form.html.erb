@@ -81,11 +81,30 @@
       <tr>
         <td><%= form.label "Category" %></td>
         <% begin %>
-          <td><%= form.collection_select :classification, @classification, :id, :classification, include_blank: true %></td>
+          <td><%= form.collection_select :classification, @classification, :id, :classification, include_blank: true %>
+          <i type="button" value="new category" id="flip">  new category</i>
+        </td>
         <% rescue %>
         <% end %>
         </tr>
     </div>
+    <tr>
+      <div>
+          <form>
+            <td></td>
+            <td>
+              <div id="panel">
+                <i>Category: </i><input type="text" name="new_category" title="Category name" id="newCatrgory">
+                <input type="button" value="Add category"  id="catsubmit"></td>
+              </div>
+              <br>
+            </td>
+          </form>
+      </div>
+    </tr>
+    <!-- Send NEW category to controller -->
+    <%= form.text_field :array_id, style: 'display:none' %>
+    <%= form.text_field :array_category, style: 'display:none' %>
 
     <div class="field">
       <tr>

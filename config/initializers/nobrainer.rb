@@ -20,15 +20,13 @@ NoBrainer.configure do |config|
 
   host = rdbaccess["access"]["host"]
   user = rdbaccess["access"]["user"]
-  password = rdbaccess["access"]["pass"]
+  pass = rdbaccess["access"]["pass"]
   port = rdbaccess["access"]["port"]
   appname = Rails.application.class.to_s.split("::").first
 
   NoBrainer.configure do |config|
-    host = 'localhost'
-    user = 'admin'
-    pass = 'GHT%&%$55$dfde$#wdf-6tYThusu'
     config.rethinkdb_url = ENV['RDB_URL'] || "rethinkdb://#{"#{user}:#{pass}@" if (user || pass)}#{host}#{":#{port}" if port}/treasury_#{Rails.env}"
+    #config.rethinkdb_url = ENV['RDB_URL'] || "rethinkdb://localhost/treasury_#{Rails.env}"
   end
 
   # ssl_options may be set to {:ca_certs => '/path/to/ca.crt'} to establish

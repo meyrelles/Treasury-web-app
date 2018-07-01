@@ -1,5 +1,27 @@
 {
-  "name": "treasury",
-  "private": true,
-  "dependencies": {}
+  "name": "javascripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "application.js",
+  "dependencies": {
+    "arg": "^2.0.0",
+    "ast": "0.0.1",
+    "bluebird": "^3.5.1",
+    "errors": "^0.3.0",
+    "events": "^3.0.0",
+    "exports": "0.0.1",
+    "f": "^1.4.0",
+    "lib": "^3.0.2",
+    "modernizr": "3.6.0",
+    "net": "^1.0.2",
+    "promise": "^8.0.1",
+    "rethinkdb": "^2.3.3",
+    "util": "^0.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
 }

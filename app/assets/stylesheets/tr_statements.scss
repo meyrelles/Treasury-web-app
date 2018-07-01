@@ -24,3 +24,30 @@
 .body_exch {
   background-color: #DFFFCA;
 }
+
+//ADD NEW Category
+#flip {
+    padding: 0px;
+    cursor:pointer;
+    text-align: center;
+    background-color: #e5eecc;
+    border: solid 1px #c3c3c3;
+}
+
+#panel {
+    padding: 0px;
+    text-align: center;
+    background-color: #e5eecc;
+    border: solid 1px #c3c3c3;
+}
+
+#panel {
+	text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    left: 5px;
+    padding: 0px;
+    display: none;
+    width: 80%;
+}
