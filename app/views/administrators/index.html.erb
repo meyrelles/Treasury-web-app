@@ -1,0 +1,33 @@
+<body id='administration' class='administration_body' data-controller="<%= controller.controller_name %>">
+  <% provide(:title, "Administrations") %>
+  <h1>App administration</h1>
+
+  <div id="Rethinkdb">
+    <table class="rethink_table">
+      <%= form_for(:administrators, url: administrators_path) do |form| %>
+        <h3>Rethinkdb commands</h3>
+        <tr>
+          <td></td>
+          <td><%= form.text_area :reql_cmd, value: $reql_input, class: 'field2', cols: 100, rows: 5  %></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><%= form.submit 'RUN REQL CMD', name: 'reql_cmd', id: 'reql_cmd', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+          <td></td>
+        </tr>
+        <tr>
+            <td>
+              <td>
+
+                  <p><%= $reql_output %><p>
+
+              </td>
+            </td>
+        </tr>
+      <% end %>
+
+    </table>
+
+  </div>
+</body>

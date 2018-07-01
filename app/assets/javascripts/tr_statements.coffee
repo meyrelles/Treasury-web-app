@@ -277,8 +277,7 @@ jQuery ->
       #OPEN CATEGORY FORM
       $('#flip').click ->
         $('#panel').slideToggle 'slow'
-        $('#fixed').toggle 1000
-        return
+
       $('#catsubmit').click ->
         put_new_cat_to = document.getElementById("tr_statement_classification")
         create_option = document.createElement("option")
@@ -322,9 +321,8 @@ jQuery ->
           $("#tr_statement_array_category").val(array_category)
 
           $('#panel').slideToggle 'slow'
-          $('#fixed').toggle 1000
-        return
-      return
+
+
 
       #CALENDAR CONTROLLER
       $('[data-behaviour~=datepicker]').datepicker

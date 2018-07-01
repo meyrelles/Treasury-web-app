@@ -19,6 +19,7 @@
             <ul class="dropdown-menu">
               <% if session[:admin].to_s == "[true]" and session[:user_id] != '' %>
                 <li><%= link_to "Users", users_path %></li>
+                <li><%= link_to "App administration", administrators_path %></li>
               <% end %>
               <li><%= link_to "Coinbags", coinbags_path %></li>
               <li><%= link_to "Currencies", currencies_path %></li>

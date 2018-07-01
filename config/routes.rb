@@ -24,6 +24,10 @@ Rails.application.routes.draw do
   get       '/settings',        to: 'settings#index'
   post      '/settings',        to: 'settings#save'
 
+  #Administration
+  get       '/administrators',  to: 'administrators#index'
+  post      '/administrators',  to: 'administrators#exec'
+
   get       '/login',           to: 'sessions#new'
   post      '/login',           to: 'sessions#create'
   delete    '/logout',          to: 'sessions#destroy'
