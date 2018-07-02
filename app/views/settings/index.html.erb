@@ -34,67 +34,70 @@
         <p id="number" class="invalid">A <b>number</b></p>
         <p id="length" class="invalid">Minimum <b>8 characters</b></p>
     </div>
+  </div>
+  <br>
+  <div class="currencies_default">
+    <%= form_for(:settings, url: settings_path) do |form| %>
+      <h3>Default currencies</h3>
+      <table border="1" id="CurDefTable">
+        <col width="130">
+        <col width="80">
+        <thead>
+          <tr>
+            <th style="text-align:center">Currency</th>
+            <th style="text-align:center">Default?</th>
+          </tr>
+        </thead>
 
-    <script>
-      var myInput = document.getElementById("psw");
-      var letter = document.getElementById("letter");
-      var capital = document.getElementById("capital");
-      var number = document.getElementById("number");
-      var length = document.getElementById("length");
+        <tbody>
+          <% i=0 %>
+          <% @currencies.each do |currency| %>
+            <tr>
+              <td id="currency"><%= currency.currency %></td>
+              <% if @currencies_default.count > 0 %>
+                <% flag = 0 %>
+                <% @currencies_default.each do |currency_default| %>
+                  <% if currency_default.currency == currency.currency %>
+                    <td><input type="checkbox" name="field1[]" onchange="change_checkbox(this)" id="field1_<%= i %>" value="<%= currency.currency %>" checked="" /></td>
+                    <% flag = 1 %>
+                  <% end %>
+                <% end %>
+                <% if flag == 0 %>
+                  <td><input type="checkbox" name="field1[]" onchange="change_checkbox(this)" id="field1_<%= i %>" value="<%= currency.currency %>" /></td>
+                <% end %>
+              <% else %>
+                <td><input type="checkbox" name="field1[]" onchange="change_checkbox(this)" id="field1_<%= i %>" value="<%= currency.currency %>" />
+              <% end %>
+            </tr>
+            <% i = i + 1 %>
+          <% end %>
 
-      // When the user clicks on the password field, show the message box
-      myInput.onfocus = function() {
-        document.getElementById("message").style.display = "block";
-      }
+          <!-- Send NEW category to controller -->
+          <%= form.text_field :currencies_name, style: 'display:none' %>
+          <%= form.text_field :currencies_checked, style: 'display:none' %>
 
-      // When the user clicks outside of the password field, hide the message box
-      myInput.onblur = function() {
-        document.getElementById("message").style.display = "none";
-      }
+<script>
+  var currencies_name = [];
+  var currencies_checked = [];
+  function change_checkbox(el){
+    if(el.checked){
+      currencies_name[el.id.substring(7)] = el.value;
+      currencies_checked[el.id.substring(7)] = "true";
+    }else{
+      currencies_name[el.id.substring(7)] = el.value;
+      currencies_checked[el.id.substring(7)] = "false";
+    }
+    //put data in form hidden field to send to controller
+    document.getElementById('settings_currencies_name').value = currencies_name;
+    document.getElementById('settings_currencies_checked').value = currencies_checked;
+  }
+</script>
 
-      // When the user starts to type something inside the password field
-      myInput.onkeyup = function() {
-        // Validate lowercase letters
-        var lowerCaseLetters = /[a-z]/g;
-        if(myInput.value.match(lowerCaseLetters)) {
-          letter.classList.remove("invalid");
-          letter.classList.add("valid");
-        } else {
-          letter.classList.remove("valid");
-          letter.classList.add("invalid");
-      }
-
-        // Validate capital letters
-        var upperCaseLetters = /[A-Z]/g;
-        if(myInput.value.match(upperCaseLetters)) {
-          capital.classList.remove("invalid");
-          capital.classList.add("valid");
-        } else {
-          capital.classList.remove("valid");
-          capital.classList.add("invalid");
-        }
-
-        // Validate numbers
-        var numbers = /[0-9]/g;
-        if(myInput.value.match(numbers)) {
-          number.classList.remove("invalid");
-          number.classList.add("valid");
-        } else {
-          number.classList.remove("valid");
-          number.classList.add("invalid");
-        }
-
-        // Validate length
-        if(myInput.value.length >= 8) {
-          length.classList.remove("invalid");
-          length.classList.add("valid");
-        } else {
-          length.classList.remove("valid");
-          length.classList.add("invalid");
-        }
-      }
-    </script>
-
+        </tbody>
+      </table>
+      <td><br></td>
+      <%= form.submit 'Apply defaults', name: 'cur_def', id: 'cur_defs', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %>
+    <% end %>
   </div>
 
 </body>

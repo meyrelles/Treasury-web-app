@@ -6,9 +6,10 @@ body {
   background-color: #FAFFFA;
 }
 
+// Style to change password
 div.settings {
   width: 400px;
-  border: 5px solid green;
+  border: 2px solid green;
   padding: 5px;
   margin: 15px;
 }
@@ -57,4 +58,22 @@ input.settings {
     position: relative;
     left: -10px;
     content: "&#10006;";
+}
+
+// Style to change password
+div.currencies_default {
+  width: 400px;
+  border: 2px solid green;
+  padding: 5px;
+  margin: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+#CurDefTable {
+  align-self: center;
+}
+
+#cur_def {
+  width: 210px;
 }
