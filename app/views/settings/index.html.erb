@@ -36,6 +36,10 @@
     </div>
   </div>
   <br>
+
+
+  <!-- CURRENCIES DEFAULTS -->
+
   <div class="currencies_default">
     <%= form_for(:settings, url: settings_path) do |form| %>
       <h3>Default currencies</h3>
@@ -76,22 +80,22 @@
           <%= form.text_field :currencies_name, style: 'display:none' %>
           <%= form.text_field :currencies_checked, style: 'display:none' %>
 
-<script>
-  var currencies_name = [];
-  var currencies_checked = [];
-  function change_checkbox(el){
-    if(el.checked){
-      currencies_name[el.id.substring(7)] = el.value;
-      currencies_checked[el.id.substring(7)] = "true";
-    }else{
-      currencies_name[el.id.substring(7)] = el.value;
-      currencies_checked[el.id.substring(7)] = "false";
-    }
-    //put data in form hidden field to send to controller
-    document.getElementById('settings_currencies_name').value = currencies_name;
-    document.getElementById('settings_currencies_checked').value = currencies_checked;
-  }
-</script>
+          <script>
+            var currencies_name = [];
+            var currencies_checked = [];
+            function change_checkbox(el){
+              if(el.checked){
+                currencies_name[el.id.substring(7)] = el.value;
+                currencies_checked[el.id.substring(7)] = "true";
+              }else{
+                currencies_name[el.id.substring(7)] = el.value;
+                currencies_checked[el.id.substring(7)] = "false";
+              }
+              //put data in form hidden field to send to controller
+              document.getElementById('settings_currencies_name').value = currencies_name;
+              document.getElementById('settings_currencies_checked').value = currencies_checked;
+            }
+          </script>
 
         </tbody>
       </table>
@@ -99,5 +103,181 @@
       <%= form.submit 'Apply defaults', name: 'cur_def', id: 'cur_defs', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %>
     <% end %>
   </div>
+
+  <br>
+
+  <!-- DETAILS (CLASSIFICATIONS) TRANSACTION DEFAULTS -->
+
+  <div class="details_default">
+    <%= form_for(:settings, url: settings_path) do |form| %>
+      <h3>Default details</h3>
+      <table border="1" id="DetailsDefTable">
+        <col width="130">
+        <col width="80">
+        <thead>
+          <tr>
+            <th style="text-align:center">Details</th>
+            <th style="text-align:center">Transaction Defaults?</th>
+            <th style="text-align:center">Transaction Hide?</th>
+            <th style="text-align:center">Exchange Defaults?</th>
+            <th style="text-align:center">Exchange Hide?</th>
+            <!-- <th style="text-align:center">Exchange Defaults?</th> -->
+          </tr>
+        </thead>
+
+        <tbody>
+          <% i=0 %>
+          <% @classifications.each do |detail| %>
+            <tr>
+              <td id="detail"><%= detail.classification %></td>
+
+                <!-- CHECK TR DEFAULTS -->
+                <% if @classifications_default.count > 0 %>
+                  <% flag = 0 %>
+                  <% @classifications_default.each do |class_trdef| %>
+                    <% if class_trdef.classification == detail.classification and class_trdef.operation == 'tr' and class_trdef.isdefault == 'true'%>
+                      <td><input type="checkbox" name="fieldtrdef[]" onchange="change_checkbox_tr_def(this)" id="fieldtrdef_<%= i %>" value="<%= detail.classification %>" checked="" /></td>
+                      <% flag = 1 %>
+                    <% end %>
+                  <% end %>
+                  <% if flag == 0 %>
+                    <td><input type="checkbox" name="fieldtrdef[]" onchange="change_checkbox_tr_def(this)" id="fieldtrdef_<%= i %>" value="<%= detail.classification %>" /></td>
+                  <% end %>
+                <% else %>
+                  <td><input type="checkbox" name="fieldtrdef[]" onchange="change_checkbox_tr_def(this)" id="fieldtrdef_<%= i %>" value="<%= detail.classification %>" />
+                <% end %>
+
+                <!-- CHECK TR HIDE -->
+                <% if @classifications_default.count > 0 %>
+                  <% flag = 0 %>
+                  <% @classifications_default.each do |class_trhide| %>
+                    <% if class_trhide.classification == detail.classification and class_trhide.operation == 'tr' and class_trhide.ishide == 'true'%>
+                      <td><input type="checkbox" name="fieldtrhide[]" onchange="change_checkbox_tr_hide(this)" id="fieldtrhide_<%= i %>" value="<%= detail.classification %>" checked="" /></td>
+                      <% flag = 1 %>
+                    <% end %>
+                  <% end %>
+                  <% if flag == 0 %>
+                    <td><input type="checkbox" name="fieldtrhide[]" onchange="change_checkbox_tr_hide(this)" id="fieldtrhide_<%= i %>" value="<%= detail.classification %>" /></td>
+                  <% end %>
+                <% else %>
+                  <td><input type="checkbox" name="fieldtrhide[]" onchange="change_checkbox_tr_hide(this)" id="fieldtrhide_<%= i %>" value="<%= detail.classification %>" />
+                <% end %>
+
+                <!-- CHECK EXCH DEFAULTS -->
+                <% if @classifications_default.count > 0 %>
+                  <% flag = 0 %>
+                  <% @classifications_default.each do |class_exchdef| %>
+                    <% if class_exchdef.classification == detail.classification and class_exchdef.operation == 'exch' and class_exchdef.isdefault == 'true'%>
+                      <td><input type="checkbox" name="fieldexchdef[]" onchange="change_checkbox_exch_def(this)" id="fieldexchdef_<%= i %>" value="<%= detail.classification %>" checked="" /></td>
+                      <% flag = 1 %>
+                    <% end %>
+                  <% end %>
+                  <% if flag == 0 %>
+                    <td><input type="checkbox" name="fieldtrdef[]" onchange="change_checkbox_exch_def(this)" id="fieldexchdef_<%= i %>" value="<%= detail.classification %>" /></td>
+                  <% end %>
+                <% else %>
+                  <td><input type="checkbox" name="fieldexchdef[]" onchange="change_checkbox_exch_def(this)" id="fieldexchdef_<%= i %>" value="<%= detail.classification %>" />
+                <% end %>
+
+                <!-- CHECK EXCH HIDE -->
+                <% if @classifications_default.count > 0 %>
+                  <% flag = 0 %>
+                  <% @classifications_default.each do |class_exchhide| %>
+                    <% if class_exchhide.classification == detail.classification and class_exchhide.operation == 'exch' and class_exchhide.ishide == 'true'%>
+                      <td><input type="checkbox" name="fieldexchhide[]" onchange="change_checkbox_exch_hide(this)" id="fieldexchhide_<%= i %>" value="<%= detail.classification %>" checked="" /></td>
+                      <% flag = 1 %>
+                    <% end %>
+                  <% end %>
+                  <% if flag == 0 %>
+                    <td><input type="checkbox" name="fieldexchhide[]" onchange="change_checkbox_exch_hide(this)" id="fieldexchhide_<%= i %>" value="<%= detail.classification %>" /></td>
+                  <% end %>
+                <% else %>
+                  <td><input type="checkbox" name="fieldexchhide[]" onchange="change_checkbox_exch_hide(this)" id="fieldexchhide_<%= i %>" value="<%= detail.classification %>" />
+                <% end %>
+            </tr>
+            <% i = i + 1 %>
+          <% end %>
+          <!-- Send NEW category to controller -->
+          <span id="hidden_fields">
+            <%= form.text_field :classifications_tr_def_name, style: 'display:none' %>
+            <%= form.text_field :classifications_tr_def_checked, style: 'display:none' %>
+
+            <%= form.text_field :classifications_tr_hide_name, style: 'display:none' %>
+            <%= form.text_field :classifications_tr_hide_checked, style: 'display:none' %>
+
+            <%= form.text_field :classifications_exch_def_name, style: 'display:none' %>
+            <%= form.text_field :classifications_exch_def_checked, style: 'display:none' %>
+
+            <%= form.text_field :classifications_exch_hide_name, style: 'display:none' %>
+            <%= form.text_field :classifications_exch_hide_checked, style: 'display:none' %>
+          </span>
+          <script>
+            var classifications_tr_def_name = [];
+            var classifications_tr_def_checked = [];
+            var classifications_tr_hide_name = [];
+            var classifications_tr_hide_checked = [];
+            var classifications_exch_def_name = [];
+            var classifications_exch_def_checked = [];
+            var classifications_exch_hide_name = [];
+            var classifications_exch_hide_checked = [];
+            function change_checkbox_tr_def(trdef){
+              if(trdef.checked){
+                classifications_tr_def_name[trdef.id.substring(11)] = trdef.value;
+                classifications_tr_def_checked[trdef.id.substring(11)] = "true";
+              }else{
+                classifications_tr_def_name[trdef.id.substring(11)] = trdef.value;
+                classifications_tr_def_checked[trdef.id.substring(11)] = "false";
+              }
+              //put data in form hidden field to send to controller
+              document.getElementById('settings_classifications_tr_def_name').value = classifications_tr_def_name;
+              document.getElementById('settings_classifications_tr_def_checked').value = classifications_tr_def_checked;
+            }
+
+            function change_checkbox_tr_hide(trhide){
+              if(trhide.checked){
+                classifications_tr_hide_name[trhide.id.substring(12)] = trhide.value;
+                classifications_tr_hide_checked[trhide.id.substring(12)] = "true";
+              }else{
+                classifications_tr_hide_name[trhide.id.substring(12)] = trhide.value;
+                classifications_tr_hide_checked[trhide.id.substring(12)] = "false";
+              }
+              //put data in form hidden field to send to controller
+              document.getElementById('settings_classifications_tr_hide_name').value = classifications_tr_hide_name;
+              document.getElementById('settings_classifications_tr_hide_checked').value = classifications_tr_hide_checked;
+            }
+
+            function change_checkbox_exch_def(exchdef){
+              if(exchdef.checked){
+                classifications_exch_def_name[exchdef.id.substring(13)] = exchdef.value;
+                classifications_exch_def_checked[exchdef.id.substring(13)] = "true";
+              }else{
+                classifications_exch_def_name[exchdef.id.substring(13)] = exchdef.value;
+                classifications_exch_def_checked[exchdef.id.substring(13)] = "false";
+              }
+              //put data in form hidden field to send to controller
+              document.getElementById('settings_classifications_exch_def_name').value = classifications_exch_def_name;
+              document.getElementById('settings_classifications_exch_def_checked').value = classifications_exch_def_checked;
+            }
+
+            function change_checkbox_exch_hide(exchhide){
+              if(exchhide.checked){
+                classifications_exch_hide_name[exchhide.id.substring(14)] = exchhide.value;
+                classifications_exch_hide_checked[exchhide.id.substring(14)] = "true";
+              }else{
+                classifications_exch_hide_name[exchhide.id.substring(14)] = exchhide.value;
+                classifications_exch_hide_checked[exchhide.id.substring(14)] = "false";
+              }
+              //put data in form hidden field to send to controller
+              document.getElementById('settings_classifications_exch_hide_name').value = classifications_exch_hide_name;
+              document.getElementById('settings_classifications_exch_hide_checked').value = classifications_exch_hide_checked;
+            }
+          </script>
+        </tbody>
+      </table>
+      <td><br></td>
+      <%= form.submit 'Apply defaults', name: 'details_def', id: 'details_def', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %>
+    <% end %>
+  </div>
+
 
 </body>

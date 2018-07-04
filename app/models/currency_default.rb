@@ -6,5 +6,7 @@ class CurrencyDefault
   field :user_id, :type => String
   field :created_at, :type => Time
   field :created_by, :type => String
-  field :currency_id_link, :type => String
+  field :currency_id, :type => String
+
+  #belongs_to :currency
 end

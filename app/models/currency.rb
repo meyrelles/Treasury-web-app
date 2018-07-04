@@ -7,4 +7,6 @@ class Currency
   field :created_by, :type => String
   field :changed_at, :type => Time
   field :changed_by, :type => String
+
+  #has_many :currency_defaults
 end

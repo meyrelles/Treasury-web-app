@@ -138,8 +138,6 @@ class TrStatementsController < ApplicationController
 
       params[:tr_statement][:date_time] = Time.new(params[:tr_statement][:"date_time"][0..3].to_i,params[:tr_statement][:"date_time"][5..6].to_i,params[:tr_statement][:"date_time"][8..9].to_i,1,45,45,"+00:00")
       params[:tr_statement][:created_by] = session[:user_id]
-
-
     end
 
     def load_tables
@@ -152,18 +150,89 @@ class TrStatementsController < ApplicationController
       @coinbag = Coinbag.all
       @coinbag = @coinbag.order(:coinbag)
 
-      #load currency table
-      @currency = Currency.all
-      @currency = @currency.order(:currency)
+      load_tables_currencies
 
-      #load classification table
+      load_tables_classifications
+    end
+
+    def load_tables_classifications
+      #load Currency table
       @classification = Classification.all
       @classification = @classification.order(:classification)
+
+      #Load defaults from transaction process
+      if params[:type] == 'tr'
+        @tr_def = ClassificationDefault.where(user_id: session[:user_id], isdefault: 'true', operation: 'tr').map(&:classification_id)*","
+      elsif params[:type] == 'exch'
+        @tr_def = ClassificationDefault.where(user_id: session[:user_id], isdefault: 'true', operation: 'exch').map(&:classification_id)*","
+      end
+      #convert activerecord to array
+      @tr_def = @tr_def.split(',')
+      i=0
+      # Add default elements to activerecord
+      @tr_def.each do |defaults|
+        if i==0
+          @tr_def_end = Classification.where(id: @tr_def[i])
+        else
+          @tr_def_end = @tr_def_end + Classification.where(id: @tr_def[i])
+        end
+        #Remove activerecord element exist in user defaults
+        @classification = @classification.reject {|id| id == Classification.find(@tr_def[i]) }
+        # Mark as default in element control
+        @tr_def_end[i]['classification'] = '**' + @tr_def_end[i]['classification']
+        i=i+1
+      end
+      # Order the array elements by currency name
+      if i > 0
+        @tr_def_end = @tr_def_end.sort_by{|e| e[:classification]}
+        @classification = @tr_def_end + @classification
+      end
+
+      i=0
+      #Remove hidden classifications
+      if params[:type] == 'tr'
+        @tr_hide = ClassificationDefault.where(user_id: session[:user_id], ishide: 'true', operation: 'tr').map(&:classification_id)*","
+      elsif params[:type] == 'exch'
+        @tr_hide = ClassificationDefault.where(user_id: session[:user_id], ishide: 'true', operation: 'exch').map(&:classification_id)*","
+      end
+      #convert activerecord to array
+      @tr_hide = @tr_hide.split(',')
+      @tr_hide.each do |defaults|
+        #Remove hidden element exist in activerecord
+        @classification = @classification.reject {|id| id == Classification.find(@tr_hide[i]) }
+        i=i+1
+      end
+    end
+
+    def load_tables_currencies
+      #load Currency table
+      @currency = Currency.all
+      @currency = @currency.order(:currency)
+      @currency3 = CurrencyDefault.where(user_id: session[:user_id]).map(&:currency_id)*","
+      #convert activerecord to array
+      @currency3 = @currency3.split(',')
+      i=0
+      # Add default elements to activerecord
+      @currency3.each do |defaults|
+        if i==0
+          @currency2 = Currency.where(id: @currency3[i])
+        else
+          @currency2 = @currency2 + Currency.where(id: @currency3[i])
+        end
+        #Remove activerecord element exist in user defaults
+        @currency = @currency.reject {|id| id == Currency.find(@currency3[i]) }
+        # Mark as default in element control
+        @currency2[i]['currency'] = '**' + @currency2[i]['currency']
+        i=i+1
+      end
+      # Order the array elements by currency name
+      if i > 0
+        @currency2 = @currency2.sort_by{|e| e[:currency]}
+        @currency = @currency2 + @currency
+      end
     end
 
     def function_update
-
-  #    respond_to do |format|
         begin
           @Record = TrStatement.find(params[:id])
 
@@ -206,9 +275,6 @@ class TrStatementsController < ApplicationController
           flash[:alert] = 'Transaction was unsuccessfully updated!!!, try again...'
           render :edit
         end
-
-#      end
-
     end
 
     def function_delete()

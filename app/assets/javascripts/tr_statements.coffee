@@ -332,3 +332,32 @@ jQuery ->
         orientation: 'bottom left'
         todayBtn: 'linked'
         autoclose: true
+
+      #FORMAT COMBOBOX CURRENCIES DEFAULTS
+      k=0
+      $('#tr_statement_currency').ready ->
+        while k < document.getElementById("tr_statement_currency").options.length - 1
+          if document.getElementById("tr_statement_currency").options[k].text.substring(0, 1) == '*'
+            texto = document.getElementById("tr_statement_currency").options[k].text.substring(1, 100)
+            document.getElementById("tr_statement_currency").options[k].text = texto
+            document.getElementById("tr_statement_currency").options[k].id = 'default_atr'
+          k++
+      k=0
+      if sessionStorage.getItem('mov_type') is 'exch'
+        $('#tr_statement_currency_dest').ready ->
+        while k < document.getElementById("tr_statement_currency_dest").options.length - 1
+          if document.getElementById("tr_statement_currency_dest").options[k].text.substring(0, 1) == '*'
+            texto = document.getElementById("tr_statement_currency_dest").options[k].text.substring(1, 100)
+            document.getElementById("tr_statement_currency_dest").options[k].text = texto
+            document.getElementById("tr_statement_currency_dest").options[k].id = 'default_atr'
+          k++
+
+      #FORMAT COMBOBOX CLASSIFICATIONS(CATEGORIES) DEFAULTS
+      k=0
+      $('#tr_statement_classification').ready ->
+        while k < document.getElementById("tr_statement_classification").options.length
+          if document.getElementById("tr_statement_classification").options[k].text.substring(0, 1) == '*'
+            texto = document.getElementById("tr_statement_classification").options[k].text.substring(1, 100)
+            document.getElementById("tr_statement_classification").options[k].text = texto
+            document.getElementById("tr_statement_classification").options[k].id = 'default_atr'
+          k++

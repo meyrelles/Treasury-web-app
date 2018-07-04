@@ -60,7 +60,7 @@ input.settings {
     content: "&#10006;";
 }
 
-// Style to change password
+// Style to currencies defaults
 div.currencies_default {
   width: 400px;
   border: 2px solid green;
@@ -75,5 +75,24 @@ div.currencies_default {
 }
 
 #cur_def {
+  width: 210px;
+}
+
+
+// Style to Details(Classifications) defaults
+div.details_default {
+  width: 400px;
+  border: 2px solid green;
+  padding: 5px;
+  margin: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+#DetailsDefTable {
+  align-self: center;
+}
+
+#details_def {
   width: 210px;
 }
