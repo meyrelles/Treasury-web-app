@@ -144,7 +144,7 @@
     <div class="field">
       <tr id = "field_coinbag_from">
         <% if @mov_type.to_s == 'tr' %>
-          <td><%= form.label :coinbag %></td>
+          <td><%= form.label "To #{:coinbag}" %></td>
           <td><%= form.grouped_collection_select :coinbag, User.order(:nickname),
             :coinbag, :nickname, :id, :coinbag, include_blank: true %>
           <div id="CTR_coinbag" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
@@ -167,7 +167,7 @@
     <div class="field">
       <tr id = "field_coinbag_to">
         <% if @mov_type.to_s == 'tr' %>
-          <td><%= form.label "coinbag" %></td>
+          <td><%= form.label "From coinbag" %></td>
           <td><%= form.grouped_collection_select :coinbag_dest, User.order(:nickname),
             :coinbag, :nickname, :id, :coinbag %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>

@@ -4,5 +4,5 @@
 require_relative 'config/application'
 require File.expand_path('../config/application', __FILE__)
 
-RAILS_ENV=development
+#RAILS_ENV=development
 Rails.application.load_tasks

@@ -42,4 +42,12 @@ Rails.application.routes.draw do
   resources :tr_statements
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   #
+  #API ROUTES
+  namespace 'api' do
+    namespace 'v1' do
+      resources :treasuryin
+      resources :treasuryout
+      resources :exchange
+    end
+  end
 end

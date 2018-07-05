@@ -89,3 +89,6 @@ gem 'bootstrap-timepicker-rails'
 #To paginate the tables
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
+
+# API package
+gem 'api'
