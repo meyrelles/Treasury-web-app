@@ -19,10 +19,19 @@ class TrStatementsController < ApplicationController
   # GET /tr_statements/1
   # GET /tr_statements/1.json
   def show
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
   end
 
   # GET /tr_statements/new
   def new
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
+
     load_tables
     @action = 'NEW'
     @usr = session[:user_id].to_s
@@ -37,6 +46,11 @@ class TrStatementsController < ApplicationController
 
   # GET /tr_statements/1/edit
   def edit
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
+
     @action = 'EDIT'
     @usr = session[:user_id].to_s
     @mov_type = params[:type]
@@ -51,6 +65,11 @@ class TrStatementsController < ApplicationController
   # POST /tr_statements
   # POST /tr_statements.json
   def create
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
+
     #data manipulation from form
     data_manipulation
 
@@ -87,6 +106,11 @@ class TrStatementsController < ApplicationController
   # PATCH/PUT /tr_statements/1
   # PATCH/PUT /tr_statements/1.json
   def update
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
+
     #data manipulation from form
     data_manipulation
 
@@ -111,6 +135,11 @@ class TrStatementsController < ApplicationController
   # DELETE /tr_statements/1
   # DELETE /tr_statements/1.json
   def destroy
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
+
     function_delete
 
     #@tr_statement.destroy
@@ -138,6 +167,11 @@ class TrStatementsController < ApplicationController
 
       params[:tr_statement][:date_time] = Time.new(params[:tr_statement][:"date_time"][0..3].to_i,params[:tr_statement][:"date_time"][5..6].to_i,params[:tr_statement][:"date_time"][8..9].to_i,1,45,45,"+00:00")
       params[:tr_statement][:created_by] = session[:user_id]
+
+      if params[:tr_statement][:mov_type] == 'tr'
+        params[:tr_statement][:amount_dest] = params[:tr_statement][:"amount"]
+        params[:tr_statement][:currency_dest] = params[:tr_statement][:"currency"]
+      end
     end
 
     def load_tables

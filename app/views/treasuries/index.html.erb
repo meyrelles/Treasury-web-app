@@ -1,0 +1,45 @@
+<body id='treasury_reports' class='treasury_reports_body' data-controller="<%= controller.controller_name %>">
+  <% provide(:title, "Treasury Reports") %>
+  <h1>Treasury reports</h1>
+
+  <div id="Reports">
+    <table border="1" id="show">
+      <thead>
+        <tr>
+          <th></th>
+          <% @header.each do |header| %>
+            <% if Currency.where(id: header[0][0][1]).map(&:currency)*"," != ''  %>
+              <th><%= Currency.where(id: header[0][0][1]).map(&:currency)*"," %></th>
+            <% end %>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <h3>Treasury balances:</h3>
+          <% @rows.each do |users| %>
+          <tr>
+            <% username = User.where(id: users[0][1][1]).map(&:nickname)*"," %>
+            <td><%= username.titleize %></td>
+              <% @header.each do |currency| %>
+                <% flag= 0 %>
+                <% @treasury.each do |values| %>
+                  <% if values[0][1][1] == users[0][1][1] and values[0][0][1] == currency[0][0][1] %>
+                    <td><%= values[1] %></td>
+                    <% flag = 1 %>
+                  <% end %>
+                <% end %>
+                <% if flag == 0 %>
+                  <td></td>
+                <% end %>
+              <% end %>
+          </tr>
+          <% end %>
+
+      <br>
+      </tbody>
+
+    </table>
+
+  </div>
+</body>

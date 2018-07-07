@@ -5,7 +5,8 @@ module Api
         treasuryout = TrStatement.where(:status => 'I')
           .where(:coinbag.not => "")
           .where(:mov_type => 'tr')
-          .order(date_time: :asc)
+          .where(:from.not => User.where(username: 'world').map(&:id)*",")
+          .order(date_time: :desc)
           .map{ |f| {
             :Amount => f.amount + f.fee,
             :Currency => Currency.where(id: f.currency).map(&:currency)*",",

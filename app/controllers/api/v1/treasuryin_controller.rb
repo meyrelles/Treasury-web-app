@@ -6,8 +6,9 @@ module Api
           treasuryin = TrStatement.where(:status => 'I')
             .where(:coinbag_dest.not => "")
             .where(:mov_type => 'tr')
+            .where(:to.not => User.where(username: 'world').map(&:id)*",")
             .where(:currency => Currency.where(currency: params[:currency]).map(&:id)*",")
-            .order(date_time: :asc)
+            .order(date_time: :desc)
             .map{ |f| {
               :Amount => f.amount,
               :Currency => Currency.where(id: f.currency).map(&:currency)*",",
@@ -27,6 +28,7 @@ module Api
           treasuryin = TrStatement.where(:status => 'I')
             .where(:coinbag_dest.not => "")
             .where(:mov_type => 'tr')
+            .where(:to.not => User.where(username: 'world').map(&:id)*",")
             .order(date_time: :asc)
             .map{ |f| {
               :Amount => f.amount,

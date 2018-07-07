@@ -50,4 +50,8 @@ Rails.application.routes.draw do
       resources :exchange
     end
   end
+
+  #REPORTS ROUTES
+  get       '/treasuries',        to: 'treasuries#index'
+  post      '/treasuries',        to: 'treasuries#filters'
 end

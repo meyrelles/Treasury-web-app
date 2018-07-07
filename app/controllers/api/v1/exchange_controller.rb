@@ -9,7 +9,7 @@ module Api
           .where(:coinbag_dest.not => nil)
           .where(:currency_dest.not => nil)
           .where(:mov_type => 'exch')
-          .order(date_time: :asc)
+          .order(date_time: :desc)
           .map{ |f| {
             :User => User.where(id: f.from).map(&:nickname)*",",
             :Source_coinbag => Coinbag.where(id: f.coinbag).map(&:coinbag)*",",
