@@ -3,9 +3,10 @@
   <h1>Treasury reports</h1>
 
   <div id="Reports">
-    <table border="1" id="show">
-      <thead>
-        <tr>
+    <table border="1" class="Balance">
+    <%= form_for(:treasuries, url: treasuries_path) do |form| %>
+      <thead class="BalanceHeader">
+        <tr class="impar">
           <th></th>
           <% @header.each do |header| %>
             <% if Currency.where(id: header[0][0][1]).map(&:currency)*"," != ''  %>
@@ -15,12 +16,13 @@
         </tr>
       </thead>
 
-      <tbody>
+      <tbody class="BalanceHeader">
+        <% tdclass = 0 %>
         <h3>Treasury balances:</h3>
           <% @rows.each do |users| %>
-          <tr>
-            <% username = User.where(id: users[0][1][1]).map(&:nickname)*"," %>
-            <td><%= username.titleize %></td>
+          <tr class="th_<%= "#{tdclass}" %>">
+            <% @username = User.where(id: users[0][1][1]).map{|p| "#{p.givenname} #{p.surname}"} %>
+            <td><%= @username[0] %></td>
               <% @header.each do |currency| %>
                 <% flag= 0 %>
                 <% @treasury.each do |values| %>
@@ -33,13 +35,56 @@
                   <td></td>
                 <% end %>
               <% end %>
+            <% if tdclass == 0 %>
+              <% tdclass = 1 %>
+            <% else %>
+              <% tdclass = 0 %>
+            <% end %>
           </tr>
           <% end %>
 
-      <br>
-      </tbody>
+        </tbody>
 
+        <tfoot>
+          <tr class="impar">
+            <th>Total</th>
+            <% i=0 %>
+            <% @header.each do |tot| %>
+              <th><%=  @totals[1][i].to_s %></th>
+              <% i+=1 %>
+            <% end %>
+          </tr>
+          <tr class="par">
+            <th>Rates</th>
+            <% i=0 %>
+            <% @header.each do |tot| %>
+              <th><%=  @totals[2][i].to_s %></th>
+              <% i+=1 %>
+            <% end %>
+
+          </tr>
+          <tr class="impar">
+            <th>USD Total</th>
+            <% i=0 %>
+            <% @header.each do |tot| %>
+              <th><%=  @totals[3][i].to_s %></th>
+              <% i+=1 %>
+            <% end %>
+
+          </tr>
+        </tfoot>
+      <br>
+
+      <br>
+      <td></td>
     </table>
+    <br>
+    <table>
+      <tr>
+        <td><%= form.submit 'Update Currency Rates', name: 'UpdateRates', id: 'UpdateRates', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+      </tr>
+    </table>
+  <% end %>
 
   </div>
 </body>

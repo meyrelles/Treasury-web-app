@@ -12,11 +12,15 @@ class User
                       uniqueness: true
   validates :nickname,  presence: true, uniqueness: true
 
-  field :username, :type => String
+  def email=(value)
+    super(value.strip.downcase)
+  end
+
+  field :username, :type => String, :index => true
   field :password_digest, :type => String
   field :surname, :type => String
   field :givenname, :type => String
-  field :nickname, :type => String
+  field :nickname, :type => String, :index => true
   field :birthdate_time, :type => Time
   field :email, :type => String
   field :spreadsheet_link, :type => String

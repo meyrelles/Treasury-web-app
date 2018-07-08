@@ -90,9 +90,6 @@ class TrStatementsController < ApplicationController
         # change for here to update the table after form commit
         # If working on exchange operation, the app needs to create an aditional record in DB
         # Link to function to create it.
-        if params[:tr_statement][:mov_type] == 'exch'
-          exchange_function_insert
-        end
 
         format.html { redirect_to @tr_statement, notice: 'Transaction was successfully created.' }
         format.json { render :show, status: :created, location: @tr_statement }

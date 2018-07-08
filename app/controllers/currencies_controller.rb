@@ -7,8 +7,12 @@ class CurrenciesController < ApplicationController
     if session[:user_id].to_s == ''
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
-    end    
+    end
+
+
+
     @currencies = Currency.all
+
   end
 
   # GET /currencies/1
@@ -73,6 +77,6 @@ class CurrenciesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def currency_params
-      params.require(:currency).permit(:currency)
+      params.require(:currency).permit(:currency, :exch_rate, :exch_name, :exch_symbol)
     end
 end

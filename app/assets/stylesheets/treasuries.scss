@@ -1,0 +1,41 @@
+// Place all the styles related to the settings controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+  background-color: #FAFFFA;
+}
+
+table.Balance {
+  border: 1px solid #333;
+}
+
+tbody.BalanceHeader {
+  border: 1px solid #333;
+}
+
+tr.th_0 {
+    border: 1px solid #333;
+    background-color: #AFEFFF;
+    color: #000;
+}
+
+tr.th_1 {
+    border: 1px solid #333;
+    background-color: #C3D7DC;
+    color: #000;
+}
+
+tr.par {
+    border: 1px solid #333;
+    background-color: #F5FCD5;
+    color: #000;
+}
+
+tr.impar {
+    border: 1px solid #333;
+    background-color: #E3E5DB;
+    color: #000;
+}
+
+tr:hover {background-color:#f5f5f5;}

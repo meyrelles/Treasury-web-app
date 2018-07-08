@@ -92,3 +92,6 @@ gem 'will_paginate-bootstrap'
 
 # API package
 gem 'api'
+
+# GET HTML API's
+gem 'httparty'

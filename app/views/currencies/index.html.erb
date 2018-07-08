@@ -7,6 +7,9 @@
       <thead>
         <tr>
           <th>Currency</th>
+          <th>Exchange Symbol</th>
+          <th>Exchange Name</th>
+          <th>Exchange Rate</th>
           <th colspan="3"></th>
         </tr>
       </thead>
@@ -15,6 +18,9 @@
         <% @currencies.each do |currency| %>
           <tr>
             <td><%= currency.currency %></td>
+            <td><%= currency.exch_symbol %></td>
+            <td><%= currency.exch_name %></td>
+            <td><%= currency.exch_rate %></td>
             <td><%= link_to 'Show', currency %></td>
             <td><%= link_to 'Edit', edit_currency_path(currency) %></td>
             <td><%= link_to 'Destroy', currency, method: :delete, data: { confirm: 'Are you sure?' } %></td>

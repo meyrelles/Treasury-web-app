@@ -17,7 +17,7 @@ class TrStatement
   field :celebrate, :type => String
   field :mov_type, :type => String
   field :fee, :type => Float
-  field :hash, :type => String
+  field :hash, :type => Hash
   field :version, :type => String
   field :created_by, :type => String
   field :status, :type => String
