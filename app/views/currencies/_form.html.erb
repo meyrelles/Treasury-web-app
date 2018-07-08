@@ -17,22 +17,41 @@
         <td><%= form.label :currency %></td>
         <td><%= form.text_field :currency %></td>
       </tr>
-      <tr>
-        <td><%= form.label 'Exchange Symbol' %></td>
-        <td><%= form.text_field :exch_symbol %></td>
-      </tr>
-      <tr>
-        <td><%= form.label 'Exchange Name' %></td>
-        <td><%= form.text_field :exch_name %></td>
-      </tr>
-      <tr>
-        <td><%= form.label 'Exchange Rate' %></td>
-        <td><%= form.text_field :exch_rate %></td>
-      </tr>
-      <tr>
-        <td><%= form.label 'Kind of currency' %></td>
-        <td><%= form.text_field :cur_type %></td>
-      </tr>
+      <% if session[:admin].to_s != "[true]" %>
+        <tr>
+          <td><%= form.label 'Exchange Symbol' %></td>
+          <td><%= form.text_field :exch_symbol, :disabled => true %></td>
+        </tr>
+        <tr>
+          <td><%= form.label 'Exchange Name' %></td>
+          <td><%= form.text_field :exch_name, :disabled => true %></td>
+        </tr>
+        <tr>
+          <td><%= form.label 'Exchange Rate' %></td>
+          <td><%= form.text_field :exch_rate, :disabled => true %></td>
+        </tr>
+        <tr>
+          <td><%= form.label 'Kind of currency' %></td>
+          <td><%= form.text_field :cur_type, :disabled => true %></td>
+        </tr>
+    <% else %>
+        <tr>
+          <td><%= form.label 'Exchange Symbol' %></td>
+          <td><%= form.text_field :exch_symbol %></td>
+        </tr>
+        <tr>
+          <td><%= form.label 'Exchange Name' %></td>
+          <td><%= form.text_field :exch_name %></td>
+        </tr>
+        <tr>
+          <td><%= form.label 'Exchange Rate' %></td>
+          <td><%= form.text_field :exch_rate %></td>
+        </tr>
+        <tr>
+          <td><%= form.label 'Kind of currency' %></td>
+          <td><%= form.text_field :cur_type %></td>
+        </tr>
+    <% end %>
     </div>
 
     <div class="actions">

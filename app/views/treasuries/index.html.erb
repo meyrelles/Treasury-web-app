@@ -1,33 +1,38 @@
-<body id='treasury_reports' class='treasury_reports_body' data-controller="<%= controller.controller_name %>">
+<body onload="  " id='treasury_reports' class='treasury_reports_body' data-controller="<%= controller.controller_name %>">
   <% provide(:title, "Treasury Reports") %>
   <h1>Treasury reports</h1>
 
   <div id="Reports">
-    <table border="1" class="Balance">
+    <table border="1" class="Balance" id="BalanceTable">
     <%= form_for(:treasuries, url: treasuries_path) do |form| %>
       <thead class="BalanceHeader">
         <tr class="impar">
           <th></th>
           <% @header.each do |header| %>
-            <% if Currency.where(id: header[0][0][1]).map(&:currency)*"," != ''  %>
-              <th><%= Currency.where(id: header[0][0][1]).map(&:currency)*"," %></th>
-            <% end %>
+            <th id="tableheader" align="center"><%= header[0][0][1] %></th>
           <% end %>
         </tr>
       </thead>
 
-      <tbody class="BalanceHeader">
-        <% tdclass = 0 %>
-        <h3>Treasury balances:</h3>
+      <tbody class="BalanceHeader" id="bodyBalance">
+        <% i = 0 %>
+        <h3>Treasury balance:</h3>
           <% @rows.each do |users| %>
-          <tr class="th_<%= "#{tdclass}" %>">
+          <% if users[0][1][1] != '' %>
+            <% if i % 2 == 0 %>
+              <% tdclass = 0 %>
+            <% else %>
+              <% tdclass = 1 %>
+            <% end %>
+
+          <tr class="th_<%= "#{tdclass}" %>" id="BalanceLines">
             <% @username = User.where(id: users[0][1][1]).map{|p| "#{p.givenname} #{p.surname}"} %>
-            <td><%= @username[0] %></td>
+            <td id="MemberNames"><%= @username[0] %></td>
               <% @header.each do |currency| %>
                 <% flag= 0 %>
                 <% @treasury.each do |values| %>
                   <% if values[0][1][1] == users[0][1][1] and values[0][0][1] == currency[0][0][1] %>
-                    <td><%= values[1] %></td>
+                    <td align="right"><%= values[1] %></td>
                     <% flag = 1 %>
                   <% end %>
                 <% end %>
@@ -35,11 +40,8 @@
                   <td></td>
                 <% end %>
               <% end %>
-            <% if tdclass == 0 %>
-              <% tdclass = 1 %>
-            <% else %>
-              <% tdclass = 0 %>
-            <% end %>
+            <% i += 1 %>
+          <% end %>
           </tr>
           <% end %>
 
@@ -50,7 +52,7 @@
             <th>Total</th>
             <% i=0 %>
             <% @header.each do |tot| %>
-              <th><%=  @totals[1][i].to_s %></th>
+              <th id="totalvalues" align="right"><%=  @totals[1][i].to_s %></th>
               <% i+=1 %>
             <% end %>
           </tr>
@@ -58,7 +60,7 @@
             <th>Rates</th>
             <% i=0 %>
             <% @header.each do |tot| %>
-              <th><%=  @totals[2][i].to_s %></th>
+              <th id="totalvalues_rates" align="right"><%=  @totals[2][i].to_s %></th>
               <% i+=1 %>
             <% end %>
 
@@ -67,7 +69,7 @@
             <th>USD Total</th>
             <% i=0 %>
             <% @header.each do |tot| %>
-              <th><%=  @totals[3][i].to_s %></th>
+              <th id="totalvalues" align="right"><%=  @totals[3][i].to_s %></th>
               <% i+=1 %>
             <% end %>
 
@@ -79,12 +81,109 @@
       <td></td>
     </table>
     <br>
-    <table>
-      <tr>
-        <td><%= form.submit 'Update Currency Rates', name: 'UpdateRates', id: 'UpdateRates', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
-      </tr>
-    </table>
+
   <% end %>
 
+
+
+
+<!-- TOTALS BY COINBAGS -->
+
+  <table border="1" class="Balance" id="BalanceTable">
+  <%= form_for(:treasuries, url: treasuries_path) do |form| %>
+    <thead class="BalanceHeader">
+      <tr class="impar">
+        <th></th>
+        <% @TotalsCoin.each do |header| %>
+          <th id="tableheader" align="center"><%= header[1] %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+
+    <br>
+    <br>
+
+        <% i=0 %>
+        <tbody class="BalanceHeader" id="bodyBalance">
+          <h3><%= User.where(id: session[:user_id]).map(&:nickname)*"," %> Coinbags balance:</h3>
+            <% @CoinbagsCoin.each do |coinbags| %>
+            <% if i % 2 == 0 %>
+              <% tdclass = 0 %>
+            <% else %>
+              <% tdclass = 1 %>
+            <% end %>
+            <tr class="th_<%= "#{tdclass}" %>" id="BalanceLines">
+              <td id="Coinbags"><%= coinbags[1] %></td>
+                <% @TotalsCoin.each do |headers| %>
+                  <% flag= 0 %>
+                  <% @ValuesCoin.each do |values| %>
+                    <% if coinbags[0] + headers[0] == values[0][0] + values[0][1]  %>
+                      <td align="right"><%= values[1].round(1) %></td>
+                      <% flag = 1 %>
+                    <% end %>
+                  <% end %>
+                  <% if flag == 0 %>
+                    <td></td>
+                  <% end %>
+                <% end %>
+              <% i += 1 %>
+            <% end %>
+            </tr>
+
+
+          </tbody>
+
+
+                  <tfoot>
+                    <tr class="impar">
+                      <th>Total</th>
+                      <% i=0 %>
+                      <% @TotalsCoin.each do |curnames| %>
+                        <% @SumValues.each do |totals| %>
+                          <% if totals[0] == curnames[0] %>
+                            <th id="totalvalues" align="right"><%= totals[1].round(1) %></th>
+                            <% i+=1 %>
+                          <% end %>
+                        <% end %>
+                      <% end %>
+                    </tr>
+                    <tr class="par">
+                      <th>Rates</th>
+                      <% i=0 %>
+                      <% @TotalsCoin.each do |curnames| %>
+                        <th id="totalvalues_rates" align="right"><%= (Currency.where(id: curnames[0]).map(&:exch_rate)*",").to_f.round(4)  %></th>
+                        <% i+=1 %>
+                      <% end %>
+
+                    </tr>
+                    <tr class="impar">
+                      <th>USD Total</th>
+                      <% i=0 %>
+                      <% @TotalsCoin.each do |curnames| %>
+                        <% @SumValues.each do |totals| %>
+                          <% if curnames[0] == totals[0] %>
+                            <th id="totalvalues" align="right"><%= (totals[1] * (Currency.where(id: curnames[0]).map(&:exch_rate)*",").to_f).round(1) %></th>
+
+                          <% end %>
+                        <% end %>
+                      <% end %>
+
+                    </tr>
+                  </tfoot>
+                <br>
+
+                <br>
+                <td></td>
+              </table>
+
+      <table>
+        <br>
+        <br>
+        <tr>
+          <td><%= form.submit 'Update Currency Rates', name: 'UpdateRates', id: 'UpdateRates', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+        </tr>
+      </table>
+    <% end %>
   </div>
 </body>

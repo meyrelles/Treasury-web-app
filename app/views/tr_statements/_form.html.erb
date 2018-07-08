@@ -135,7 +135,7 @@
         <% if @action == 'NEW' %>
           <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
         <% else %>
-          <td><%= form.collection_select :from, @users, :id, :nickname %></td>
+          <td><%= form.collection_select :from, @users.all, :id, :nickname %></td>
         <% end %>
       </tr>
     </div>

@@ -53,6 +53,7 @@ class TrStatementsController < ApplicationController
 
     @action = 'EDIT'
     @usr = session[:user_id].to_s
+    $mov_type = params[:type]
     @mov_type = params[:type]
     if params[:type] == 'tr'
       @tittle = 'Edit Transaction'
@@ -192,6 +193,7 @@ class TrStatementsController < ApplicationController
       @classification = @classification.order(:classification)
 
       #Load defaults from transaction process
+
       if params[:type] == 'tr'
         @tr_def = ClassificationDefault.where(user_id: session[:user_id], isdefault: 'true', operation: 'tr').map(&:classification_id)*","
       elsif params[:type] == 'exch'
