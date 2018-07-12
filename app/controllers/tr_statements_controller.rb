@@ -278,7 +278,7 @@ class TrStatementsController < ApplicationController
             :password => rdbaccess["access"]["pass"],
             :port => rdbaccess["access"]["port"])
 
-          r.db('treasury_development').table('tr_statements').insert({
+          r.db(rdbaccess["access"]["db"]).table('tr_statements').insert({
             :id => ([*('A'..'Z'),*('0'..'9'),*('a'..'z')]-%w(Y)).sample(16).join,
             :detail => TrStatement.where(id: params[:id]).map(&:detail)*",",
             :celebrate => TrStatement.where(id: params[:id]).map(&:celebrate)*",",
@@ -320,7 +320,7 @@ class TrStatementsController < ApplicationController
           :password => rdbaccess["access"]["pass"],
           :port => rdbaccess["access"]["port"])
 
-        r.db('treasury_development').table("tr_statements").filter({
+        r.db(rdbaccess["access"]["db"]).table("tr_statements").filter({
           :id => params[:id]}).update({
             :status => 'D'
         }).run(conn)
@@ -353,7 +353,7 @@ class TrStatementsController < ApplicationController
         i=0
 
         @category.each do |categories|
-          r.db('treasury_development').table('classifications').insert({
+          r.db(rdbaccess["access"]["db"]).table('classifications').insert({
             :id => id[i],
             :classification => @category[i],
             :created_at => Time.now

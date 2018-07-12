@@ -41,7 +41,7 @@ class SettingsController < ApplicationController
           :password => rdbaccess["access"]["pass"],
           :port => rdbaccess["access"]["port"])
 
-        r.db('treasury_development').table("users").filter({
+        r.db(rdbaccess["access"]["db"]).table("users").filter({
           :id => session[:user_id]}).update({
             :password_digest => encrypted_data
         }).run(conn)

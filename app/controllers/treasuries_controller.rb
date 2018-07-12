@@ -298,6 +298,9 @@ class TreasuriesController < ApplicationController
       @currenciesCoin = Currency.all
       @currenciesCoin = @currenciesCoin.order(:currency)
 
+      #Get world user id
+      @worldId = User.where(username: 'world').map(&:id)*","
+
       @treasuryIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
           doc['from'].eq("#{session[:user_id]}") &
@@ -310,7 +313,7 @@ class TreasuriesController < ApplicationController
       #Just to get the income
       @treasuryOut = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['from'].eq("#{session[:user_id]}") &
+          doc['to'].eq("#{session[:user_id]}") &
           doc['coinbag_dest'].ne('')
           }.
         group('coinbag_dest','currency_dest').
@@ -330,7 +333,7 @@ class TreasuriesController < ApplicationController
       #Just to get the TOTAL IN
       @TotalsIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['from'].eq("#{session[:user_id]}") &
+          doc['to'].eq("#{session[:user_id]}") &
           doc['coinbag_dest'].ne('')
           }.
         group('currency_dest').
@@ -350,7 +353,7 @@ class TreasuriesController < ApplicationController
       #Just to get the COINBAGS IN
       @coinbagsIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['from'].eq("#{session[:user_id]}") &
+          doc['to'].eq("#{session[:user_id]}") &
           doc['coinbag_dest'].ne('')
           }.
         group('coinbag_dest').
