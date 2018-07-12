@@ -2,7 +2,7 @@ class Currency
   include NoBrainer::Document
   include NoBrainer::Document::Timestamps
 
-  field :currency, :type => String, :index => true
+  field :currency, :type => String, :index => true, :uniq => true
   field :created_at, :type => Time
   field :created_by, :type => String
   field :changed_at, :type => Time

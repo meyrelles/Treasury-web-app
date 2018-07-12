@@ -16,13 +16,13 @@ class User
     super(value.strip.downcase)
   end
 
-  field :username, :type => String, :index => true
+  field :username, :type => String, :index => true, :uniq => true
   field :password_digest, :type => String
   field :surname, :type => String
   field :givenname, :type => String
-  field :nickname, :type => String
+  field :nickname, :type => String, :uniq => true
   field :birthdate_time, :type => Time
-  field :email, :type => String
+  field :email, :type => String, :uniq => true
   field :spreadsheet_link, :type => String
   field :sheet_name, :type => String
   field :verified, :type => Boolean

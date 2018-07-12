@@ -32,7 +32,7 @@
                 <% flag= 0 %>
                 <% @treasury.each do |values| %>
                   <% if values[0][1][1] == users[0][1][1] and values[0][0][1] == currency[0][0][1] %>
-                    <td align="right"><%= values[1] %></td>
+                    <td align="right"><%= values[1].round(2) %></td>
                     <% flag = 1 %>
                   <% end %>
                 <% end %>
@@ -52,7 +52,7 @@
             <th>Total</th>
             <% i=0 %>
             <% @header.each do |tot| %>
-              <th id="totalvalues" align="right"><%=  @totals[1][i].to_s %></th>
+              <th id="totalvalues" align="right"><%=  @totals[1][i].round(2).to_s %></th>
               <% i+=1 %>
             <% end %>
           </tr>
@@ -60,16 +60,33 @@
             <th>Rates</th>
             <% i=0 %>
             <% @header.each do |tot| %>
-              <th id="totalvalues_rates" align="right"><%=  @totals[2][i].to_s %></th>
+              <th id="totalvalues_rates" align="right"><%=  @totals[2][i].round(2).to_s %></th>
               <% i+=1 %>
             <% end %>
 
           </tr>
+
+          <% i=0 %>
+          <% usdTot = 0 %>
+          <% eurTot = 0 %>
+
           <tr class="impar">
             <th>USD Total</th>
-            <% i=0 %>
             <% @header.each do |tot| %>
-              <th id="totalvalues" align="right"><%=  @totals[3][i].to_s %></th>
+              <th id="totalvalues" align="right"><%=  @totals[3][i].round(2).to_s %></th>
+              <% usdTot += @totals[3][i].to_f %>
+              <% i+=1 %>
+            <% end %>
+
+          </tr>
+          <tr class="par">
+            <th>EUR Total</th>
+            <% i=0 %>
+            <% euroRate = Currency.where(currency: 'EUR').map(&:exch_rate)*"," %>
+            <% @header.each do |tot| %>
+              <% euros = (1 / euroRate.to_f) * @totals[3][i].to_f %>
+              <th id="totalvalues" align="right"><%=  euros.round(2).to_s %></th>
+              <% eurTot += euros.round(2) %>
               <% i+=1 %>
             <% end %>
 
@@ -79,6 +96,17 @@
 
       <br>
       <td></td>
+    </table>
+    <br>
+    <table border=1>
+      <tr>
+        <th>EUR:.</th>
+        <td><%= number_with_delimiter(eurTot.round(2), :delimiter => ',') %></td>
+      </tr>
+      <tr>
+        <th>USD:.</th>
+        <td><%= number_with_delimiter(usdTot.round(2), :delimiter => ',') %></td>
+      </tr>
     </table>
     <br>
 
@@ -119,7 +147,7 @@
                   <% flag= 0 %>
                   <% @ValuesCoin.each do |values| %>
                     <% if coinbags[0] + headers[0] == values[0][0] + values[0][1]  %>
-                      <td align="right"><%= values[1].round(1) %></td>
+                      <td align="right"><%= values[1].round(2) %></td>
                       <% flag = 1 %>
                     <% end %>
                   <% end %>
@@ -142,7 +170,7 @@
                       <% @TotalsCoin.each do |curnames| %>
                         <% @SumValues.each do |totals| %>
                           <% if totals[0] == curnames[0] %>
-                            <th id="totalvalues" align="right"><%= totals[1].round(1) %></th>
+                            <th id="totalvalues" align="right"><%= totals[1].round(2) %></th>
                             <% i+=1 %>
                           <% end %>
                         <% end %>
@@ -155,26 +183,58 @@
                         <th id="totalvalues_rates" align="right"><%= (Currency.where(id: curnames[0]).map(&:exch_rate)*",").to_f.round(4)  %></th>
                         <% i+=1 %>
                       <% end %>
-
                     </tr>
+
+
+                    <% i=0 %>
+
+                    <% usdTot = 0 %>
+                    <% eurTot = 0 %>
                     <tr class="impar">
                       <th>USD Total</th>
                       <% i=0 %>
                       <% @TotalsCoin.each do |curnames| %>
                         <% @SumValues.each do |totals| %>
                           <% if curnames[0] == totals[0] %>
-                            <th id="totalvalues" align="right"><%= (totals[1] * (Currency.where(id: curnames[0]).map(&:exch_rate)*",").to_f).round(1) %></th>
-
+                            <th id="totalvalues" align="right"><%= (totals[1] * (Currency.where(id: curnames[0]).map(&:exch_rate)*",").to_f).round(2) %></th>
+                            <% usdTot += (totals[1] * (Currency.where(id: curnames[0]).map(&:exch_rate)*",").to_f) %>
                           <% end %>
                         <% end %>
                       <% end %>
 
+                    </tr>
+
+                    <% euroRate = Currency.where(currency: 'EUR').map(&:exch_rate)*"," %>
+
+                    <tr class="par">
+                      <th>EUR Total</th>
+                      <% i=0 %>
+                      <% @TotalsCoin.each do |curnames| %>
+                        <% @SumValues.each do |totals| %>
+                          <% if curnames[0] == totals[0] %>
+                            <% euros = (1 / euroRate.to_f) * (totals[1] * (Currency.where(id: curnames[0]).map(&:exch_rate)*",").to_f) %>
+                            <th id="totalvalues" align="right"><%= euros.round(2) %></th>
+                            <% eurTot += euros.round(2) %>
+                            <% end %>
+                        <% end %>
+                      <% end %>
                     </tr>
                   </tfoot>
                 <br>
 
                 <br>
                 <td></td>
+              </table>
+              <br>
+              <table border=1>
+                <tr>
+                  <th>EUR:.</th>
+                  <td><%= number_with_delimiter(eurTot.round(2), :delimiter => ',')  %></td>
+                </tr>
+                <tr>
+                  <th>USD:.</th>
+                  <td><%= number_with_delimiter(usdTot.round(2), :delimiter => ',') %></td>
+                </tr>
               </table>
 
       <table>

@@ -6,6 +6,10 @@ class TreasuriesController < ApplicationController
 
   #GET
   def index
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
     tresuryBalance
     tresuryCoinbagBalance
   end
@@ -13,6 +17,10 @@ class TreasuriesController < ApplicationController
 
   #POST
   def filters
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
     updateRatesCryptorates
     updateFiatRates
     redirect_to treasuries_path
@@ -52,7 +60,7 @@ class TreasuriesController < ApplicationController
 
         #Update currencies names and rates
         @currencies.each do |currencies|
-          if currencies.exch_symbol
+          if currencies.exch_symbol != '' and currencies.exch_symbol != nil
             currencyName = currencies.exch_symbol
           else
             currencyName = currencies.currency
@@ -63,7 +71,7 @@ class TreasuriesController < ApplicationController
               @cryptoRate = HTTParty.get("https://api.coinmarketcap.com/v2/ticker/#{currencyID}/")
               @cryptoRate = JSON.parse(@cryptoRate.body)['data']
 
-              if @cryptoRate['quotes']['USD']['price'] > 0
+              #if @cryptoRate['quotes']['USD']['price'] > 0
                 rate = @cryptoRate['quotes']['USD']['price'].to_f
                 name = @cryptoRate['name']
                 symbol = @cryptoRate['symbol']
@@ -74,7 +82,7 @@ class TreasuriesController < ApplicationController
                   exch_symbol: "#{symbol}")
                 }
 
-              end
+              #end
             end
           end
         end
@@ -160,7 +168,7 @@ class TreasuriesController < ApplicationController
         @treasuryout.each do |vout|
           if tr[0][0][1] == vout[0][0][1] and tr[0][1][1] == vout[0][1][1]
             tr[1] = tr[1] + vout[1]
-            tr[1] = tr[1].round(1)
+            tr[1] = tr[1]
           end
         end
       end
@@ -252,7 +260,7 @@ class TreasuriesController < ApplicationController
                 @totals[1][i] = 0
               end
               @totals[1][i] += values[1].to_f
-              @totals[1][i] = @totals[1][i].round(1)
+              @totals[1][i] = @totals[1][i]
             end
           end
           i += 1
@@ -268,7 +276,7 @@ class TreasuriesController < ApplicationController
           if @totals[3][i] == nil
             @totals[3][i] = 0
           end
-          @totals[2][i] = rate.to_f.round(5)
+          @totals[2][i] = rate.to_f
           #if @totals[1][i] > 0
             if @totals[3][i] == nil
               @totals[3][i] = 0
@@ -279,7 +287,7 @@ class TreasuriesController < ApplicationController
               @totals[3][i] += rate.to_f * (@totals[1][i].to_f * -1)
               @totals[3][i] = @totals[3][i] * -1
             end
-            @totals[3][i] = @totals[3][i].round(1)
+            @totals[3][i] = @totals[3][i]
           #end
         else
           @totals[2][i] = 0
