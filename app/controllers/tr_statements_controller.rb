@@ -107,7 +107,7 @@ class TrStatementsController < ApplicationController
 
     # Check if the transaction goes to Approval mode or inserted
     @users = NoBrainer.run(:profile => false) { |r| r.table('users').
-          filter{|wh| (wh['group'].eq('Member')) & (wh['id'].eq(session[:user_id]))
+          filter{|wh| (wh['group'].eq('Member')) & (wh['id'].eq(session[:user_id])) &
             ((wh['id'].ne(params[:tr_statement][:from])) | (wh['id'].ne(params[:tr_statement][:to])))}}
     @users = @users.to_a
 
@@ -155,8 +155,8 @@ class TrStatementsController < ApplicationController
 
     # Check if the transaction goes to Approval mode or inserted
     @users = NoBrainer.run(:profile => false) { |r| r.table('users').
-          filter{|wh| (wh['group'].eq('Member')) & (wh['id'].eq(session[:user_id]))
-            ((wh['id'].ne(params[:tr_statement][:from])) | (wh['id'].ne(params[:tr_statement][:to])))}}
+          filter{|wh| (wh['group'].eq('Member')) & (wh['id'].ne(session[:user_id])) &
+            ((wh['id'].eq(params[:tr_statement][:from])) | (wh['id'].eq(params[:tr_statement][:to])))}}
     @users = @users.to_a
 
     if @users.any?
