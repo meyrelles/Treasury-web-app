@@ -52,6 +52,11 @@
   </div>
 
   <div class="field">
+    <%= form.label "#{:kind} of user" %>
+    <%= form.select :group, ['', 'Member','Team','World'], class: 'form-control' %>
+  </div>
+
+  <div class="field">
     <%= form.label :spreadsheet_link %>
     <%= form.text_field :spreadsheet_link, class: 'form-control' %>
   </div>

@@ -17,16 +17,17 @@ class User
   end
 
   field :username, :type => String, :index => true, :uniq => true
-  field :password_digest, :type => String
-  field :surname, :type => String
-  field :givenname, :type => String
-  field :nickname, :type => String, :uniq => true
+  field :password_digest, :type => String, :required => true
+  field :surname, :type => String, :required => true
+  field :givenname, :type => String, :required => true
+  field :nickname, :type => String, :uniq => true, :required => true
   field :birthdate_time, :type => Time
-  field :email, :type => String, :uniq => true
+  field :email, :type => String, :uniq => true, :required => true
   field :spreadsheet_link, :type => String
   field :sheet_name, :type => String
   field :verified, :type => Boolean
   field :admin, :type => Boolean
+  field :group, :type => String, :required => true
 
   #has_secure_password
 end

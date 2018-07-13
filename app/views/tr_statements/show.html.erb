@@ -107,14 +107,24 @@
 <br>
 </table>
 <br>
-<% if @tr_statement.from == nil && @tr_statement.created_by == session[:user_id] %>
-  <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => ''), class: "btn btn-lg btn-primary" %></td> |
-<% else %>
-  <% if @tr_statement.mov_type == 'tr' && @tr_statement.created_by == session[:user_id] %>
-    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.to).map(&:id)*","), class: "btn btn-lg btn-primary" %></td> |
-  <% elsif @tr_statement.created_by == session[:user_id]  %>
-    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.from).map(&:id)*","), class: "btn btn-lg btn-primary" %></td> |
+<% if params[:type] != 'approvals' %>
+  <% if @tr_statement.from == nil && @tr_statement.created_by == session[:user_id] %>
+    <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => ''), class: "btn btn-lg btn-primary" %></td> |
+  <% else %>
+    <% if @tr_statement.mov_type == 'tr' && @tr_statement.created_by == session[:user_id] %>
+      <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.to).map(&:id)*","), class: "btn btn-lg btn-primary" %></td> |
+    <% elsif @tr_statement.created_by == session[:user_id]  %>
+      <td><%= link_to 'Edit', edit_tr_statement_path(@tr_statement, :type => @tr_statement.mov_type, :usr => User.where(id: @tr_statement.from).map(&:id)*","), class: "btn btn-lg btn-primary" %></td> |
+    <% end %>
   <% end %>
 <% end %>
-<%= link_to 'Back', tr_statements_path, class: "btn btn-lg btn-primary" %>
+<% if params[:type] == 'approvals' %>
+  <table>
+    <tr>
+      <td><INPUT TYPE="button" VALUE="Back" class="btn btn-lg btn-primary" OnClick="history.go( -1 );return true;"></td>
+    </tr>
+  </table>
+<% else %>
+  <%= link_to 'Back', tr_statements_path, class: "btn btn-lg btn-primary" %>
+<% end %>
 </body>

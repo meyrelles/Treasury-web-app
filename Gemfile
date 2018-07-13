@@ -95,3 +95,6 @@ gem 'api'
 
 # GET HTML API's
 gem 'httparty'
+
+# Start Ruby server
+gem 'thin'

@@ -16,6 +16,28 @@ class TrStatementsController < ApplicationController
     @statements_tr = @statements_tr.paginate(:page => params[:page], :per_page => 10)
   end
 
+  # GET /tr_statements
+  # GET /tr_statements.json
+  def approvals
+    if session[:user_id].to_s == ''
+      flash[:notice] = "You must login to access the app..."
+      redirect_to login_path
+    end
+
+    @statements_tr = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+      filter{|wh| (wh['status'].eq('A')) & (wh['created_by'].ne(session[:user_id])) &
+        ((wh['from'].eq(session[:user_id])) | (wh['to'].eq(session[:user_id])))}}
+
+    @statements_tr = @statements_tr.to_a
+
+    if @statements_tr.any?
+      @statements_tr = @statements_tr.to_a
+    else
+      flash[:success] = "No transactions to approve..."
+      redirect_to tr_statements_path
+    end
+  end
+
   # GET /tr_statements/1
   # GET /tr_statements/1.json
   def show
@@ -81,7 +103,19 @@ class TrStatementsController < ApplicationController
 
     #Version Controll
     params[:tr_statement][:transaction_id] = params[:tr_statement][:"id"]
-    params[:tr_statement][:status] = 'I'
+
+
+    # Check if the transaction goes to Approval mode or inserted
+    @users = NoBrainer.run(:profile => false) { |r| r.table('users').
+          filter{|wh| (wh['group'].eq('Member')) & (wh['id'].eq(session[:user_id]))
+            ((wh['id'].ne(params[:tr_statement][:from])) | (wh['id'].ne(params[:tr_statement][:to])))}}
+    @users = @users.to_a
+
+    if @users.any?
+      params[:tr_statement][:status] = 'A'
+    else
+      params[:tr_statement][:status] = 'I'
+    end
     #--#
 
     @tr_statement = TrStatement.new(tr_statement_params)
@@ -119,6 +153,19 @@ class TrStatementsController < ApplicationController
 
     function_update
 
+    # Check if the transaction goes to Approval mode or inserted
+    @users = NoBrainer.run(:profile => false) { |r| r.table('users').
+          filter{|wh| (wh['group'].eq('Member')) & (wh['id'].eq(session[:user_id]))
+            ((wh['id'].ne(params[:tr_statement][:from])) | (wh['id'].ne(params[:tr_statement][:to])))}}
+    @users = @users.to_a
+
+    if @users.any?
+      params[:tr_statement][:status] = 'A'
+    else
+      params[:tr_statement][:status] = 'I'
+    end
+    #--#
+
     respond_to do |format|
       if @tr_statement.update(tr_statement_params)
         format.html { redirect_to @tr_statement, notice: 'Transaction was successfully updated.' }
@@ -128,6 +175,28 @@ class TrStatementsController < ApplicationController
         format.json { render json: @tr_statement.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # PATCH/PUT /tr_statements/Approvals
+  def approvals_run
+    @TrId = params[:tr_statements][:"transaction_id"].split(',')
+    @TrChecked = params[:tr_statements][:"transaction_checked"].split(',')
+
+    i=0
+    @TrId.each do |trid|
+      if @TrChecked[i] == "true"
+
+        NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+          filter({id: "#{@TrId[i]}"}).
+          update({status: 'I'})
+        }
+      end
+
+      i += 1
+    end
+
+    flash[:success] = "Transactions approved!"
+    redirect_to tr_statements_path
   end
 
   # DELETE /tr_statements/1

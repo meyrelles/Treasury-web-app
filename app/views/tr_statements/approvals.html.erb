@@ -1,0 +1,107 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Approval transactions</h1>
+
+<br>
+<h3>Transactions to approve:</h3>
+
+<br>
+<%= form_for(:tr_statements, url: '/approvals') do |form| %>
+
+
+<table border="1" id="show">
+  <thead>
+    <tr>
+      <th>Approve?</th>
+      <th>Date</th>
+      <th>Detail</th>
+      <th>Category</th>
+      <th>From</th>
+      <th>From coinbag</th>
+      <th>Currency</th>
+      <th>Amount</th>
+      <th>To</th>
+      <th>To coinbag</th>
+      <th>To currency</th>
+      <th>To amount</th>
+      <th>Celebrate</th>
+      <th colspan="0"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% i = 0 %>
+    <% @statements_tr.each do |tr_statement| %>
+      <tr>
+        <td><input type="checkbox" name="field1[]" onchange="change_checkbox(this)" id="field1_<%= i %>" value="<%= tr_statement["id"] %>" /></td>
+        <td><%= tr_statement["date_time"].strftime("%d-%m-%Y") %></td>
+        <td><%= tr_statement["detail"] %></td>
+        <% i += 1 %>
+        <% begin %>
+          <td><%= Classification.where(id: tr_statement["classification"]).map(&:classification)*"," %></td>
+        <% rescue %>
+        <% end %>
+        <% begin %>
+          <td><%= User.where(id: tr_statement["from"]).map(&:nickname)*"," %></td>
+        <% rescue %>
+        <% end %>
+        <% begin %>
+          <td><%= Coinbag.where(id: tr_statement["coinbag"]).map(&:coinbag)*"," %></td>
+        <% rescue %>
+        <% end %>
+        <% begin %>
+          <td><%= Currency.where(id: tr_statement["currency"]).map(&:currency)*"," %></td>
+        <% rescue %>
+        <% end %>
+        <td><%= tr_statement["amount"] %></td>
+        <% begin %>
+          <td><%= User.where(id: tr_statement["to"]).map(&:nickname)*"," %></td>
+        <% rescue %>
+        <% end %>
+        <% begin %>
+          <td><%= Coinbag.where(id: tr_statement["coinbag_dest"]).map(&:coinbag)*"," %></td>
+        <% rescue %>
+        <% end %>
+        <% begin %>
+          <td><%= Currency.where(id: tr_statement["currency_dest"]).map(&:currency)*"," %></td>
+        <% rescue %>
+        <% end %>
+        <td><%= tr_statement["amount_dest"] %></td>
+        <td><%= tr_statement["celebrate"] %></td>
+        <td><%= link_to image_tag('show.ico', size: "20x20"), "/tr_statements/#{tr_statement['id']}/?type=approvals" %></td>
+      </tr>
+    <% end %>
+  <br>
+  </tbody>
+
+  <%= form.text_field :transaction_id, style: 'display:none' %>
+  <%= form.text_field :transaction_checked, style: 'display:none' %>
+
+  <script>
+    var transaction_id = [];
+    var transaction_checked = [];
+    function change_checkbox(el){
+      if(el.checked){
+        transaction_id[el.id.substring(7)] = el.value;
+        transaction_checked[el.id.substring(7)] = "true";
+      }else{
+        transaction_id[el.id.substring(7)] = el.value;
+        transaction_checked[el.id.substring(7)] = "false";
+      }
+      //put data in form hidden field to send to controller
+      document.getElementById('tr_statements_transaction_id').value = transaction_id;
+      document.getElementById('tr_statements_transaction_checked').value = transaction_checked;
+    }
+  </script>
+
+
+
+</table>
+<br>
+<table>
+  <tr>
+    <td><%= form.submit 'Submit', name: 'send', id: 'send', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %></td>
+  </tr>
+</table>
+<br>
+<% end %>

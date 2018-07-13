@@ -89,8 +89,21 @@ class SessionsController < ApplicationController
 
     if user && params[:session][:"password"].to_s == pass && pass != '' && verified.to_s == "true"
       log_in user
-      flash[:info] = "Welcome to treasury app"
-      redirect_to tr_statements_path
+
+      #CHECK IF THE USER HAVE TRANSACTIONS TO APPROVE
+      @statements_tr = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+        filter{|wh| (wh['status'].eq('A')) & (wh['created_by'].ne(session[:user_id])) &
+          ((wh['from'].eq(session[:user_id])) | (wh['to'].eq(session[:user_id])))}}
+
+      @statements_tr = @statements_tr.to_a
+
+      if @statements_tr.any?
+        flash[:info] = "You have transactions to approve..."
+        redirect_to "/tr_statements/approvals"
+      else
+        flash[:info] = "Welcome to treasury app"
+        redirect_to tr_statements_path
+      end
     else
       if user && params[:session][:"password"].to_s == pass && pass != ''
         flash[:danger] = 'User not yet verified, contact Veda member.' # Not quite right!

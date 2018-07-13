@@ -39,7 +39,13 @@ Rails.application.routes.draw do
   patch     '/users/:id',       to: 'users#update'
   put       '/users/:id',       to: 'users#update'
   delete    '/users/:id',       to: 'users#destroy'
+
+  # To approve transactions
+  get       '/tr_statements/approvals',   to: 'tr_statements#approvals'
+  post      '/approvals',   to: 'tr_statements#approvals_run'
+
   resources :tr_statements
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   #
   #API ROUTES
