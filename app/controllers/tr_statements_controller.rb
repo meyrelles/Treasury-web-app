@@ -12,7 +12,12 @@ class TrStatementsController < ApplicationController
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
-    @statements_tr = TrStatement.where(status: 'I').order(date_time: :desc)
+    @tr = TrStatement.where(status: 'I').order(date_time: :desc)
+    @tmp = TrStatement.where(status: 'A').order(date_time: :desc)
+    @statements_tr = @tr + @tmp
+    .sort_by{|m| m.created_at}
+    @statements_tr = @statements_tr.sort_by{|m| m.date_time}.reverse #.sort_by(&:date_time :desc)
+
     @statements_tr = @statements_tr.paginate(:page => params[:page], :per_page => 10)
   end
 

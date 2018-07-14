@@ -36,7 +36,11 @@
     <h3>List of transactions:</h3>
     <%= will_paginate  @statements_tr, param_name: 'page' %>
     <% @statements_tr.each do |tr_statement| %>
-      <tr>
+      <% if tr_statement.status == 'A' %>
+        <tr style="background-color:#FFE5CC;font-weight:bold;">
+      <% else %>
+        <tr>
+      <% end %>
         <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
         <td><%= tr_statement.detail %></td>
         <% begin %>
