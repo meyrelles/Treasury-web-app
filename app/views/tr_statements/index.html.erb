@@ -38,6 +38,10 @@
     <% @statements_tr.each do |tr_statement| %>
       <% if tr_statement.status == 'A' %>
         <tr style="background-color:#FFE5CC;font-weight:bold;">
+      <% elsif tr_statement.mov_type == 'tr' %>
+        <tr style="background-color:#E6F1FF;font-weight:bold;">
+      <% elsif tr_statement.mov_type == 'exch' %>
+        <tr style="background-color:#DFFFCA;font-weight:bold;">
       <% else %>
         <tr>
       <% end %>
