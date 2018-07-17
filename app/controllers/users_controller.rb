@@ -56,18 +56,34 @@ class UsersController < ApplicationController
     encrypted_data = crypt.encrypt_and_sign(params[:user][:"password_digest"], purpose: :login)
     params[:user][:password_digest] = encrypted_data
 
+    if params[:user][:id] == ''
+      params[:user][:id] = unique_identifier = SecureRandom.hex(15)
+    end
+
     @user = User.new(user_params)
 
-    if @user.save
-      # Tell the UserMailer to send a welcome email after save
-      UserMailer.with(user: @user).welcome_email.deliver_now
-      UserMailer.with(user: @user).approve_user_email.deliver_now
-      flash[:success] = "Welcome to the Veda Treasury App!"
-      redirect_to login_path #@user
-      #format.json { render :show, status: :created, location: @user }
+    if session[:user_id]
+      respond_to do |format|
+        if @user.save
+          format.html { redirect_to @user, notice: "User was successfully created.!" }
+          format.json { render :show, status: :created, location: @user }
+        else
+          format.html { render :new }
+          format.json { render json: @user.errors, status: :unprocessable_entity }
+        end
+      end
     else
-      render :new
-      #format.json { render json: @user.errors, status: :unprocessable_entity }
+      if @user.save
+        # Tell the UserMailer to send a welcome email after save
+        UserMailer.with(user: @user).welcome_email.deliver_now
+        UserMailer.with(user: @user).approve_user_email.deliver_now
+        flash[:success] = "Welcome to the Veda Treasury App!"
+        redirect_to login_path #@user
+        #format.json { render :show, status: :created, location: @user }
+      else
+        render :new
+        #format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
 

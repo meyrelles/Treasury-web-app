@@ -78,13 +78,13 @@
         <% if tr_statement.from == nil %>
           <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
         <% else %>
-          <% if tr_statement.created_by == session[:user_id] %>
+          <% if tr_statement.created_by == session[:user_id] or tr_statement.from == session[:user_id] or tr_statement.to == session[:user_id] %>
             <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
           <% else %>
             <td>---</td>
           <% end %>
         <% end %>
-        <% if tr_statement.created_by == session[:user_id] %>
+        <% if tr_statement.created_by == session[:user_id] or tr_statement.from == session[:user_id] or tr_statement.to == session[:user_id] %>
           <td><%= link_to image_tag('delete.ico', size: "20x20"), tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% else %>
           <td>---</td>
