@@ -60,4 +60,8 @@ Rails.application.routes.draw do
   #REPORTS ROUTES
   get       '/treasuries',        to: 'treasuries#index'
   post      '/treasuries',        to: 'treasuries#filters'
+
+  #MINERS MONITORING AND AUTOINSERT PAYMENTS
+  get       '/miners',            to: 'miners#index'# via: :get
+  put       '/miners',            to: 'miners#my_action'# via: :get
 end
