@@ -66,6 +66,10 @@ Update_Field_On_Start =
 
 jQuery ->
 #Form control
+  $('#transactions').dataTable
+    sPaginationType: "full_numbers"
+    order: [[ 0, "desc" ]]
+
   $(document).on 'turbolinks:load', ->
     $('#new_tr').click ->
       sessionStorage.setItem('mov_type', 'tr')
@@ -78,11 +82,9 @@ jQuery ->
       sessionStorage.setItem('mov_type', 'exch')
 
     if $("#Trstatementbody").data("controller") == 'tr_statements'
-      #alert($("#Trstatementbody").data("controller"))
+
       array=[]
       array[0]=0
-
-      #document.getElementById('type_parameter').setAttribute('data_parameter',sessionStorage.getItem('mov_type'))
 
       #jQuery to disable the combobox TO and FROM to avoid errors on transactions
       if sessionStorage.getItem('mov_type') is 'tr'

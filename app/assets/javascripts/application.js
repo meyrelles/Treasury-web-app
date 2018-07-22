@@ -15,10 +15,14 @@
 //= require bootstrap
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require dataTables/jquery.dataTables
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
 //= require bootstrap-datepicker
 //= require bootstrap-timepicker
+//= require Chart.bundle
+//= require highcharts
+//= require chartkick
 //= require_tree .
 //= require init

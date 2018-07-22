@@ -7,7 +7,7 @@
 jQuery ->
 #Form control
   $(document).on 'turbolinks:load', ->
-    if $("#Stettingsbody").data("controller") == 'settings'
+    if $("#Settingsbody").data("controller") == 'settings'
 
       #PASSWORD SCRIPT BLOCK
       password = document.getElementById("psw")

@@ -1,102 +1,110 @@
 <p id="notice"><%= notice %></p>
 
 <h1>Treasury Statements</h1>
-
-<br>
-<h3>New transaction:</h3>
-<table class = "links">
-  <tr>
-    <td><%= link_to 'Transaction', new_tr_statement_path(@tr_statement, :type => "tr"), id: "new_tr", class: "btn btn-lg btn-primary" %></td>
-    <td><%= link_to 'Exchange', new_tr_statement_path(@tr_statement, :type => "exch"), id: "new_exch", class: "btn btn-lg btn-primary" %></td>
-    <div id="type_parameter"></div>
-  </tr>
-</table>
-<br>
-
-<table border="1" id="show">
-  <thead>
+<body class='transactions_body' id="Transactionsbody" data-controller="<%= controller.controller_name %>">
+  <br>
+  <h3>New transaction:</h3>
+  <table class = "links">
     <tr>
-      <th>Date</th>
-      <th>Detail</th>
-      <th>Category</th>
-      <th>From</th>
-      <th>From coinbag</th>
-      <th>Currency</th>
-      <th>Amount</th>
-      <th>To</th>
-      <th>To coinbag</th>
-      <th>To currency</th>
-      <th>To amount</th>
-      <th>Celebrate</th>
-      <th colspan="0"></th>
+      <td><%= link_to 'Transaction', new_tr_statement_path(@tr_statement, :type => "tr"), id: "new_tr", class: "btn btn-lg btn-primary" %></td>
+      <td><%= link_to 'Exchange', new_tr_statement_path(@tr_statement, :type => "exch"), id: "new_exch", class: "btn btn-lg btn-primary" %></td>
+      <div id="type_parameter"></div>
     </tr>
-  </thead>
+  </table>
+  <br>
 
-  <tbody>
-    <h3>List of transactions:</h3>
-    <%= will_paginate  @statements_tr, param_name: 'page' %>
-    <% @statements_tr.each do |tr_statement| %>
-      <% if tr_statement.status == 'A' %>
-        <tr style="background-color:#FFE5CC;font-weight:bold;">
-      <% elsif tr_statement.mov_type == 'tr' %>
-        <tr style="background-color:#E6F1FF;font-weight:bold;">
-      <% elsif tr_statement.mov_type == 'exch' %>
-        <tr style="background-color:#DFFFCA;font-weight:bold;">
-      <% else %>
-        <tr>
-      <% end %>
-        <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
-        <td><%= tr_statement.detail %></td>
-        <% begin %>
-          <td><%= Classification.where(id: tr_statement.classification).map(&:classification)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
-          <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
-          <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
-          <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <td><%= tr_statement.amount %></td>
-        <% begin %>
-          <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
-          <td><%= Coinbag.where(id: tr_statement.coinbag_dest).map(&:coinbag)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <% begin %>
-          <td><%= Currency.where(id: tr_statement.currency_dest).map(&:currency)*"," %></td>
-        <% rescue %>
-        <% end %>
-        <td><%= tr_statement.amount_dest %></td>
-        <td><%= tr_statement.celebrate %></td>
-        <td><%= link_to image_tag('show.ico', size: "20x20"), tr_statement %></td>
-        <% if tr_statement.from == nil %>
-          <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
+  <table style="border: 1px solid black; border-collapse: collapse;" id="transactions">
+    <thead>
+      <tr >
+        <th>Date</th>
+        <th>Detail</th>
+        <th>Category</th>
+        <th>From</th>
+        <th>From coinbag</th>
+        <th>Currency</th>
+        <th>Amount</th>
+        <th>To</th>
+        <th>To coinbag</th>
+        <th>To currency</th>
+        <th>To amount</th>
+        <th>Celebrate</th>
+        <th style="width:5px;"></th>
+        <th style="width:5px;"></th>
+        <th style="width:5px;"></th>
+      </tr>
+    </thead>
+<style media="screen">
+  td {
+    border: 1px solid lightgrey;
+    border-style: dotted;
+  }
+</style>
+    <tbody>
+      <h3>List of transactions:</h3>
+
+      <% @statements_tr.each do |tr_statement| %>
+        <% if tr_statement.status == 'A' %>
+          <tr style="background-color:#FFE5CC;font-weight:bold;">
+        <% elsif tr_statement.mov_type == 'tr' %>
+          <tr style="background-color:#E6F1FF;font-weight:bold;">
+        <% elsif tr_statement.mov_type == 'exch' %>
+          <tr style="background-color:#DFFFCA;font-weight:bold;">
         <% else %>
+          <tr>
+        <% end %>
+          <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
+          <td><%= tr_statement.detail %></td>
+          <% begin %>
+            <td><%= Classification.where(id: tr_statement.classification).map(&:classification)*"," %></td>
+          <% rescue %>
+          <% end %>
+          <% begin %>
+            <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
+          <% rescue %>
+          <% end %>
+          <% begin %>
+            <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
+          <% rescue %>
+          <% end %>
+          <% begin %>
+            <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
+          <% rescue %>
+          <% end %>
+          <td><%= tr_statement.amount %></td>
+          <% begin %>
+            <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
+          <% rescue %>
+          <% end %>
+          <% begin %>
+            <td><%= Coinbag.where(id: tr_statement.coinbag_dest).map(&:coinbag)*"," %></td>
+          <% rescue %>
+          <% end %>
+          <% begin %>
+            <td><%= Currency.where(id: tr_statement.currency_dest).map(&:currency)*"," %></td>
+          <% rescue %>
+          <% end %>
+          <td><%= tr_statement.amount_dest %></td>
+          <td><%= tr_statement.celebrate %></td>
+          <td><%= link_to image_tag('show.ico', size: "20x20"), tr_statement %></td>
+          <% if tr_statement.from == nil %>
+            <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
+          <% else %>
+            <% if tr_statement.created_by == session[:user_id] or tr_statement.from == session[:user_id] or tr_statement.to == session[:user_id] %>
+              <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
+            <% else %>
+              <td>---</td>
+            <% end %>
+          <% end %>
           <% if tr_statement.created_by == session[:user_id] or tr_statement.from == session[:user_id] or tr_statement.to == session[:user_id] %>
-            <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
+            <td><%= link_to image_tag('delete.ico', size: "20x20"), tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           <% else %>
             <td>---</td>
           <% end %>
-        <% end %>
-        <% if tr_statement.created_by == session[:user_id] or tr_statement.from == session[:user_id] or tr_statement.to == session[:user_id] %>
-          <td><%= link_to image_tag('delete.ico', size: "20x20"), tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% else %>
-          <td>---</td>
-        <% end %>
-      </tr>
-    <% end %>
-  <br>
-  </tbody>
+        </tr>
+      <% end %>
+    <br>
+    </tbody>
 
-</table>
-<br>
+  </table>
+  <br>
+</body>

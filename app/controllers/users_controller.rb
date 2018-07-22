@@ -11,8 +11,14 @@ class UsersController < ApplicationController
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
-    @users = User.all
-    @users = @users.order(:givenname)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: UsersDatatable.new(view_context) }
+    end
+
+    #@users = User.all
+    #@users = @users.order(:givenname)
   end
 
   # GET /users/1

@@ -1,0 +1,248 @@
+
+<body class='settings_body' id="Stettingsbody" data-controller="<%= controller.controller_name %>">
+  <% provide(:title, "Miners") %>
+  <h1>Miners Dashboard</h1>
+  <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+
+
+  <!-- CURRENCIES DEFAULTS -->
+  <div id="dynamicLoadingPanel">
+    <%= form_for(:settings, url: miners_path) do |form| %>
+
+
+      <!-- GET TOTAL SHARES -->
+      <% @Shares = NoBrainer.run(:profile => false) { |r| %>
+      <%    r.http('https://pool.803mine.com/api/worker_stats?DNYMQdLSqBFzZZ6MjEzTftPKxBgHFhBbr6')} %>
+      <% @Shares = @Shares.to_a %>
+      <% @Shares[6][1] = @Shares[6][1].round(0) %>
+
+      <!-- GET HASHRATE AND DATETIME -->
+      <% @Hashrate = NoBrainer.run(:profile => false) { |r| %>
+      <%    r.http('https://pool.803mine.com/api/worker_stats?DNYMQdLSqBFzZZ6MjEzTftPKxBgHFhBbr6'). %>
+      <%    pluck({history: {DNYMQdLSqBFzZZ6MjEzTftPKxBgHFhBbr6: ["hashrate", "time"]}});} %>
+
+      <!-- NEW DATA TO DATABASE MINING-->
+      <% @Hashrate = @Hashrate.to_a %>
+      <% @Hashrate[0][1].each do |list| %>
+        <% list[1].each do |sub| %>
+          <% @checkid = Miner.where(id: sub["time"].to_s).count() %>
+          <% if @checkid == 0 %>
+            <% NoBrainer.run(:profile => false) { |r| r.table('miners'). %>
+            <%    insert({datetime: r.epoch_time(sub["time"]), %>
+            <%    hashrate: (sub["hashrate"] / 1000000000000).round(1), %>
+            <%    id: sub["time"].to_s, totalshares: @Shares[6][1]})} %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <table id="main_table">
+        <td>
+          <!-- READ DB AND PUT DATA ON TABLE -->
+          <% @miners = NoBrainer.run(:profile => false) { |r| r.table('miners').order_by(r.desc('id')).limit(1440) } %>
+          <% k = 0 %>
+          <% j = 0 %>
+          <% h = 0 %>
+          <table id="left_table" border=1>
+            <tr>
+              <th style="text-align:center;">Date</th>
+              <th style="text-align:center;">Time</th>
+              <th style="text-align:center;">Shares</th>
+              <th style="text-align:center;">Hashrate</th>
+            </tr>
+            <!-- list last 20 -->
+            <% i=0 %>
+            <% @miners.each do |lista| %>
+              <% if i < 20 %>
+                <tr>
+                  <td><%= Time.at(lista["id"].to_f).strftime("%e-%m-%Y") %></td>
+                  <td><%= Time.at(lista["id"].to_f).strftime("%H:%M:%S") %></td>
+                  <td style="text-align:right;"><%= lista["totalshares"] %></td>
+                  <td style="text-align:right;"><%= lista["hashrate"].round(1) %></td>
+                </tr>
+              <% end %>
+              <% if i < 20 %>
+                <% h += lista["hashrate"] %>
+              <% end %>
+              <% if i < 120 %>
+                <% k += lista["hashrate"] %>
+              <% end %>
+              <% if i < 14400 %>
+                <% j += lista["hashrate"] %>
+              <% end %>
+              <% i+= 1 %>
+            <% end %>
+          </table>
+        </td>
+        <td style="width: 150px;">
+          <p ></p>
+        </td>
+        <td style="vertical-align: top;">
+          <table id="center_table" border=1>
+            <tr>
+              <th style="text-align:center;">5m HR Avg</th>
+              <th style="text-align:center;">1h HR Avg</th>
+              <th style="text-align:center;">12h HR Avg</th>
+            </tr>
+            <tr>
+              <td style="text-align:right;"><%= (h / 20).round(1) %> Th/s</td>
+              <td style="text-align:right;"><%= (k / 120).round(1) %> Th/s</td>
+              <td style="text-align:right;"><%= (j / 1440).round(1) %> Th/s</td>
+            </tr>
+            <tr>
+              <%
+              @hash = Miner.all
+              @hash = @hash.order_by(:id => :desc)
+              #@hash = Miner.order(:id).dsc
+              @graph_RT = []
+              @graph_5M = []
+              @graph_60M = []
+
+              i = 0
+              @hash.each do |list|
+                @graph_RT[i] = [i,list.hashrate]
+                i+=1
+                break if i >= 240
+
+              end
+
+              #5 Minutes Avg
+              i=0
+              k=0
+              h=0
+              m5=0
+              @hash.each do |list|
+                if k == 9
+                  m5 = m5/10
+                  @graph_5M[h] = [h,m5]
+                  k=-1
+                  h+=1
+                  m5=0
+                else
+                  m5 += list.hashrate
+                  #@graph_5M[i] = [i,0]
+                end
+                k += 1
+                i+=1
+                break if i >= 2880
+              end
+
+              #60 Minutes Avg
+              i=0
+              k=0
+              h=0
+              m60=0
+              @hash.each do |list|
+                if k == 119
+                  m60 = m60/k
+                  @graph_60M[h] = [h,m60]
+                  k=-1
+                  h+=1
+                  m60=0
+                else
+                  m60 += list.hashrate
+                  #@graph_5M[i] = [i,0]
+                end
+                k += 1
+                i+=1
+                break if i >= 1440
+              end
+
+              @graph_RT = @graph_RT.reverse
+              @graph_5M = @graph_5M.reverse
+              @graph_60M = @graph_60M.reverse
+              %>
+
+              <!-- SEND CHART DATA TO CoffeeScript  -->
+              <p id="chartdata" data-parameter="<%= @graph_RT.to_json %>"></p>
+              <p id="chartdata2" data-parameter="<%= @graph_5M.to_json %>"></p>
+              <p id="chartdata3" data-parameter="<%= @graph_60M.to_json %>"></p>
+            </tr>
+          </table>
+        </td>
+        <td style="width: 150px;">
+          <p ></p>
+        </td>
+
+        <td style="vertical-align: top;">
+
+            <%
+            # GET PAYMENTS AND DATETIME
+            @Payments = NoBrainer.run(:profile => false) { |r|
+                r.http('https://pool.803mine.com/api/payments').filter({name: 'digibyte-sha256'}).
+                pluck({payments: [{amounts: "DNYMQdLSqBFzZZ6MjEzTftPKxBgHFhBbr6"}, "txid"]})}
+
+            # NEW DATA TO DATABASE - TABLE TRANSACTIONS
+             @Payments = @Payments.to_a
+
+             @Payments[0].each do |list|
+               list[1].reverse.each do |sub|
+                  @exist = TrStatement.where(id: sub["txid"], status: "I").count
+                  if sub["amounts"]["DNYMQdLSqBFzZZ6MjEzTftPKxBgHFhBbr6"].to_f > 0 and @exist == 0
+                    NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+                      insert({id: sub["txid"], hash: sub["txid"], amount: sub["amounts"]["DNYMQdLSqBFzZZ6MjEzTftPKxBgHFhBbr6"],
+                        amount_dest: sub["amounts"]["DNYMQdLSqBFzZZ6MjEzTftPKxBgHFhBbr6"],
+                        celebrate: "Miners income", classification: "RVKi1W7RWRPitIK", coinbag_dest: "6QurJyYGyw3cSh",
+                        created_at: Time.now, created_by: "6KauQZJDx2Izdg", currency: "6QwVfRPJwZ7taA",
+                        currency_dest: "6QwVfRPJwZ7taA", date_time: Time.now, detail: "803 pool >> DGB",
+                        fee: 0, from: "66vVRjoK9ZA8qy", mov_type: "tr", status: "I", to: "6KauQZJDx2Izdg"})}
+                  end
+               end
+             end
+             %>
+
+            <table id="right_table" border=1>
+              <tr>
+                <th style="text-align:center;">Date</th>
+                <th style="text-align:center;">Hour</th>
+                <th style="text-align:center;">Value DGB</th>
+              </tr>
+
+                <%
+                  i=0
+                  @TrStatement = TrStatement.where(detail: "803 pool >> DGB", status: "I")
+                  @TrStatement = @TrStatement.order_by(:date_time => :desc)
+                  @TrStatement.each do |payments|
+                %>
+                <tr>
+                  <td><%= payments.date_time.strftime("%e-%m-%Y") %></td>
+                  <td><%= payments.date_time.strftime("%H:%M:%S") %></td>
+                  <td style="text-align:right;"><%= payments.amount.round(3) %></td>
+                </tr>
+                <%
+                    break if i >= 20
+                    i+=1
+                  end
+
+                  #Prepaire data to chart
+                  @TrStatement = @TrStatement.group_by { |d| d[:date_time].strftime("%e-%m-%Y") }.
+                    map{ |date_time,amount| {:date => date_time, :total => amount.sum {|j| j.amount.to_f} }}.
+                    reverse
+
+                    @TrStatement = Hash[@TrStatement.map.with_index.to_a]
+
+                    @payments = []
+                    i=0
+                    @TrStatement.each do | value |
+                      @payments[i] = [value[0][:date],value[0][:total]]
+                      i+=1
+                   end %>
+
+                   <p id="chartpayments" data-parameter="<%= @payments.to_json %>"></p>
+
+            </table>
+
+        </td>
+      </table>
+
+      <!--
+      < form.submit 'Apply defaults', name: 'details_def', id: 'details_def', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %>
+    -->
+    <% end %>
+  </div>
+
+  <%= line_chart [ {name: "Real Time", data: @graph_RT}, {name: "5 Minutes", data: @graph_5M} ], :id => "chart-id2", adapter: "highcharts",
+      library: {yAxis:{tickInterval: 10}, xAxis:{max: 236}}  %>
+  <%= line_chart [ {name: "60 Minutes", data: @graph_60M}], :id => "chart-id3", adapter: "highcharts",
+      library: {yAxis:{tickInterval: 10}, xAxis:{max: 11, tickInterval: 1}}  %>
+  <%= line_chart  [{name: "Payments", data: @payments}], :id => "chart-payments", adapter: "highcharts"  %>
+</body>

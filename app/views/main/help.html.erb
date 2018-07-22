@@ -1,13 +1,89 @@
+
+
+<p id="notice"><%= notice %></p>
 <% provide(:title, "Help") %>
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= yield(:title) %> | Veda Treasury App</title>
-  </head>
-  <body>
-    <h1>Help</h1>
-    <p>
-      To insert the help contents
+
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=auto">
+  <title><%= yield(:title) %> | Veda Treasury App</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    var icons = {
+      header: "ui-icon-circle-arrow-e",
+      activeHeader: "ui-icon-circle-arrow-s"
+    };
+    $( "#accordion" ).accordion({
+      icons: icons
+    });
+    $( "#toggle" ).button().on( "click", function() {
+      if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
+        $( "#accordion" ).accordion( "option", "icons", null );
+      } else {
+        $( "#accordion" ).accordion( "option", "icons", icons );
+      }
+    });
+  } );
+</script>
+  <script type="text/javascript">
+  $(document).ready(function(){
+      //Check if the current URL contains '#'
+      if(document.URL.indexOf("#")==-1){
+          // Set the URL to whatever it was plus "#".
+          url = document.URL+"#";
+          location = "#";
+
+          //Reload the page
+          location.reload(true);
+      }
+  });
+  </script>
+
+</head>
+<tbody>
+<div id="accordion" style="max-width: 600px">
+  <h2 style="background-color:#000;color:#fff;font-size: 20px;">Transactions</h2>
+  <div>
+    <p style="font-size: 15px;">
+      The transasction process is divided in two types of transactions:<br>
+      <ul>
+        <li><b>Simple transaction</b>, is the normal option to insert or update payments to others
+               members, teams or world. The process isn't the same like in google spreadsheet, because
+               here you can send and indicate the user to receive your transaction.
+        </li>
+        <br>
+        <li><b>Exchange transaction</b>, is the process you have to exchange currencies between one to
+               onother, as example, when you have ETH's and want to convert to EUR's you need to have
+               an option to do this in only one transaction and with Exchange transaction you are abble
+               to do this in single operation.
+        </li>
+      </ul>
     </p>
-  </body>
-</html>
+  </div>
+  <h2 style="background-color:#000;color:#fff;font-size: 20px;">Users</h2>
+  <div>
+    <p>...</p>
+  </div>
+  <h2 style="background-color:#000;color:#fff;font-size: 20px;">Currencies</h2>
+  <div>
+    <p>......</p>
+    <ul>
+      <li>List item one</li>
+      <li>List item two</li>
+      <li>List item three</li>
+    </ul>
+  </div>
+  <h2 style="background-color:#000;color:#fff;font-size: 20px;">Coinbags</h2>
+  <div>
+    <p>....</p>
+  </div>
+</div>
+
+<!--<button id="toggle">Toggle icons</button>-->
+</tbody>

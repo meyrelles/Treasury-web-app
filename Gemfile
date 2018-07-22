@@ -76,20 +76,21 @@ gem 'nobrainer'
 #google drive API
 gem "google_drive"
 
-# Asset template engines
-gem 'sass'
-gem 'jquery-rails'
-gem 'jquery-turbolinks'
-
 # Asset to have date picker calender
 gem 'bootstrap-datepicker-rails'
 # Asset to have time picker
 gem 'bootstrap-timepicker-rails'
 
-#To paginate the tables
+# Asset template engines
+gem 'sass'
+gem 'jquery-rails'
+gem 'jquery-turbolinks'
+
+#To paginate the tables and sort
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 
+gem 'jquery-datatables-rails'
 # API package
 gem 'api'
 
@@ -98,3 +99,14 @@ gem 'httparty'
 
 # Start Ruby server
 gem 'thin'
+
+#CHARTS
+# Specify your gem's dependencies in groupdate.gemspec
+#gemspec
+gem 'chartkick'
+gem "activerecord", "~> 5.2.0"
+
+group :assets do
+  gem 'jquery-ui-rails'
+end
+#gem 'groupdate'
