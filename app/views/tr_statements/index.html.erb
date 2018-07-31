@@ -28,7 +28,9 @@ $('#transactions').DataTable( {
     }
   } );
 
-
+$('input[value="tr"]').mouseup ->
+  var table = window.$('#transactions').DataTable();
+  table.draw();
 
 </script>
 

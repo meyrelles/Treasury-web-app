@@ -4,10 +4,13 @@
 
 format = (d) ->
   # `d` is the original data object for the row
-  '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Detail:</td>' + '<td>' + d.detail + '</td>' + '</tr>' + '<tr>' + '<td>Hash:</td>' + '<td>' + d.hash + '</td>' +
+  '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Detail:</td>' + '<td>' + d.detail + '</td>' +
   '</tr>' + '<tr>' + '<td>Currency to:</td>' + '<td>' + d.currency_dest + '</td>' + '</tr>' + '</tr>' + '<tr>' + '<td>Coinbag from:</td>' + '<td>' + d.coinbag + '</td>' +
   '</tr>' + '<tr>' + '<td>Coinbag to:</td>' + '<td>' + d.coinbag_dest + '</td>' +
-  '</tr>' + '<tr>' + '<td>Amount to:</td>' + '<td>' + d.amount_dest + '</td>' + '</tr>' + '</tr>' + '<tr>' + '<td>Author:</td>' + '<td>' + d.author + '</td>' + '</tr>' + '</table>'
+  '</tr>' + '<tr>' + '<td>Amount to:</td>' + '<td>' + d.amount_dest + '</td>' +
+  '</tr>' + '<tr>' + '<td>Celebrate:</td>' + '<td>' + d.celebrate + '</td>' + 
+  '</tr>' + '<tr>' + '<td>Hash:</td>' + '<td>' + d.hash + '</td>' +
+  '</tr>' + '</tr>' + '<tr>' + '<td>Author:</td>' + '<td>' + d.author + '</td>' + '</tr>' + '</table>'
 
 #Put message in fornt of field when wrong
 ValidateNumber =
@@ -91,9 +94,23 @@ GetAuthorStatus = ->
   e = document.getElementById("transaction_author")
   return e.options[e.selectedIndex].value
 
+UpdateDate = ->
+  dt = new Date()
+  df = new Date(dt)
+
+  df.setDate(df.getDate() - 60)
+
+  dateEnd = dt.getFullYear() + "-" + ("0" + (dt.getMonth() + 1)).slice(-2) + "-" + ("0" + dt.getDate()).slice(-2)
+  dateIni = df.getFullYear() + "-" + ("0" + (df.getMonth() - 1)).slice(-2) + "-" + ("0" + df.getDate()).slice(-2)
+
+  $("#date_to").val(dateEnd)
+  $("#date_from").val(dateIni)
+
 jQuery ->
 #Form control
   $(document).on 'turbolinks:load', ->
+
+    UpdateDate()
 
     $("#transactions").append('<tfoot><tr id="foot"><th></th><th></th><th></th><th></th><th></th><th style="max-width:5px;">PAGE TOTAL:</th><th style="background:#a1eaed;color:black;max-width:5px;"></th><th></th><th></th>');
 
@@ -148,12 +165,18 @@ jQuery ->
       columnDefs: [ {
         targets: 8
         render: (url, type, full, row, data) ->
-          '<a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/tr_statements/' + full.id + '"><img src="assets/delete.ico" height="20px" width="20px" title="Delete transaction" alt="Delete"></a>'
+          if (full.session_id == full.from_id or full.session_id == full.to_id or full.session_id == full.created_by)
+            '<a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/tr_statements/' + full.id + '"><img src="assets/delete.ico" height="20px" width="20px" title="Delete transaction" alt="Delete"></a>'
+          else
+            '<a><img src="assets/delete_disabled.ico" height="20px" width="20px" title="No permissions to delete transaction" alt="Delete"></a>'
         }
         {
         targets: 7
         render: (url, type, full, row, data) ->
-          '<a href="/tr_statements/' + full.id + '/edit?type=' + full.mov_type + '&usr=' + full.session_id + '"><img src="assets/edit.ico" height="20px" width="20px" title="Edit transaction" alt="Edit"></a>'
+          if (full.session_id == full.from_id or full.session_id == full.to_id or full.session_id == full.created_by)
+            '<a href="/tr_statements/' + full.id + '/edit?type=' + full.mov_type + '&usr=' + full.session_id + '"><img src="assets/edit.ico" height="20px" width="20px" title="Edit transaction" alt="Edit"></a>'
+          else
+            '<a><img src="assets/edit_disabled.ico" height="20px" width="20px" title="No permissions to edit transaction" alt="Edit"></a>'
       } ]
       columns: [
         {

@@ -34,19 +34,13 @@ private
 
   def fetch_transactions
 
-    dateini_to = Time.new(Time.now.year,Time.now.month,Time.now.day,1,45,45,"+00:00") + 1
-    if Time.now.month > 2
-      dateini_from = Time.new(Time.now.year,Time.now.month - 2,Time.now.day,1,45,45,"+00:00")
-    elsif Time.now.month = 2
-      dateini_from = Time.new(Time.now.year,12,Time.now.day,1,45,45,"+00:00")
-    elsif Time.now.month = 1
-      dateini_from = Time.new(Time.now.year,11,Time.now.day,1,45,45,"+00:00")
-    end
+    dateini_to = Time.new(Time.now.year,Time.now.month,Time.now.day,1,45,45,"+00:00")
+    dateini_from = Time.new(Time.now.year,Time.now.month,Time.now.day,1,45,45,"+00:00") - 60.days
 
     if sort_direction == "asc"
       transactions = NoBrainer.run(:profile => false) { |r|
         r.table('tr_statements').filter{|doc| (doc['status'].eq("I") | doc['status'].eq("A")) & doc['date_time'].during(dateini_from, dateini_to) &
-          doc['created_by'].eq($session_id)}.
+          (doc['created_by'].eq($session_id) | doc['from'].eq($session_id) | doc['to'].eq($session_id))}.
         map{ |lista|
           {
             :id => lista["id"],
@@ -81,7 +75,7 @@ private
     else
       transactions = NoBrainer.run(:profile => false) { |r|
         r.table('tr_statements').filter{|doc| (doc['status'].eq("I") | doc['status'].eq("A")) & doc['date_time'].during(dateini_from, dateini_to) &
-          doc['created_by'].eq($session_id)}.
+          (doc['created_by'].eq($session_id) | doc['from'].eq($session_id) | doc['to'].eq($session_id))}.
         map{ |lista|
           {
             :id => lista["id"],
@@ -151,8 +145,8 @@ private
           (r.branch(params[:sSearch] != '', doc['detail'].downcase().match("#{params[:sSearch]}".downcase), doc['detail']) |
           r.branch(params[:sSearch] != '', doc['celebrate'].downcase().match("#{params[:sSearch]}".downcase), doc['celebrate'])) &
           r.branch(params[:category] != '', doc['classification'].eq(params[:category]),doc['classification']) &
-          (r.branch(params[:user] != '', doc['from'].eq(params[:user]),doc['from']) |
-          r.branch(params[:user] != '', doc['to'].eq(params[:user]),doc['to'])) &
+          (r.branch(params[:user] != '', doc['from'].eq(params[:user]),doc['from'].eq($session_id)) |
+          r.branch(params[:user] != '', doc['to'].eq(params[:user]), doc['to'].eq($session_id))) &
           (r.branch(params[:coinbag].delete(' ') != '' && doc['coinbag'].ne(''), doc['coinbag'].match(params[:coinbag]),true) |
           r.branch(params[:coinbag].delete(' ') != '' && doc['coinbag_dest'].ne(''), doc['coinbag_dest'].match(params[:coinbag]),true)) &
           (r.branch(params[:currency] != '', doc['currency'].eq(params[:currency]),true) |
