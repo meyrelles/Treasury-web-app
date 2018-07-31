@@ -52,9 +52,63 @@
     width: 80%;
 }
 
-//Default dropbox values
+/* Default dropbox values */
 #default_atr{
   font-weight: bold;
   color: #CCFFFF;
   background: #003366;
 }
+
+/* CALL TRANSACTIONS */
+#calltransactions {
+  border:0px solid black;
+  float:auto;
+  margin: -100px 30px -50px 0px;
+}
+
+#TransactiosAndFilters {
+  border:0px solid black;
+  float:auto;
+  margin: -60px 30px -50px 0px;
+}
+
+#transaction_coinbag, #transaction_currency, #transaction_user, #transaction_classification, #transaction_author {
+  float:auto;
+  margin: -1px 0px 0px 0px;
+}
+
+#separator {
+  height: 40px;
+}
+
+/* BEGIN FILTERS */
+#options {
+  border:0px solid black;
+}
+
+#filterstable {
+  border:1px solid grey;
+  background-color: #fffff1;
+  width:900px;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:2%;
+}
+
+input.options {
+  -ms-transform: scale(2);
+  -moz-transform: scale(2);
+  -webkit-transform: scale(2);
+  -o-transform: scale(2);
+  padding: 0px;
+  height: 10px;
+  width:10px;
+  float:left;
+  margin: 5px 30px 8px 10px;
+}
+
+.toolbar {
+    float: right;
+}
+
+/* END FILTERS */

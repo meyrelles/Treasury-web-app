@@ -55,5 +55,3 @@ jQuery ->
           # Open this row
           row.child(format(row.data())).show()
           tr.addClass 'shown'
-        return
-      return

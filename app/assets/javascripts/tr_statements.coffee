@@ -2,6 +2,13 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+format = (d) ->
+  # `d` is the original data object for the row
+  '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Detail:</td>' + '<td>' + d.detail + '</td>' + '</tr>' + '<tr>' + '<td>Hash:</td>' + '<td>' + d.hash + '</td>' +
+  '</tr>' + '<tr>' + '<td>Currency to:</td>' + '<td>' + d.currency_dest + '</td>' + '</tr>' + '</tr>' + '<tr>' + '<td>Coinbag from:</td>' + '<td>' + d.coinbag + '</td>' +
+  '</tr>' + '<tr>' + '<td>Coinbag to:</td>' + '<td>' + d.coinbag_dest + '</td>' +
+  '</tr>' + '<tr>' + '<td>Amount to:</td>' + '<td>' + d.amount_dest + '</td>' + '</tr>' + '</tr>' + '<tr>' + '<td>Author:</td>' + '<td>' + d.author + '</td>' + '</tr>' + '</table>'
+
 #Put message in fornt of field when wrong
 ValidateNumber =
   cleanNumber: (number) -> number.replace /[- ]/g, ""
@@ -64,13 +71,183 @@ Update_Field_On_Start =
       else
         $('#tr_statement_coinbag_dest').empty()
 
+GetCoinbagStatus = ->
+  e = document.getElementById("transaction_coinbag")
+  return e.options[e.selectedIndex].value
+
+GetCurrencyStatus = ->
+  e = document.getElementById("transaction_currency")
+  return e.options[e.selectedIndex].value
+
+GetUserStatus = ->
+  e = document.getElementById("transaction_user")
+  return e.options[e.selectedIndex].value
+
+GetCategoryStatus = ->
+  e = document.getElementById("transaction_classification")
+  return e.options[e.selectedIndex].value
+
+GetAuthorStatus = ->
+  e = document.getElementById("transaction_author")
+  return e.options[e.selectedIndex].value
+
 jQuery ->
 #Form control
-  $('#transactions').dataTable
-    sPaginationType: "full_numbers"
-    order: [[ 0, "desc" ]]
-
   $(document).on 'turbolinks:load', ->
+
+    $("#transactions").append('<tfoot><tr id="foot"><th></th><th></th><th></th><th></th><th></th><th style="max-width:5px;">PAGE TOTAL:</th><th style="background:#a1eaed;color:black;max-width:5px;"></th><th></th><th></th>');
+
+    $("#transaction_user").change ->
+      table = window.$('#transactions').DataTable()
+      table.draw()
+    $("#transaction_coinbag").change ->
+      table = window.$('#transactions').DataTable()
+      table.draw()
+    $("#transaction_currency").change ->
+      table = window.$('#transactions').DataTable()
+      table.draw()
+    $("#transaction_classification").change ->
+      table = window.$('#transactions').DataTable()
+      table.draw()
+    $("#transaction_author").change ->
+      table = window.$('#transactions').DataTable()
+      table.draw()
+
+    #CALENDAR CONTROLLER
+    $('[data-behaviour~=datepicker]').datepicker
+      format: 'yyyy-mm-dd'
+      maxViewMode: 2
+      todayHighlight: true
+      orientation: 'bottom left'
+      todayBtn: 'linked'
+      autoclose: true
+
+    table = $('#transactions').DataTable (
+      sPaginationType: "full_numbers"
+      responsive: true
+      bFilter: true
+      bProcessing: true
+      bServerSide: true
+      drawCallback: (settings) ->
+        total = 0
+        api = this.api()
+        sum = api.column(6, page: 'all').data().sum()
+        $(api.column(6).footer()).html(Math.round(sum * 100)/100)
+
+      #scrollY:        '800px'
+      #scrollX:        true
+      #scrollCollapse: true
+      #paging:         true
+      #fixedColumns:   true
+      stateSave:      true
+      order: [ 1, 'asc' ]
+      #jQueryUI: true
+      #sDom: 'lfBtip'
+      #buttons:
+      sAjaxSource: $('#transactions').data('source')
+      columnDefs: [ {
+        targets: 8
+        render: (url, type, full, row, data) ->
+          '<a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/tr_statements/' + full.id + '"><img src="assets/delete.ico" height="20px" width="20px" title="Delete transaction" alt="Delete"></a>'
+        }
+        {
+        targets: 7
+        render: (url, type, full, row, data) ->
+          '<a href="/tr_statements/' + full.id + '/edit?type=' + full.mov_type + '&usr=' + full.session_id + '"><img src="assets/edit.ico" height="20px" width="20px" title="Edit transaction" alt="Edit"></a>'
+      } ]
+      columns: [
+        {
+          'className': 'details-control'
+          'orderable': false
+          'data': null
+          'defaultContent': ''
+        }
+        {
+        data: 'date_time'
+        render: (data, type, row) ->
+          dt = new Date(data)
+          d = "0" + dt.getDate()
+          d = d.substr(d.length - 2 , 2)
+          m = "0" + (dt.getMonth() + 1)
+          m = m.substr(m.length - 2 , 2)
+          y = dt.getFullYear()
+          dt = d + "-" + m + "-" + y
+           #$("#txtDate").val($.format.date(new Date(), 'dd M yy'));
+          #dt.toDateString()
+
+        }
+        { data: 'classification' }
+        { data: 'from' }
+        { data: 'to' }
+        { data: 'currency' }
+        { data: 'amount' }
+        { data: 'id' }
+        { data: 'id' }
+      ]
+      fnServerParams: (aoData) ->
+        aoData.push {
+          'name': 'coinbag'
+          'value': GetCoinbagStatus()
+          },{
+          'name': 'currency'
+          'value': GetCurrencyStatus()
+          },{
+          'name': 'user'
+          'value': GetUserStatus()
+          },{
+          'name': 'author'
+          'value': GetAuthorStatus()
+          },{
+          'name': 'category'
+          'value': GetCategoryStatus()
+          },{
+          'name': 'datefrom'
+          'value': document.getElementById("date_from").value
+          },{
+          'name': 'dateto'
+          'value': document.getElementById("date_to").value
+          },{
+          'name': 'amountfrom'
+          'value': document.getElementById("amount_from").value
+          },{
+          'name': 'amountto'
+          'value': document.getElementById("amount_to").value
+          }
+      #sDom: 'f<"#reset">irt',
+      sDom: '<"toolbar">frtip' +
+        "<'row'<'col-sm-12 col-md-6'l>>" +
+        "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+      buttons: [
+            "Search"
+            "excel"
+            "pdf"
+        ]
+      )
+
+    #alert($.param(dtIni))
+
+    $('div.toolbar').html'<table id="temporary" style="display:none;"></table>'
+    #table.buttons()
+    #  .container()
+    #  .appendTo( $("#myTableButtons", table.table().container() ) );
+
+    # Add event listener for opening and closing details
+    $('#transactions tbody').on 'click', 'td.details-control', ->
+      tr = $(this).closest('tr')
+      row = table.row(tr)
+      if row.child.isShown()
+        # This row is already open - close it
+        row.child.hide()
+        tr.removeClass 'shown'
+      else
+        # Open this row
+        row.child(format(row.data())).show()
+        tr.addClass 'shown'
+
+
+
+
     $('#new_tr').click ->
       sessionStorage.setItem('mov_type', 'tr')
     $('#new_exch').click ->
@@ -323,17 +500,6 @@ jQuery ->
           $("#tr_statement_array_category").val(array_category)
 
           $('#panel').slideToggle 'slow'
-
-
-
-      #CALENDAR CONTROLLER
-      $('[data-behaviour~=datepicker]').datepicker
-        format: 'yyyy-mm-dd'
-        maxViewMode: 2
-        todayHighlight: true
-        orientation: 'bottom left'
-        todayBtn: 'linked'
-        autoclose: true
 
       #FORMAT COMBOBOX CURRENCIES DEFAULTS
       k=0

@@ -91,6 +91,7 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 
 gem 'jquery-datatables-rails'
+gem 'rails-datatables'
 # API package
 gem 'api'
 

@@ -1,34 +1,115 @@
-<p id="notice"><%= notice %></p>
+<script>
 
-<h1>Treasury Statements</h1>
+function toggleTable() {
+    var elem = document.getElementById("filterstable");
+    var hide = elem.style.display =="none";
+    if (hide) {
+      elem.style.display="table";
+    }
+    else {
+      elem.style.display="none";
+    }
+  }
+
+
+
+function update_filters() {
+  var table = window.$('#transactions').DataTable();
+  table.draw();
+  //table.draw()
+}
+
+$('#transactions').DataTable( {
+    drawCallback: function () {
+      var api = this.api();
+      $( api.table().footer() ).html(
+        api.column( 4, {page:'current'} ).data().sum()
+      );
+    }
+  } );
+
+
+
+</script>
+
+<p id="notice"><%= notice %></p>
+<h1>TRANSACTIONS</h1>
 <body class='transactions_body' id="Transactionsbody" data-controller="<%= controller.controller_name %>">
   <br>
-  <h3>New transaction:</h3>
-  <table class = "links">
-    <tr>
-      <td><%= link_to 'Transaction', new_tr_statement_path(@tr_statement, :type => "tr"), id: "new_tr", class: "btn btn-lg btn-primary" %></td>
-      <td><%= link_to 'Exchange', new_tr_statement_path(@tr_statement, :type => "exch"), id: "new_exch", class: "btn btn-lg btn-primary" %></td>
-      <div id="type_parameter"></div>
+  <table  id="TransactiosAndFilters" class = "links">
+    <td id="options">
+      <table id="calltransactions">
+        <tr>
+          <td id="options" colspan="2"><h2>New transaction:</h2></td>
+        </tr>
+        <tr id="options">
+          <td id="options"><%= link_to 'Transaction', new_tr_statement_path(@tr_statement, :type => "tr"), id: "new_tr", class: "btn btn-lg btn-primary" %></td>
+          <td id="options"><%= link_to 'Exchange', new_tr_statement_path(@tr_statement, :type => "exch"), id: "new_exch", class: "btn btn-lg btn-primary" %></td>
+          <div id="type_parameter"></div>
+        </tr>
+      </table>
+    </td>
+    <td id="options" align=right style="width: 100%;">
+      <td id="options" align=right style="width: 200px;"><button style="width: 200px;" name="Search options" onclick="toggleTable()">Filter options</button></td>
+    </td>
+  </table>
+  <table id="separator"></table>
+  <table id="filterstable" style="display:none;">
+    <tr id="options">
+      <td id="options" style="width:1px;" colspan="5">
+        <div class="input-daterange" data-behaviour='datepicker' id="datepicker" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+          <label style="width:40px;">Dates </label>
+          <label style="width:50px;" for="from">from: </label>
+          <input style="margin: 2px 30px 8px 0px;width:80px;" class="datepicker_field" type="text" id="date_from" name="date_from" onchange="update_filters()">
+          <label style="width:25px;" for="to"> to: </label>
+          <input style="margin: 2px 30px 8px 0px;width:80px;" class="datepicker_field" type="text" id="date_to" name="date_to" onchange="update_filters()">
+        </div>
+      </td>
+      <td id="options" style="width:1px;" colspan="5">
+        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+          <label style="width:55px;">Amount </label>
+          <label style="width:50px;" for="from">from: </label>
+          <input style="margin: 2px 30px 8px 0px;width:80px;" type="text" id="amount_from" name="date_from" onchange="update_filters()">
+          <label style="width:25px;" for="to"> to: </label>
+          <input style="margin: 2px 30px 8px 0px;width:80px;" type="text" id="amount_to" name="date_to" onchange="update_filters()">
+        </div>
+      </td>
     </tr>
+    <% @usr = User.all.order_by(:nickname) %>
+    <%= form_for :transaction do |f| %>
+    <tr id="options">
+      <td id="options" class="members"><b>Member</b></td><td id="options">
+        <%= f.collection_select :user, @usr, :id, :nickname, include_blank: true %>
+      </td>
+      <td id="options" class="authors"><b>Author</b></td><td id="options">
+        <%= f.collection_select :author, @usr, :id, :nickname, include_blank: true %>
+      </td>
+      <td id="options" class="currencies"><b>Currency</b></td><td id="options">
+        <%= f.collection_select :currency, Currency.all.order_by(:currency), :id, :currency, include_blank: true %>
+      </td>
+      <td id="options" class="coinbags"><b>Coinbag</b></td><td id="options">
+        <%= f.collection_select :coinbag, Coinbag.where(user_id: session[:user_id]).order_by(:coinbag), :id, :coinbag, include_blank: true %>
+      </td>
+      <td id="options" class="categories"><b>Category</b></td><td id="options">
+        <%= f.collection_select :classification, Classification.all.order_by(:classification), :id, :classification, include_blank: true %>
+      </td>
+    </tr>
+    <% end %>
   </table>
   <br>
 
-  <table style="border: 1px solid black; border-collapse: collapse;" id="transactions">
+  <table style="border: 1px solid black; border-collapse: collapse;" id="transactions" class="display"
+    data-source="<%= tr_statements_url(format: "json") %>">
+
     <thead>
       <tr >
+        <th>Details</th>
         <th>Date</th>
-        <th>Detail</th>
         <th>Category</th>
         <th>From</th>
-        <th>From coinbag</th>
+        <th>To</th>
         <th>Currency</th>
         <th>Amount</th>
-        <th>To</th>
-        <th>To coinbag</th>
-        <th>To currency</th>
-        <th>To amount</th>
-        <th>Celebrate</th>
-        <th style="width:5px;"></th>
         <th style="width:5px;"></th>
         <th style="width:5px;"></th>
       </tr>
@@ -40,69 +121,6 @@
   }
 </style>
     <tbody>
-      <h3>List of transactions:</h3>
-
-      <% @statements_tr.each do |tr_statement| %>
-        <% if tr_statement.status == 'A' %>
-          <tr style="background-color:#FFE5CC;font-weight:bold;">
-        <% elsif tr_statement.mov_type == 'tr' %>
-          <tr style="background-color:#E6F1FF;font-weight:bold;">
-        <% elsif tr_statement.mov_type == 'exch' %>
-          <tr style="background-color:#DFFFCA;font-weight:bold;">
-        <% else %>
-          <tr>
-        <% end %>
-          <td><%= tr_statement.date_time.strftime("%d-%m-%Y") %></td>
-          <td><%= tr_statement.detail %></td>
-          <% begin %>
-            <td><%= Classification.where(id: tr_statement.classification).map(&:classification)*"," %></td>
-          <% rescue %>
-          <% end %>
-          <% begin %>
-            <td><%= User.where(id: tr_statement.from).map(&:nickname)*"," %></td>
-          <% rescue %>
-          <% end %>
-          <% begin %>
-            <td><%= Coinbag.where(id: tr_statement.coinbag).map(&:coinbag)*"," %></td>
-          <% rescue %>
-          <% end %>
-          <% begin %>
-            <td><%= Currency.where(id: tr_statement.currency).map(&:currency)*"," %></td>
-          <% rescue %>
-          <% end %>
-          <td><%= tr_statement.amount %></td>
-          <% begin %>
-            <td><%= User.where(id: tr_statement.to).map(&:nickname)*"," %></td>
-          <% rescue %>
-          <% end %>
-          <% begin %>
-            <td><%= Coinbag.where(id: tr_statement.coinbag_dest).map(&:coinbag)*"," %></td>
-          <% rescue %>
-          <% end %>
-          <% begin %>
-            <td><%= Currency.where(id: tr_statement.currency_dest).map(&:currency)*"," %></td>
-          <% rescue %>
-          <% end %>
-          <td><%= tr_statement.amount_dest %></td>
-          <td><%= tr_statement.celebrate %></td>
-          <td><%= link_to image_tag('show.ico', size: "20x20"), tr_statement %></td>
-          <% if tr_statement.from == nil %>
-            <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => '') %></td>
-          <% else %>
-            <% if tr_statement.created_by == session[:user_id] or tr_statement.from == session[:user_id] or tr_statement.to == session[:user_id] %>
-              <td><%= link_to image_tag('edit.ico', size: "20x20"), edit_tr_statement_path(tr_statement, :type => tr_statement.mov_type, :usr => User.where(id: tr_statement.to).map(&:id)*",") %></td>
-            <% else %>
-              <td>---</td>
-            <% end %>
-          <% end %>
-          <% if tr_statement.created_by == session[:user_id] or tr_statement.from == session[:user_id] or tr_statement.to == session[:user_id] %>
-            <td><%= link_to image_tag('delete.ico', size: "20x20"), tr_statement, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-          <% else %>
-            <td>---</td>
-          <% end %>
-        </tr>
-      <% end %>
-    <br>
     </tbody>
 
   </table>

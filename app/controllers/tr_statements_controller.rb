@@ -8,17 +8,52 @@ class TrStatementsController < ApplicationController
   # GET /tr_statements
   # GET /tr_statements.json
   def index
-    if session[:user_id].to_s == ''
+    if session[:user_id].to_s == '' or session[:user_id].to_s == nil
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
+
+    $session_id = session[:user_id]
+
+    respond_to do |format|
+      format.html
+      format.json { render json: TrStatementsDatatable.new(view_context) }
+    end
     #@statements_tr = TrStatement.all
     #@statements_tr = @statements_tr.order('date_time')
-    @tr = TrStatement.where(status: 'I').order(date_time: :desc)
-    @tmp = TrStatement.where(status: 'A').order(date_time: :desc)
-    @statements_tr = @tr + @tmp
-    .sort_by{|m| m.created_at}
-    @statements_tr = @statements_tr.sort_by{|m| m.date_time}.reverse #.sort_by(&:date_time :desc)
+
+=begin
+    @transactions = NoBrainer.run(:profile => false) { |r|
+      r.table('tr_statements').filter{|doc| doc['status'].eq("I") | doc['status'].eq("A")}.
+      map{ |lista|
+        {
+          :id => lista["id"],
+          :mov_type => lista["mov_type"],
+          :date_time => lista["date_time"].to_epoch_time,
+          :detail => lista["detail"],
+          :classification => r.table('classifications').filter({id: lista["classification"]}).get_field('classification').reduce{ |left, right| left+right}.default(''),
+          :coinbag => r.table('coinbags').filter({id: lista["coinbag"]}).get_field('coinbag').reduce{ |left, right| left+right}.default(""),
+          :amount => lista["amount"],
+          :currency => r.table('currencies').filter({id: lista["currency"]}).get_field('currency').reduce{ |left, right| left+right}.default(""),
+          :from => r.table('users').filter({id: lista["from"]}).get_field('nickname').reduce{ |left, right| left+right}.default(""),
+          :to => r.table('users').filter({id: lista["to"]}).get_field('nickname').reduce{ |left, right| left+right}.default(""),
+          :coinbag_dest => r.table('coinbags').filter({id: lista["coinbag_dest"]}).get_field('coinbag').reduce{ |left, right| left+right}.default(""),
+          :currency_dest => r.table('currencies').filter({id: lista["currency_dest"]}).get_field('currency').reduce{ |left, right| left+right}.default(""),
+          :amount_dest => lista["amount_dest"],
+          :celebrate => lista["celebrate"],
+          :created_by => lista["created_by"],
+          :from_id => lista["from"],
+          :to_id => lista["to"],
+          :status => lista["status"]
+        }
+      }
+    }
+=end
+    #@tr = TrStatement.where(status: 'I').order(date_time: :desc).limit(100)
+    #@tmp = TrStatement.where(status: 'A').order(date_time: :desc).limit(100)
+    #@statements_tr = @tr + @tmp
+    #.sort_by{|m| m.created_at}
+    #@statements_tr = @statements_tr.sort_by{|m| m.date_time}.reverse #.sort_by(&:date_time :desc)
 
     #@statements_tr = @statements_tr.paginate(:page => params[:page], :per_page => 10)
 
@@ -269,7 +304,6 @@ class TrStatementsController < ApplicationController
       @classification = @classification.order(:classification)
 
       #Load defaults from transaction process
-
       if params[:type] == 'tr'
         @tr_def = ClassificationDefault.where(user_id: session[:user_id], isdefault: 'true', operation: 'tr').map(&:classification_id)*","
       elsif params[:type] == 'exch'
@@ -354,24 +388,33 @@ class TrStatementsController < ApplicationController
             :password => rdbaccess["access"]["pass"],
             :port => rdbaccess["access"]["port"])
 
+          date_time = TrStatement.where(id: params[:id]).map(&:date_time)*","
+          date_time = Time.new(date_time[0..3].to_i,date_time[5..6].to_i,date_time[8..9].to_i,1,45,45,"+00:00")
+          amount = TrStatement.where(id: params[:id]).map(&:amount)*","
+          amount = amount.to_f
+          amount_dest = TrStatement.where(id: params[:id]).map(&:amount_dest)*","
+          amount_dest = amount_dest.to_f
+          fee = TrStatement.where(id: params[:id]).map(&:fee)*","
+          fee = fee.to_f
+
           r.db(rdbaccess["access"]["db"]).table('tr_statements').insert({
             :id => ([*('A'..'Z'),*('0'..'9'),*('a'..'z')]-%w(Y)).sample(16).join,
             :detail => TrStatement.where(id: params[:id]).map(&:detail)*",",
             :celebrate => TrStatement.where(id: params[:id]).map(&:celebrate)*",",
-            :date_time => TrStatement.where(id: params[:id]).map(&:date_time)*",",
+            :date_time => date_time,
             :mov_type => TrStatement.where(id: params[:id]).map(&:mov_type)*",",
             :timezone => TrStatement.where(id: params[:id]).map(&:timezone)*",",
             :classification => TrStatement.where(id: params[:id]).map(&:classification)*",",
             :coinbag => TrStatement.where(id: params[:id]).map(&:coinbag)*",",
             :coinbag_dest => TrStatement.where(id: params[:id]).map(&:coinbag_dest)*",",
-            :amount => TrStatement.where(id: params[:id]).map(&:amount)*",",
+            :amount => amount,
             :currency => TrStatement.where(id: params[:id]).map(&:currency)*",",
             :currency_dest => TrStatement.where(id: params[:id]).map(&:currency_dest)*",",
-            :amount_dest => TrStatement.where(id: params[:id]).map(&:amount_dest)*",",
+            :amount_dest => amount_dest,
             :from => TrStatement.where(id: params[:id]).map(&:from)*",",
             :to => TrStatement.where(id: params[:id]).map(&:to)*",",
             :created_by => TrStatement.where(id: params[:id]).map(&:created_by)*",",
-            :fee => TrStatement.where(id: params[:id]).map(&:fee)*",",
+            :fee => fee,
             :hash => TrStatement.where(id: params[:id]).map(&:hash)*",",
             :version => TrStatement.where(id: params[:id]).map(&:version)*",",
             :link_id => params[:id],

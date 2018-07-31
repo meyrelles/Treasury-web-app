@@ -22,4 +22,5 @@ class TrStatement
   field :created_by, :type => String
   field :status, :type => String
   field :link_id, :type => String
+  field :date, :type => Time
 end

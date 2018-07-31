@@ -11,7 +11,14 @@ refreshChart = ->
     chart3.updateData [{name: "60 Minutes", data: $("#chartdata3").data("parameter")}]
 
     chart3 = Chartkick.charts['chart-payments']
-    chart3.updateData [{name: "Ppayments", data: $("#chartpayments").data("parameter")}]
+    chart3.updateData [{name: "Payments", data: $("#chartpayments").data("parameter")},
+      {name: "Avg", data: $("#chartpaymentsAvg").data("parameter")}]
+
+    chart = Chartkick.charts['chart-id2_Lustosa']
+    chart.updateData [{name: "Real Time", data: $("#chartdata_Lustosa").data("parameter")}, {name: "5 minutes", data: $("#chartdata2_Lustosa").data("parameter")}]
+
+    chart3 = Chartkick.charts['chart-id3_Lustosa']
+    chart3.updateData [{name: "60 Minutes", data: $("#chartdata3_Lustosa").data("parameter")}]
 
     setTimeout refreshChart, 30000
 
