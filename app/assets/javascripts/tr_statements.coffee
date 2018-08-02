@@ -8,7 +8,7 @@ format = (d) ->
   '</tr>' + '<tr>' + '<td>Currency to:</td>' + '<td>' + d.currency_dest + '</td>' + '</tr>' + '</tr>' + '<tr>' + '<td>Coinbag from:</td>' + '<td>' + d.coinbag + '</td>' +
   '</tr>' + '<tr>' + '<td>Coinbag to:</td>' + '<td>' + d.coinbag_dest + '</td>' +
   '</tr>' + '<tr>' + '<td>Amount to:</td>' + '<td>' + d.amount_dest + '</td>' +
-  '</tr>' + '<tr>' + '<td>Celebrate:</td>' + '<td>' + d.celebrate + '</td>' + 
+  '</tr>' + '<tr>' + '<td>Celebrate:</td>' + '<td>' + d.celebrate + '</td>' +
   '</tr>' + '<tr>' + '<td>Hash:</td>' + '<td>' + d.hash + '</td>' +
   '</tr>' + '</tr>' + '<tr>' + '<td>Author:</td>' + '<td>' + d.author + '</td>' + '</tr>' + '</table>'
 
