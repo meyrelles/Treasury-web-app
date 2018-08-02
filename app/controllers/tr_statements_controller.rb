@@ -1,9 +1,5 @@
 class TrStatementsController < ApplicationController
   before_action :set_tr_statement, only: [:show, :edit, :update, :destroy]
-  #require 'will_paginate'
-  #require 'will_paginate/array'
-  #require 'will_paginate/active_record'
-  #require YAML
 
   # GET /tr_statements
   # GET /tr_statements.json
@@ -19,44 +15,6 @@ class TrStatementsController < ApplicationController
       format.html
       format.json { render json: TrStatementsDatatable.new(view_context) }
     end
-    #@statements_tr = TrStatement.all
-    #@statements_tr = @statements_tr.order('date_time')
-
-=begin
-    @transactions = NoBrainer.run(:profile => false) { |r|
-      r.table('tr_statements').filter{|doc| doc['status'].eq("I") | doc['status'].eq("A")}.
-      map{ |lista|
-        {
-          :id => lista["id"],
-          :mov_type => lista["mov_type"],
-          :date_time => lista["date_time"].to_epoch_time,
-          :detail => lista["detail"],
-          :classification => r.table('classifications').filter({id: lista["classification"]}).get_field('classification').reduce{ |left, right| left+right}.default(''),
-          :coinbag => r.table('coinbags').filter({id: lista["coinbag"]}).get_field('coinbag').reduce{ |left, right| left+right}.default(""),
-          :amount => lista["amount"],
-          :currency => r.table('currencies').filter({id: lista["currency"]}).get_field('currency').reduce{ |left, right| left+right}.default(""),
-          :from => r.table('users').filter({id: lista["from"]}).get_field('nickname').reduce{ |left, right| left+right}.default(""),
-          :to => r.table('users').filter({id: lista["to"]}).get_field('nickname').reduce{ |left, right| left+right}.default(""),
-          :coinbag_dest => r.table('coinbags').filter({id: lista["coinbag_dest"]}).get_field('coinbag').reduce{ |left, right| left+right}.default(""),
-          :currency_dest => r.table('currencies').filter({id: lista["currency_dest"]}).get_field('currency').reduce{ |left, right| left+right}.default(""),
-          :amount_dest => lista["amount_dest"],
-          :celebrate => lista["celebrate"],
-          :created_by => lista["created_by"],
-          :from_id => lista["from"],
-          :to_id => lista["to"],
-          :status => lista["status"]
-        }
-      }
-    }
-=end
-    #@tr = TrStatement.where(status: 'I').order(date_time: :desc).limit(100)
-    #@tmp = TrStatement.where(status: 'A').order(date_time: :desc).limit(100)
-    #@statements_tr = @tr + @tmp
-    #.sort_by{|m| m.created_at}
-    #@statements_tr = @statements_tr.sort_by{|m| m.date_time}.reverse #.sort_by(&:date_time :desc)
-
-    #@statements_tr = @statements_tr.paginate(:page => params[:page], :per_page => 10)
-
   end
 
   # GET /tr_statements
