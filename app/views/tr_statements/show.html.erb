@@ -125,6 +125,11 @@
     </tr>
   </table>
 <% else %>
-  <%= link_to 'Back', tr_statements_path, class: "btn btn-lg btn-primary" %>
+  <td><%= link_to 'Back', tr_statements_path, class: "btn btn-lg btn-primary" %></td> |
+  <% if @tr_statement.mov_type == 'tr' %>
+    <td><%= link_to 'New', new_tr_statement_path(@tr_statement, :type => "tr"), id: "new_tr", class: "btn btn-lg btn-primary" %></td>
+  <% else %>
+    <td><%= link_to 'New', new_tr_statement_path(@tr_statement, :type => "exch"), id: "new_exch", class: "btn btn-lg btn-primary" %></td>
+  <% end %>
 <% end %>
 </body>

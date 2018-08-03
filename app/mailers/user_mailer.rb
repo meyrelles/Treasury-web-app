@@ -1,21 +1,21 @@
 class UserMailer < ApplicationMailer
   default from: 'no_reply@ultroneous.org'
 
-  @address = "smtp.gmail.com"
-  @port = 587
-  @user_name = 'nuno.de.meireles@gmail.com'
-  @password = 'QQQQwwww!1'
-  @authentication = "login"
+  @address = "treasury.ultroneous.org"
+  @port = 25
+  @user_name = ''
+  @password = ''
+  @authentication = ""
 
   def welcome_email
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/login'
     delivery_options = {
-               :address              => "smtp.gmail.com",
-               :port                 => 587,
-               :user_name            => 'nuno.de.meireles@gmail.com',
-               :password             => 'QQQQwwww!1',
-               :authentication       => "login",
+               :address              => "treasury.ultroneous.org",
+               :port                 => 25,
+               :user_name            => '',
+               :password             => '',
+               :authentication       => "",
               :enable_starttls_auto => true
               }
 
@@ -27,11 +27,11 @@ class UserMailer < ApplicationMailer
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/login'
     delivery_options = {
-               :address              => "smtp.gmail.com",
-               :port                 => 587,
-               :user_name            => 'nuno.de.meireles@gmail.com',
-               :password             => 'QQQQwwww!1',
-               :authentication       => "login",
+               :address              => "treasury.ultroneous.org",
+               :port                 => 25,
+               :user_name            => '',
+               :password             => '',
+               :authentication       => "",
               :enable_starttls_auto => true
               }
 
@@ -43,11 +43,11 @@ class UserMailer < ApplicationMailer
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/password_reset'
     delivery_options = {
-               :address              => "smtp.gmail.com",
-               :port                 => 587,
-               :user_name            => 'nuno.de.meireles@gmail.com',
-               :password             => 'QQQQwwww!1',
-               :authentication       => "login",
+               :address              => "treasury.ultroneous.org",
+               :port                 => 25,
+               :user_name            => '',
+               :password             => '',
+               :authentication       => "",
               :enable_starttls_auto => true
               }
 
@@ -59,11 +59,11 @@ class UserMailer < ApplicationMailer
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/users/' + @user.id + '/edit'
     delivery_options = {
-               :address              => "smtp.gmail.com",
-               :port                 => 587,
-               :user_name            => 'nuno.de.meireles@gmail.com',
-               :password             => 'QQQQwwww!1',
-               :authentication       => "login",
+               :address              => "treasury.ultroneous.org",
+               :port                 => 25,
+               :user_name            => '',
+               :password             => '',
+               :authentication       => "",
               :enable_starttls_auto => true
               }
 

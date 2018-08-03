@@ -296,7 +296,7 @@ jQuery ->
 
       if $("#type_new").data("parameter") is 'NEW'
         document.getElementById("send").disabled = true
-        array = [0,1,0,0,0,0,0,0,0,0]
+        array = [0,1,0,0,0,0,0,0,0,1]
 
       if $("#type_new").data("parameter") is 'EDIT'
         array = [0,1,1,1,1,1,1,1,1,1]
@@ -317,13 +317,13 @@ jQuery ->
 
       #REASON FIELD
       $("#tr_statement_detail").blur ->
-        if @value.length > 5
+        if @value.length >= 1
           $("#CTR_reason").text("")
           array[2]=1
           #enable submit
           EnableSubmitButton.Checking(array)
         else
-          $("#CTR_reason").text("Detail should be great than 5 characters!")
+          $("#CTR_reason").text("Detail should be great than 1 characters!")
           document.getElementById("send").disabled = true
           array[2]=0
 
@@ -529,7 +529,7 @@ jQuery ->
       $('#tr_statement_currency').ready ->
         while k < document.getElementById("tr_statement_currency").options.length - 1
           if document.getElementById("tr_statement_currency").options[k].text.substring(0, 1) == '*'
-            texto = document.getElementById("tr_statement_currency").options[k].text.substring(1, 100)
+            texto = document.getElementById("tr_statement_currency").options[k].text.substring(2, 100) + ' *'
             document.getElementById("tr_statement_currency").options[k].text = texto
             document.getElementById("tr_statement_currency").options[k].id = 'default_atr'
           k++
@@ -538,7 +538,7 @@ jQuery ->
         $('#tr_statement_currency_dest').ready ->
         while k < document.getElementById("tr_statement_currency_dest").options.length - 1
           if document.getElementById("tr_statement_currency_dest").options[k].text.substring(0, 1) == '*'
-            texto = document.getElementById("tr_statement_currency_dest").options[k].text.substring(1, 100)
+            texto = document.getElementById("tr_statement_currency_dest").options[k].text.substring(2, 100) + ' *'
             document.getElementById("tr_statement_currency_dest").options[k].text = texto
             document.getElementById("tr_statement_currency_dest").options[k].id = 'default_atr'
           k++
@@ -548,7 +548,7 @@ jQuery ->
       $('#tr_statement_classification').ready ->
         while k < document.getElementById("tr_statement_classification").options.length
           if document.getElementById("tr_statement_classification").options[k].text.substring(0, 1) == '*'
-            texto = document.getElementById("tr_statement_classification").options[k].text.substring(1, 100)
+            texto = document.getElementById("tr_statement_classification").options[k].text.substring(2, 100) + ' *'
             document.getElementById("tr_statement_classification").options[k].text = texto
             document.getElementById("tr_statement_classification").options[k].id = 'default_atr'
           k++

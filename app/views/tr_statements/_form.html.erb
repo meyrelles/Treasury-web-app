@@ -1,3 +1,27 @@
+
+
+<script type="text/javascript">
+
+//function fnOnLoad() {
+
+  var t = document.getElementsByTagName('INPUT');
+  for (var i = 0; i < t.length; i++) {
+          t[i].onfocus = function() { this.style.backgroundColor = '#FFFF00';};
+          t[i].onblur = function() { this.style.backgroundColor = '#FFFFFF'; };
+  }
+
+  var d = document.getElementsByTagName('SELECT');
+  for (var i = 0; i < d.length; i++) {
+          d[i].onfocus = function() { this.style.backgroundColor = '#FFFF00'; };
+          d[i].onblur = function() { this.style.backgroundColor = '#FFFFFF'; };
+  }
+
+  document.getElementById('tr_statement_classification').focus();
+//}
+</script>
+
+
+
 <body class="body_<%= @mov_type.to_s %>" id="Trstatementbody" data-controller="<%= controller.controller_name %>">
 
   <%= form_with(model: tr_statement, local: true) do |form| %>
@@ -23,7 +47,7 @@
     <table class="st_input" border="0">
     <div class="field_date">
       <tr>
-        <td><%= form.label :date_time %></td>
+        <td><%= form.label :date_time, id: "form_label"  %></td>
           <% if @action == 'NEW' %>
             <td class="input-daterange" data-behaviour='datepicker' id="datepicker">
               <%= form.text_field :date_time, class: 'datepicker_field', value: Time.now.strftime("%Y-%m-%d") %>
@@ -68,7 +92,7 @@
 
     <div class="field">
       <tr>
-        <td><%= form.label "Category" %></td>
+        <td><%= form.label "Category", id: "form_label"  %></td>
         <% begin %>
           <td><%= form.collection_select :classification, @classification, :id, :classification, include_blank: true %>
           <i type="button" value="new category" id="flip">  new category</i>
@@ -97,7 +121,7 @@
 
     <div class="field">
       <tr>
-        <td><%= form.label :detail %></td>
+        <td><%= form.label :detail, id: "form_label"  %></td>
         <td><%= form.text_field :detail, class: 'text_field_Detail' %><div id="CTR_reason" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
       </tr>
     </div>
@@ -106,11 +130,11 @@
     <div class="field">
       <tr>
         <% if @mov_type.to_s == 'exch' && @action == 'NEW' %>
-          <td><%= form.label "Source #{:coinbag}" %></td>
+          <td><%= form.label "Source #{:coinbag}", id: "form_label"  %></td>
           <td><%= form.collection_select :coinbag, Coinbag.where(user_id: @usr.to_s), :id, :coinbag, include_blank: true %><div id="CTR_coinbag" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% elsif @mov_type.to_s == 'exch' && @action != 'NEW' %>
-          <td><%= form.label "Source #{:coinbag}" %></td>
-          <td><%= form.collection_select :coinbag, Coinbag.where(user_id: @tr_statement.from), :id, :coinbag, include_blank: true, :default => @tr_statement.coinbag %></td>
+          <td><%= form.label "Source #{:coinbag}", id: "form_label"  %></td>
+          <td><%= form.collection_select :coinbag, Coinbag.where(user_id: @tr_statement.from), :id, :coinbag, include_blank: true, :default => @tr_statement.coinbag, class: "combo" %></td>
         <% end %>
       </tr>
     </div>
@@ -119,11 +143,11 @@
     <div class="field">
       <tr>
         <% if @mov_type.to_s == 'exch' && @action == 'NEW' %>
-          <td><%= form.label "Destination #{:coinbag}" %></td>
+          <td><%= form.label "Destination #{:coinbag}", id: "form_label"  %></td>
           <td><%= form.collection_select :coinbag_dest, Coinbag.where(user_id: @usr.to_s), :id, :coinbag, include_blank: true %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         <% elsif @mov_type.to_s == 'exch' && @action != 'NEW' %>
-          <td><%= form.label "Destination #{:coinbag}" %></td>
+          <td><%= form.label "Destination #{:coinbag}", id: "form_label"  %></td>
           <td><%= form.collection_select :coinbag_dest, Coinbag.where(user_id: @tr_statement.to), :id, :coinbag, include_blank: true, :default => @tr_statement.coinbag_dest %></td>
         <% end %>
       </tr>
@@ -131,9 +155,9 @@
 
     <div class="field">
       <tr>
-        <td><%= form.label :from %></td>
+        <td><%= form.label :from, id: "form_label"  %></td>
         <% if @action == 'NEW' %>
-          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s %></td>
+          <td><%= form.collection_select :from, @users, :id, :nickname, :selected => User.where(id: @usr.to_s).map(&:id)*",".to_s, :value => User.where(id: @usr.to_s).map(&:id)*",".to_s, class: "combo" %></td>
         <% else %>
           <td><%= form.collection_select :from, @users.all, :id, :nickname %></td>
         <% end %>
@@ -144,7 +168,7 @@
     <div class="field">
       <tr id = "field_coinbag_from">
         <% if @mov_type.to_s == 'tr' %>
-          <td><%= form.label "From #{:coinbag}" %></td>
+          <td><%= form.label "From #{:coinbag}", id: "form_label"  %></td>
           <td><%= form.grouped_collection_select :coinbag, User.order(:nickname),
             :coinbag, :nickname, :id, :coinbag, include_blank: true %>
           <div id="CTR_coinbag" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
@@ -154,7 +178,7 @@
 
     <div class="field">
       <tr>
-        <td><%= form.label :to %></td>
+        <td><%= form.label :to, id: "form_label"  %></td>
         <% if @action == 'NEW' %>
           <td><%= form.collection_select :to, @users, :id, :nickname, selected: User.where(id: @usr.to_s).map(&:id)*",".to_s, value: User.where(id: @usr.to_s).map(&:id)*",".to_s, include_blank: true %></td>
         <% else %>
@@ -167,7 +191,7 @@
     <div class="field">
       <tr id = "field_coinbag_to">
         <% if @mov_type.to_s == 'tr' %>
-          <td><%= form.label "To coinbag" %></td>
+          <td><%= form.label "To coinbag", id: "form_label" %></td>
           <td><%= form.grouped_collection_select :coinbag_dest, User.order(:nickname),
             :coinbag, :nickname, :id, :coinbag %>
             <div id="CTR_coinbag_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
@@ -178,9 +202,9 @@
     <div class="field_currency">
       <tr>
         <% if @mov_type.to_s == 'exch' %>
-          <td><%= form.label "Source #{:currency}" %></td>
+          <td><%= form.label "Source #{:currency}", id: "form_label"  %></td>
         <% else %>
-          <td><%= form.label :currency%></td>
+          <td><%= form.label :currency, id: "form_label" %></td>
         <% end %>
         <% if @mov_type.to_s != 'exch' %>
           <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %><div id="CTR_currency" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
@@ -189,7 +213,7 @@
             <table>
               <tr>
                 <td><%= form.collection_select :currency, @currency, :id, :currency, include_blank: true %></td>
-                <td><%= form.label :amount %></td>
+                <td><%= form.label :amount, id: "form_label"  %></td>
                 <td><%= form.text_field :amount, class: 'text_field2' %><div id="CTR_currency" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div><div id="CTR_amount" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
               </tr>
             </table>
@@ -202,12 +226,12 @@
     <% if @mov_type.to_s == 'exch' %>
       <div class="field_currency">
         <tr>
-          <td><%= form.label "Destination #{:currency}" %></td>
+          <td><%= form.label "Destination #{:currency}", id: "form_label"  %></td>
           <td>
             <table>
               <tr>
                 <td><%= form.collection_select :currency_dest, @currency, :id, :currency, include_blank: true %></td>
-                <td><%= form.label :amount %></td>
+                <td><%= form.label :amount, id: "form_label"  %></td>
                 <td><%= form.text_field :amount_dest %><div id="CTR_currency_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div>
                   <div id="CTR_amount_dest" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
               </tr>
@@ -220,7 +244,7 @@
     <% if @mov_type.to_s != 'exch' %>
       <div class="field_float">
         <tr>
-          <td><%= form.label :amount %></td>
+          <td><%= form.label :amount, id: "form_label"  %></td>
           <td><%= form.text_field :amount, class: 'text_field2'  %><div id="CTR_amount" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
         </tr>
       </div>
@@ -228,21 +252,25 @@
 
     <div class="field_float">
       <tr>
-        <td><%= form.label "Original currency #{:fee}" %></td>
-        <td><%= form.text_field :fee, class: 'text_field2'  %><div id="CTR_fee" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+        <td><%= form.label "Source currency #{:fee}", id: "form_label"  %></td>
+        <% if @action == 'NEW' %>
+          <td><%= form.text_field :fee, class: 'text_field2', value: 0 %><div id="CTR_fee" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+        <% else %>
+          <td><%= form.text_field :fee, class: 'text_field2' %><div id="CTR_fee" class="CTR_form"><%= @action == 'NEW' && '*' || '' %></div></td>
+        <% end %>
       </tr>
     </div>
 
     <div class="field">
       <tr>
-        <td><%= form.label :hash %></td>
+        <td><%= form.label :hash, id: "form_label"  %></td>
         <td><%= form.text_field :hash %></td>
       </tr>
     </div>
 
     <div class="field">
       <tr>
-        <td><%= form.label "To #{:celebrate}" %></td>
+        <td><%= form.label "To #{:celebrate}", id: "form_label"  %></td>
         <td><%= form.text_field :celebrate %></td>
       </tr>
     </div>

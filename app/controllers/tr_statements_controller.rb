@@ -235,10 +235,16 @@ class TrStatementsController < ApplicationController
       params[:tr_statement][:date_time] = Time.new(params[:tr_statement][:"date_time"][0..3].to_i,params[:tr_statement][:"date_time"][5..6].to_i,params[:tr_statement][:"date_time"][8..9].to_i,1,45,45,"+00:00")
       params[:tr_statement][:created_by] = session[:user_id]
 
+      params[:tr_statement][:amount] = ('0' + params[:tr_statement][:"amount"]).to_f
+
       if params[:tr_statement][:mov_type] == 'tr'
-        params[:tr_statement][:amount_dest] = params[:tr_statement][:"amount"]
+        params[:tr_statement][:amount_dest] = params[:tr_statement][:amount]
         params[:tr_statement][:currency_dest] = params[:tr_statement][:"currency"]
+      else
+        params[:tr_statement][:amount_dest] = ('0' + params[:tr_statement][:"amount_dest"]).to_f
       end
+
+      params[:tr_statement][:fee] = ('0' + params[:tr_statement][:"fee"]).to_f
     end
 
     def load_tables
