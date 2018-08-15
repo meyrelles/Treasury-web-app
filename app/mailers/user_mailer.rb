@@ -1,22 +1,16 @@
 class UserMailer < ApplicationMailer
   default from: 'no_reply@ultroneous.org'
 
-  @address = "treasury.ultroneous.org"
+  @address = "localhost"
   @port = 25
-  @user_name = ''
-  @password = ''
-  @authentication = ""
 
   def welcome_email
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/login'
     delivery_options = {
-               :address              => "treasury.ultroneous.org",
+               :address              => "localhost",
                :port                 => 25,
-               :user_name            => '',
-               :password             => '',
-               :authentication       => "",
-              :enable_starttls_auto => true
+               :enable_starttls_auto => true
               }
 
     mail(from: "no_reply@ultroneous.org", reply_to: "no_reply@ultroneous.org" ,to: @user.email, subject: 'Welcome to Veda Tresury Web App',
@@ -27,12 +21,9 @@ class UserMailer < ApplicationMailer
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/login'
     delivery_options = {
-               :address              => "treasury.ultroneous.org",
+               :address              => "localhost",
                :port                 => 25,
-               :user_name            => '',
-               :password             => '',
-               :authentication       => "",
-              :enable_starttls_auto => true
+               :enable_starttls_auto => true
               }
 
     mail(from: "no_reply@ultroneous.org", reply_to: "no_reply@ultroneous.org" ,to: @user.email, subject: 'Welcome to Veda Tresury Web App',
@@ -43,12 +34,9 @@ class UserMailer < ApplicationMailer
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/password_reset'
     delivery_options = {
-               :address              => "treasury.ultroneous.org",
+               :address              => "localhost",
                :port                 => 25,
-               :user_name            => '',
-               :password             => '',
-               :authentication       => "",
-              :enable_starttls_auto => true
+               :enable_starttls_auto => true
               }
 
     mail(from: "no_reply@ultroneous.org", reply_to: "no_reply@ultroneous.org" ,to: @user.email, subject: 'Treasury web app - Reset password',
@@ -59,12 +47,9 @@ class UserMailer < ApplicationMailer
     @user = params[:user]
     @url  = 'http://treasury.ultroneous.org:3000/users/' + @user.id + '/edit'
     delivery_options = {
-               :address              => "treasury.ultroneous.org",
+               :address              => "localhost",
                :port                 => 25,
-               :user_name            => '',
-               :password             => '',
-               :authentication       => "",
-              :enable_starttls_auto => true
+               :enable_starttls_auto => true
               }
 
     mail(from: "no_reply@ultroneous.org", reply_to: "no_reply@ultroneous.org" ,to: 'nuno.de.meireles@gmail.com', subject: 'Please check new user to approve',
