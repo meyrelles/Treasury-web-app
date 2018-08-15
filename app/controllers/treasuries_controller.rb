@@ -10,6 +10,11 @@ class TreasuriesController < ApplicationController
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
+    if cookies[:default_member].present?
+      @default_member = cookies[:default_member]
+    else
+      @default_member = session[:user_id]
+    end
     tresuryBalance
     tresuryCoinbagBalance
   end
@@ -21,9 +26,14 @@ class TreasuriesController < ApplicationController
       flash[:notice] = "You must login to access the app..."
       redirect_to login_path
     end
-    updateRatesCryptorates
-    updateFiatRates
-    redirect_to treasuries_path
+    if params[:Update_table]
+      cookies[:default_member] = params[:transaction][:member]
+      redirect_to treasuries_path
+    else
+      updateRatesCryptorates
+      updateFiatRates
+      redirect_to treasuries_path
+    end
   end
 
   private
@@ -298,20 +308,22 @@ class TreasuriesController < ApplicationController
 
     end
 
-
-
-
     def tresuryCoinbagBalance
+      #Get world user id
+      @worldId = User.where(username: 'world').map(&:id)*","
+      @world = User.where(username: 'world')
+      #load members to filter table
+      @members = User.all
+      @members = @members.order(:nickname)
+      @members = @members - @world
+     #@members.find(@worldId).destroy
 
       @currenciesCoin = Currency.all
       @currenciesCoin = @currenciesCoin.order(:currency)
 
-      #Get world user id
-      @worldId = User.where(username: 'world').map(&:id)*","
-
       @treasuryIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['from'].eq("#{session[:user_id]}") &
+          doc['from'].eq("#{@default_member}") &
           doc['coinbag'].ne('')
           }.
         group('coinbag','currency').
@@ -321,7 +333,7 @@ class TreasuriesController < ApplicationController
       #Just to get the income
       @treasuryOut = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['to'].eq("#{session[:user_id]}") &
+          doc['to'].eq("#{@default_member}") &
           doc['coinbag_dest'].ne('')
           }.
         group('coinbag_dest','currency_dest').
@@ -331,7 +343,7 @@ class TreasuriesController < ApplicationController
       #Just to get the TOTAL OUT
       @TotalsOut = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['from'].eq("#{session[:user_id]}") &
+          doc['from'].eq("#{@default_member}") &
           doc['coinbag'].ne('')
           }.
         group('currency').
@@ -341,7 +353,7 @@ class TreasuriesController < ApplicationController
       #Just to get the TOTAL IN
       @TotalsIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['to'].eq("#{session[:user_id]}") &
+          doc['to'].eq("#{@default_member}") &
           doc['coinbag_dest'].ne('')
           }.
         group('currency_dest').
@@ -351,7 +363,7 @@ class TreasuriesController < ApplicationController
       #Just to get the COINBAGS OUT
       @coinbagsOut = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['from'].eq("#{session[:user_id]}") &
+          doc['from'].eq("#{@default_member}") &
           doc['coinbag'].ne('')
           }.
         group('coinbag').
@@ -361,7 +373,7 @@ class TreasuriesController < ApplicationController
       #Just to get the COINBAGS IN
       @coinbagsIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
         filter{ |doc| doc['status'].eq("I") &
-          doc['to'].eq("#{session[:user_id]}") &
+          doc['to'].eq("#{@default_member}") &
           doc['coinbag_dest'].ne('')
           }.
         group('coinbag_dest').

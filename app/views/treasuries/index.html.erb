@@ -117,6 +117,16 @@
 
 <!-- TOTALS BY COINBAGS -->
 
+<!-- Filter options -->
+  <table border="0" class="filter" id="filter_id">
+    <tr>
+      <%= form_for :transaction do |f| %>
+      <td>Filter coinbags by: <%= f.collection_select :member, @members, :id, :nickname, {:selected => @default_member} %></td>
+      <td><%= f.submit 'Update', name: 'Update_table', id: 'Update_table', class: "btn-primary", data: { disable_with: "Please wait.." } %></td>
+      <% end %>
+    </tr>
+  </table>
+
   <table border="1" class="Balance" id="BalanceTable">
   <%= form_for(:treasuries, url: treasuries_path) do |form| %>
     <thead class="BalanceHeader">
@@ -134,7 +144,7 @@
 
         <% i=0 %>
         <tbody class="BalanceHeader" id="bodyBalance">
-          <h3><%= User.where(id: session[:user_id]).map(&:nickname)*"," %> Coinbags balance:</h3>
+          <h3><%= User.where(id: @default_member).map(&:nickname)*"," %> Coinbags balance:</h3>
             <% @CoinbagsCoin.each do |coinbags| %>
             <% if i % 2 == 0 %>
               <% tdclass = 0 %>
