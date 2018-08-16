@@ -1,6 +1,6 @@
 module Api
   module V1
-    class ExchangeController < ApplicationController
+    class ExchangeinController < ApplicationController
       def index
 
         treasuryexch = TrStatement.where(:status => 'I')
@@ -12,12 +12,9 @@ module Api
           .order(date_time: :desc)
           .map{ |f| {
             :User => User.where(id: f.from).map(&:nickname)*",",
-            :Source_coinbag => Coinbag.where(id: f.coinbag).map(&:coinbag)*",",
-            :Source_currency => Currency.where(id: f.currency).map(&:currency)*",",
-            :Source_amount => f.amount + f.fee,
-            :Destination_coinbag => Coinbag.where(id: f.coinbag_dest).map(&:coinbag)*",",
-            :Destination_currency => Currency.where(id: f.currency_dest).map(&:currency)*",",
-            :Destination_amount => f.amount_dest,
+            :Coinbag => Coinbag.where(id: f.coinbag_dest).map(&:coinbag)*",",
+            :Currency => Currency.where(id: f.currency_dest).map(&:currency)*",",
+            :Amount => f.amount_dest,
             :Date => f.date_time,
             :Category => Classification.where(id: f.classification).map(&:classification)*",",
             :detail => f.detail,

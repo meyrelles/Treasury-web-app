@@ -1,6 +1,6 @@
 module Api
   module V1
-    class TreasuryinController < ApplicationController
+    class TransactioninController < ApplicationController
       def index
         if params[:currency]
           treasuryin = TrStatement.where(:status => 'I')

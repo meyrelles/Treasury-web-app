@@ -51,9 +51,10 @@ Rails.application.routes.draw do
   #API ROUTES
   namespace 'api' do
     namespace 'v1' do
-      resources :treasuryin
-      resources :treasuryout
-      resources :exchange
+      resources :transactionin
+      resources :transactionout
+      resources :exchangein
+      resources :exchangeout
     end
   end
 

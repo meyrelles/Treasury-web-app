@@ -1,6 +1,6 @@
 module Api
   module V1
-    class TreasuryoutController < ApplicationController
+    class TransactionoutController < ApplicationController
       def index
         treasuryout = TrStatement.where(:status => 'I')
           .where(:coinbag.not => "")
