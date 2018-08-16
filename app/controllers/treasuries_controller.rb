@@ -17,6 +17,7 @@ class TreasuriesController < ApplicationController
     end
     tresuryBalance
     tresuryCoinbagBalance
+    tresuryCategoryBalance
   end
 
 
@@ -406,5 +407,99 @@ class TreasuriesController < ApplicationController
       @ValuesCoin = @treasuryIn.merge(@treasuryOut){|key, oldval, newval| newval + oldval}
 
     end
+
+    def tresuryCategoryBalance
+      #Get world user id
+      @worldId = User.where(username: 'world').map(&:id)*","
+      @world = User.where(username: 'world')
+      #load members to filter table
+      @members = User.all
+      @members = @members.order(:nickname)
+      @members = @members - @world
+     #@members.find(@worldId).destroy
+
+      @currenciesCoin = Currency.all
+      @currenciesCoin = @currenciesCoin.order(:currency)
+
+      @C_treasuryIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+        filter{ |doc| doc['status'].eq("I") &
+          doc['from'].eq("#{@default_member}")
+          }.
+        group('classification','currency').
+        sum{|value| value['amount'] * (-1) - value['fee']}
+      }
+
+      #Just to get the income
+      @C_treasuryOut = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+        filter{ |doc| doc['status'].eq("I") &
+          doc['to'].eq("#{@default_member}")
+          }.
+        group('classification','currency_dest').
+        sum{|value| value['amount_dest']}
+      }
+
+      #Just to get the TOTAL OUT
+      @C_TotalsOut = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+        filter{ |doc| doc['status'].eq("I") &
+          doc['from'].eq("#{@default_member}")
+          }.
+        group('currency').
+        sum{|value| value['amount'] * (-1) - value['fee']}
+      }
+
+      #Just to get the TOTAL IN
+      @C_TotalsIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+        filter{ |doc| doc['status'].eq("I") &
+          doc['to'].eq("#{@default_member}")
+          }.
+        group('currency_dest').
+        sum{|value| value['amount_dest']}
+      }
+
+      #Just to get the COINBAGS OUT
+      @categoryOut = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+        filter{ |doc| doc['status'].eq("I") &
+          doc['from'].eq("#{@default_member}")
+          }.
+        group('classification').
+        sum{|value| value['amount'] * (-1) - value['fee']}
+      }
+
+      #Just to get the COINBAGS IN
+      @categoryIn = NoBrainer.run(:profile => false) { |r| r.table('tr_statements').
+        filter{ |doc| doc['status'].eq("I") &
+          doc['to'].eq("#{@default_member}")
+          }.
+        group('classification').
+        sum{|value| value['amount_dest']}
+      }
+
+      #Merge coinbags IN with OUT
+      @CategoryCoin = @categoryIn.merge(@categoryOut){|key, oldval, newval| newval + oldval}
+
+      #Get coinbags names
+      @CategoryCoin = @CategoryCoin.update(@CategoryCoin) {
+         |key, value| Classification.where(id: key).map(&:classification)*"," }
+      #Order hash
+      @CategoryCoin = Hash[@CategoryCoin.sort_by{|k, v| v}]
+
+
+      #TOTALS
+      @C_SumValues = @C_TotalsIn.merge(@C_TotalsOut){|key, oldval, newval| newval + oldval}
+
+
+      #Merge Totals IN with OUT and HEADERs
+      @C_TotalsCoin = @C_TotalsIn.merge(@C_TotalsOut){|key, oldval, newval| newval + oldval}
+      #Get currencies names
+      @C_TotalsCoin = @C_TotalsCoin.update(@C_TotalsCoin) {
+         |key, value| Currency.where(id: key).map(&:currency)*"," }
+      #Order hash
+      @C_TotalsCoin = Hash[@C_TotalsCoin.sort_by{|k, v| v}]
+
+
+      @C_ValuesCoin = @C_treasuryIn.merge(@C_treasuryOut){|key, oldval, newval| newval + oldval}
+
+    end
+
 
 end
