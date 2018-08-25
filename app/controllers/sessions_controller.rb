@@ -87,7 +87,7 @@ class SessionsController < ApplicationController
       pass = crypt.decrypt_and_verify(pass, purpose: :login)
     end
 
-    if user && params[:session][:"password"].to_s == pass && pass != '' && verified.to_s == "true"
+    if user && params[:session][:"password"].to_s == pass && pass != '' && verified.to_s == "true" && status.to_s == 'Active'
       log_in user
 
       #CHECK IF THE USER HAVE TRANSACTIONS TO APPROVE
