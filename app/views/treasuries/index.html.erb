@@ -121,9 +121,10 @@
 <!-- TOTALS BY COINBAGS -->
 
 <!-- Filter options -->
+  <%= form_for :transaction do |f| %>
   <table border="0" class="filter" id="filter_id">
     <tr>
-      <%= form_for :transaction do |f| %>
+
       <td>Filter coinbags and category by: <%= f.collection_select :member, @members, :id, :nickname, {:selected => @default_member} %></td>
       <td><%= f.submit 'Update', name: 'Update_table', id: 'Update_table', class: "btn-primary", data: { disable_with: "Please wait.." } %></td>
       <% end %>
@@ -255,9 +256,8 @@
 
 
   <!-- TOTALS BY CATEGORY -->
-
-    <table border="1" class="Balance" id="BalanceTable">
     <%= form_for(:treasuries, url: treasuries_path) do |form| %>
+    <table border="1" class="Balance" id="BalanceTable">
       <thead class="BalanceHeader">
         <tr class="impar">
           <th></th>

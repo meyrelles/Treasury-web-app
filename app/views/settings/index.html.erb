@@ -3,8 +3,8 @@
   <h3>User settings</h3>
 
   <div class="settings">
+    <%= form_for(:settings, url: settings_path) do |form| %>
     <table class="table">
-      <%= form_for(:settings, url: settings_path) do |form| %>
         <h3>Change password</h3>
         <tr>
           <td><%= form.label "Old password" %></td>
