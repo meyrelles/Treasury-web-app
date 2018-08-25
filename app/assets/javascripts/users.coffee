@@ -4,7 +4,8 @@
 
 format = (d) ->
   # `d` is the original data object for the row
-  '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Full name:</td>' + '<td>' + d.surname + '</td>' + '</tr>' + '<tr>' + '<td>Extension number:</td>' + '<td>' + d.givenname + '</td>' + '</tr>' + '<tr>' + '<td>Extra info:</td>' + '<td>And any further details here (images etc)...</td>' + '</tr>' + '</table>'
+  '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Full name:</td>' + '<td>' + d.surname + ', ' + d.givenname + '</td>' + '</tr>' + '<tr>' + '<td>Status:</td>' + '<td>' + d.status   + '</td>' + '</tr>' + '<tr>' +
+  '<td>Kind of user:</td>' + '<td>' + d.group + '</td>' + '</tr>' + '</table>'
 
 jQuery ->
   $(document).ready ->
@@ -15,12 +16,12 @@ jQuery ->
         bServerSide: true
         sAjaxSource: $('#users').data('source')
         columnDefs: [ {
-          targets: 5
+          targets: 6
           render: (url, type, full, row, data) ->
             '<a data-confirm="Are you sure?" rel="nofollow" data-method="delete" href="/users/' + full.id1 + '"><img src="assets/delete.ico" height="20px" width="20px" title="Delete user" alt="Delete"></a>'
           }
           {
-          targets: 4
+          targets: 5
           render: (url, type, full, row, data) ->
             '<a href="/users/' + full.id2 + '/edit"><img src="assets/edit.ico" height="20px" width="20px" title="Edit user" alt="Edit"></a>'
         } ]
@@ -34,6 +35,7 @@ jQuery ->
           { 'data': 'username' }
           { 'data': 'nickname' }
           { 'data': 'email' }
+          { 'data': 'status' }
           { 'data': 'id1' }
           { 'data': 'id2' }
         ]

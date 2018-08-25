@@ -30,7 +30,9 @@ private
         nickname: raw(user.nickname),
         email: mail_to(user.email),
         id1: raw(user.id),
-        id2: raw(user.id)
+        id2: raw(user.id),
+        status: raw(user.status),
+        group: raw(user.group)   
       }
     end
   end

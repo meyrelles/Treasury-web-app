@@ -11,6 +11,7 @@ class User
                       format: { with: VALID_EMAIL_REGEX },
                       uniqueness: true
   validates :nickname,  presence: true, uniqueness: true
+  #validates :status,  presence: true
 
   def email=(value)
     super(value.strip.downcase)
@@ -28,6 +29,7 @@ class User
   field :verified, :type => Boolean
   field :admin, :type => Boolean
   field :group, :type => String, :required => true
+  field :status, :type => String, :required => true
 
   #has_secure_password
 end

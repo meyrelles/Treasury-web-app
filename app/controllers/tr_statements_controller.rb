@@ -250,8 +250,10 @@ class TrStatementsController < ApplicationController
     def load_tables
 
       #load user table
+      @users_tmp = User.where(status: 'Inactive')
       @users = User.all
       @users = @users.order(:nickname)
+      @users = @users - @users_tmp
 
       #load coinbags table
       @coinbag = Coinbag.all

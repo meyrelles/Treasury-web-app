@@ -57,6 +57,11 @@
   </div>
 
   <div class="field">
+    <%= form.label "#{:status} of user" %>
+    <%= form.select :status, ['Active','Inactive'], class: 'form-control' %>
+  </div>
+
+  <div class="field">
     <%= form.label :spreadsheet_link %>
     <%= form.text_field :spreadsheet_link, class: 'form-control' %>
   </div>
