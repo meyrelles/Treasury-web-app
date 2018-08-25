@@ -320,12 +320,12 @@ jQuery ->
         if @value.length >= 1
           $("#CTR_reason").text("")
           array[2]=1
-          #enable submit
-          EnableSubmitButton.Checking(array)
         else
           $("#CTR_reason").text("Detail should be great than 1 characters!")
           document.getElementById("send").disabled = true
           array[2]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)        
 
       #TIME ZONE FIELD
       $("#tr_statement_timezone").blur ->
@@ -333,8 +333,6 @@ jQuery ->
           if @value % 1 == 0
             $("#CTR_TZ").text("")
             array[1]=1
-            #enable submit
-            EnableSubmitButton.Checking(array)
           else
             $("#CTR_TZ").text("Input should be integer!")
             document.getElementById("send").disabled = true
@@ -343,50 +341,50 @@ jQuery ->
           $("#CTR_TZ").text("should have at least 1 digit!")
           document.getElementById("send").disabled = true
           array[1]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       #COINBAG FIELD
       $("#tr_statement_coinbag").blur ->
         if @value.length > 0
           $("#CTR_coinbag").text("")
           array[3]=1
-          #enable submit
-          EnableSubmitButton.Checking(array)
         else
           $("#CTR_coinbag").text("Please select a coinbag!")
           document.getElementById("send").disabled = true
           array[3]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       #COINBAG FOR EXCHANGE FIELD
       $("#tr_statement_coinbag_dest").blur ->
         if @value.length > 0
           $("#CTR_coinbag_dest").text("")
           array[4]=1
-          #enable submit
-          EnableSubmitButton.Checking(array)
         else
           $("#CTR_coinbag_dest").text("Please select a coinbag!")
           document.getElementById("send").disabled = true
           array[4]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       #CURRENCY AND AMOUNT FOR EXCHANGE FIELD
       $("#tr_statement_currency").blur ->
         if @value.length > 0
           $("#CTR_currency").text("")
           array[5]=1
-          #enable submit
-          EnableSubmitButton.Checking(array)
         else
           $("#CTR_currency").text("Please select a currency!  ")
           document.getElementById("send").disabled = true
           array[5]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       $("#tr_statement_amount").blur ->
         if !isNaN(@value)
           if @value >= 0 && @value.length > 0
             $("#CTR_amount").text("")
             array[6]=1
-            #enable submit
-            EnableSubmitButton.Checking(array)
           else
             $("#CTR_amount").text("Amount should be positive value and great or equal 0!")
             document.getElementById("send").disabled = true
@@ -395,14 +393,14 @@ jQuery ->
           $("#CTR_amount").text("Amount should be a number!")
           document.getElementById("send").disabled = true
           array[6]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       $("#tr_statement_fee").blur ->
         if !isNaN(@value)
           if @value >= 0 && @value.length > 0
             $("#CTR_fee").text("")
             array[9]=1
-            #enable submit
-            EnableSubmitButton.Checking(array)
           else
             $("#CTR_fee").text("Fee should be positive value and great or equal 0!")
             document.getElementById("send").disabled = true
@@ -411,26 +409,26 @@ jQuery ->
           $("#CTR_fee").text("Fee should be a number!")
           document.getElementById("send").disabled = true
           array[9]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       #CURRENCY AND AMOUNT FOR EXCHANGE FIELD Destination
       $("#tr_statement_currency_dest").blur ->
         if @value.length > 0
           $("#CTR_currency_dest").text("")
           array[7]=1
-          #enable submit
-          EnableSubmitButton.Checking(array)
         else
           $("#CTR_currency_dest").text("Please select a currency!  ")
           document.getElementById("send").disabled = true
           array[7]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       $("#tr_statement_amount_dest").blur ->
         if !isNaN(@value)
           if @value >= 0 && @value.length > 0
             $("#CTR_amount_dest").text("")
             array[8]=1
-            #enable submit
-            EnableSubmitButton.Checking(array)
           else
             $("#CTR_amount_dest").text("Amount should be positive value and great or equal 0!")
             document.getElementById("send").disabled = true
@@ -439,6 +437,8 @@ jQuery ->
           $("#CTR_amount_dest").text("Amount should be a number!")
           document.getElementById("send").disabled = true
           array[8]=0
+        #enable submit
+        EnableSubmitButton.Checking(array)
 
       #Dynamic destination coinbag Combobox
       destcoinbags = $('#tr_statement_coinbag_dest').html()
