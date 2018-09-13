@@ -332,6 +332,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord (~> 5.2.0)
   api
+  autoprefixer-rails
   bootsnap (>= 1.1.0)
   bootstrap-datepicker-rails
   bootstrap-sass (= 3.3.7)

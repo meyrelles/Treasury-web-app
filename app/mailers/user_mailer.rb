@@ -6,7 +6,7 @@ class UserMailer < ApplicationMailer
 
   def welcome_email
     @user = params[:user]
-    @url  = 'http://treasury.ultroneous.org:3000/login'
+    @url  = 'https://treasury.ultroneous.org/login'
     delivery_options = {
                :address              => "localhost",
                :port                 => 25,
@@ -19,7 +19,7 @@ class UserMailer < ApplicationMailer
 
   def approved_user
     @user = params[:user]
-    @url  = 'http://treasury.ultroneous.org:3000/login'
+    @url  = 'https://treasury.ultroneous.org/login'
     delivery_options = {
                :address              => "localhost",
                :port                 => 25,
@@ -32,7 +32,7 @@ class UserMailer < ApplicationMailer
 
   def reset_password
     @user = params[:user]
-    @url  = 'http://treasury.ultroneous.org:3000/password_reset'
+    @url  = 'https://treasury.ultroneous.org/password_reset'
     delivery_options = {
                :address              => "localhost",
                :port                 => 25,
@@ -45,7 +45,7 @@ class UserMailer < ApplicationMailer
 
   def approve_user_email
     @user = params[:user]
-    @url  = 'http://treasury.ultroneous.org:3000/users/' + @user.id + '/edit'
+    @url  = 'https://treasury.ultroneous.org/users/' + @user.id + '/edit'
     delivery_options = {
                :address              => "localhost",
                :port                 => 25,
