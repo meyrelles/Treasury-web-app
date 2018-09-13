@@ -79,6 +79,7 @@ class SessionsController < ApplicationController
     user = User.where(username: params[:session][:username].to_s)
     pass = User.where(username: params[:session][:username].to_s).map(&:password_digest)*",".to_s
     verified = User.where(username: params[:session][:username].to_s).map(&:verified)*",".to_s
+    status = User.where(username: params[:session][:username].to_s).map(&:status)*",".to_s
 
     if pass != ''
       salt  = 'CCEKvUgNbXByO6eAp2pgb56Nur/E16tHA1cYY2Ofai8='
@@ -87,7 +88,7 @@ class SessionsController < ApplicationController
       pass = crypt.decrypt_and_verify(pass, purpose: :login)
     end
 
-    if user && params[:session][:"password"].to_s == pass && pass != '' && verified.to_s == "true" && status.to_s == 'Active'
+    if user && params[:session][:"password"].to_s == pass && pass != '' && verified.to_s == "true" && status == 'Active'
       log_in user
 
       #CHECK IF THE USER HAVE TRANSACTIONS TO APPROVE
