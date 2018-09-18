@@ -20,9 +20,13 @@ Rails.application.routes.draw do
   get       '/password_reset',  to: 'sessions#reset_password'
   post      '/password_reset',  to: 'sessions#reset_password_post'
 
-  #Settings
+  #User Settings
   get       '/settings',        to: 'settings#index'
   post      '/settings',        to: 'settings#save'
+
+  #Global Settings
+  get       '/global_settings', to: 'global_settings#index'
+  post      '/global_settings', to: 'global_settings#save'
 
   #Administration
   get       '/administrators',  to: 'administrators#index'

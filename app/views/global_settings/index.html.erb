@@ -1,0 +1,72 @@
+<body class='settings_body' id="Settingsbody" data-controller="<%= controller.controller_name %>">
+  <% provide(:title, "Global Settings") %>
+  <h3>Global settings</h3>
+
+  <!-- USERS DEFAULTS -->
+
+  <div class="_default">
+    <%= form_for(:global_settings, url: global_settings_path) do |form| %>
+      <h3>Default app users</h3>
+      <table border="1" id="CurDefTable">
+        <col width="130">
+        <col width="80">
+        <thead>
+          <tr>
+            <th style="text-align:center">Member/POD</th>
+            <th style="text-align:center">Default?</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% i=0 %>
+          <% @users.each do |users| %>
+            <tr>
+              <td id="Member"><%= users.nickname %></td>
+              <% if @users_default.count > 0 %>
+                <% flag = 0 %>
+                <% @users_default.each do |users_default| %>
+                  <% if users_default.user_id == users.user_id %>
+                    <td><input type="checkbox" name="field1[]" onchange="change_checkbox(this)" id="field1_<%= i %>" value="<%= users.nickname %>" checked="" /></td>
+                    <% flag = 1 %>
+                  <% end %>
+                <% end %>
+                <% if flag == 0 %>
+                  <td><input type="checkbox" name="field1[]" onchange="change_checkbox(this)" id="field1_<%= i %>" value="<%= users.nickname %>" /></td>
+                <% end %>
+              <% else %>
+                <td><input type="checkbox" name="field1[]" onchange="change_checkbox(this)" id="field1_<%= i %>" value="<%= users.nickname %>" />
+              <% end %>
+            </tr>
+            <% i = i + 1 %>
+          <% end %>
+
+          <%= form.text_field :users_nickname, style: 'display:none' %>
+          <%= form.text_field :users_checked, style: 'display:none' %>
+
+          <script>
+            var users_nickname = [];
+            var users_checked = [];
+            function change_checkbox(el){
+              if(el.checked){
+                users_nickname[el.id.substring(7)] = el.value;
+                users_checked[el.id.substring(7)] = "true";
+              }else{
+                users_nickname[el.id.substring(7)] = el.value;
+                users_checked[el.id.substring(7)] = "false";
+              }
+              //put data in form hidden field to send to controller
+              document.getElementById('settings_currencies_name').value = users_nickname;
+              document.getElementById('settings_currencies_checked').value = users_checked;
+            }
+          </script>
+
+        </tbody>
+      </table>
+      <td><br></td>
+      <%= form.submit 'Apply defaults', name: 'cur_def', id: 'cur_defs', class: "btn btn-lg btn-primary", data: { disable_with: "Please wait.." } %>
+    <% end %>
+  </div>
+
+  <br>
+
+</body>
