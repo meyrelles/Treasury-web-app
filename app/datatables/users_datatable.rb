@@ -22,6 +22,14 @@ private
   def data
     #users
     users.map do |user|
+
+      if !user.profile.nil?
+        profile = Usergroup.find(user.profile) #where(:id => user.profile)
+        profile_name = profile.group_name #profile.group_name
+      else
+        profile_name=""
+      end
+      #@groupname = @profile.group_name
       {
         #link_to(user.username, user),
         username: raw(user.username),
@@ -32,7 +40,8 @@ private
         id1: raw(user.id),
         id2: raw(user.id),
         status: raw(user.status),
-        group: raw(user.group)   
+        group: raw(user.group),
+        profile: raw(profile_name)
       }
     end
   end

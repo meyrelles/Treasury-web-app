@@ -57,20 +57,26 @@
   </div>
 
   <div class="field">
-    <%= form.label "#{:status} of user" %>
+    <%= form.label "User #{:status}" %>
     <%= form.select :status, ['Active','Inactive'], class: 'form-control' %>
   </div>
 
   <div class="field">
-    <%= form.label :spreadsheet_link %>
-    <%= form.text_field :spreadsheet_link, class: 'form-control' %>
+    <%= form.label "User #{:profile}" %>
+    <%= form.collection_select :profile, @profile, :id, :group_name, include_blank: true %>
+  </div>
+
+<!--
+  <div class="field">
+    %= form.label :spreadsheet_link %>
+    %= form.text_field :spreadsheet_link, class: 'form-control' %>
   </div>
 
   <div class="field">
-    <%= form.label :sheet_name %>
-    <%= form.text_field :sheet_name, class: 'form-control' %>
+    %= form.label :sheet_name %>
+    %= form.text_field :sheet_name, class: 'form-control' %>
   </div>
-
+-->
   <% if @kind != 'new' %>
     <%= form.hidden_field :id, value: params[:id].to_s %>
   <% else %>

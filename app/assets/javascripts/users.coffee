@@ -5,7 +5,7 @@
 format = (d) ->
   # `d` is the original data object for the row
   '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' + '<tr>' + '<td>Full name:</td>' + '<td>' + d.surname + ', ' + d.givenname + '</td>' + '</tr>' + '<tr>' + '<td>Status:</td>' + '<td>' + d.status   + '</td>' + '</tr>' + '<tr>' +
-  '<td>Kind of user:</td>' + '<td>' + d.group + '</td>' + '</tr>' + '</table>'
+  '<td>Kind of user:</td>' + '<td>' + d.group + '</td>' + '</tr>' + '<tr>' + '<td>User profile:</td>' + '<td>' + d.profile + '</td>' + '</tr>' + '</table>'
 
 jQuery ->
   $(document).ready ->

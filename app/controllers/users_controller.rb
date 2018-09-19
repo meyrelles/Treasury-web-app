@@ -43,12 +43,16 @@ class UsersController < ApplicationController
   def new
     @user = User.new
     @kind = 'new'
+    @profile = Usergroup.all
+    @profile = @profile.order('group_name')
   end
 
   # GET /users/1/edit
   def edit
     @user = User.find(params[:id])
     @kind = 'edit'
+    @profile = Usergroup.all
+    @profile = @profile.order('group_name')
   end
 
   # POST /users
@@ -135,7 +139,7 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:status, :group, :verified, :admin, :id, :username, :password_digest, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email, :sheet_name)
+      params.require(:user).permit(:profile, :status, :group, :verified, :admin, :id, :username, :password_digest, :surname, :givenname, :nickname, :birthdate_time, :spreadsheet_link, :email, :sheet_name)
     end
 
     #function to manipulate form data

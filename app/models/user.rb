@@ -26,10 +26,11 @@ class User
   field :email, :type => String, :uniq => true, :required => true
   field :spreadsheet_link, :type => String
   field :sheet_name, :type => String
-  field :verified, :type => Boolean
-  field :admin, :type => Boolean
-  field :group, :type => String, :required => true
-  field :status, :type => String, :required => true
+  field :verified, :type => Boolean 
+  field :admin, :type => Boolean #User is app administrator?
+  field :group, :type => String, :required => true #used to define users and teams
+  field :status, :type => String, :required => true #Status of user in app
+  field :profile, :type => String, :required => true #Used to create users group on app
 
   #has_secure_password
 end
