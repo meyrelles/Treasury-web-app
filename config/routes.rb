@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   patch     '/signup',          to: 'users#update'
   resources :main
   resources :users
+  resources :usergroups
   resources :classifications
   resources :coinbags
   resources :currencies

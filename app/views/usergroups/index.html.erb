@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Users group</h1>
+<body class='usergroups_body' id="Usergroupsbody" data-controller="<%= controller.controller_name %>">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <table id="usergroups">
+        <thead>
+          <tr>
+            <th>Group name</th>
+            <th style="width:5px;"></th>
+            <th style="width:5px;"></th>
+            <th style="width:5px;"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @usergroup.each do |group| %>
+            <tr>
+              <td><%= group.group_name %></td>
+              <td><%= link_to 'Show', group %></td>
+              <td><%= link_to 'Edit', edit_usergroup_path(group) %></td>
+              <td><%= link_to 'Destroy', group, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <br>
+
+      <%= link_to 'New Group', new_usergroup_path, id: "create_group", class: "btn btn-lg btn-primary" %>
+    </div>
+  </div>
+</body>

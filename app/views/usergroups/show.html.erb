@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <p id="notice"><%= notice %></p>
+
+    <p>
+      <strong>User group:</strong>
+      <%= @usergroup.group_name %>
+    </p>
+
+    <%= link_to 'Edit', edit_usergroup_path(@usergroup), class: "btn btn-lg btn-primary" %> |
+    <%= link_to 'Back', usergroups_path, class: "btn btn-lg btn-primary" %>
+  </div>
+</div>
